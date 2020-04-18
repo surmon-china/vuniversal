@@ -33,6 +33,12 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
     target: IS_SERVER ? 'node' : 'web',
     // Controversially, decide on sourcemaps.
     devtool: IS_DEV ? 'cheap-module-source-map' : 'source-map',
+    // Logging
+    // TODO: REMOVE when webpack5
+    // @ts-ignore
+    infrastructureLogging: {
+      level: 'info'
+    },
     // We need to tell webpack how to resolve both Razzle's node_modules and
     // the users', so we use resolve and resolveLoader.
     resolve: {
@@ -113,7 +119,10 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
         NODE_ENV: buildContext.environment,
         VUE_ENV: buildContext.target
       }))
-    ]
+    ],
+    watchOptions: {
+      ignored: /node_modules/
+    }
   }
 
   if (IS_CLIENT) {

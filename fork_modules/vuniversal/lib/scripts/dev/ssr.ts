@@ -1,6 +1,7 @@
 
 // import path from 'path'
 // import fs from 'fs-extra'
+// import { vol as mfs } from 'memfs'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import StartServerPlugin from 'start-server-webpack-plugin'
@@ -26,6 +27,7 @@ export default function startSSRServer(vunConfig: VunConfig) {
     clientConfig.output.publicPath = assetsServerUrl + '/'
   }
   if (serverConfig.output) {
+    // 3001?
     serverConfig.output.publicPath = assetsServerUrl
   }
 
@@ -37,28 +39,30 @@ export default function startSSRServer(vunConfig: VunConfig) {
   // Auro run ssr server when build done.
   serverConfig.plugins?.push(new StartServerPlugin({
     name: SERVER_JS_NAME,
-    nodeArgs: args || []
+    // Capture any --inspect or --inspect-brk flags (with optional values) so that we
+    // can pass them when we invoke nodejs
+    nodeArgs: args || [],
+    keyboard: true
   }))
 
   const clientCompiler = compileConfig(clientConfig)
-  const serverCompiler = compileConfig(serverConfig)
-
   const devServerConfig: WebpackDevServer.Configuration = {
     ...getDefaultDevServerConfig(vunConfig),
     port: assetsServerPost,
     historyApiFallback: false,
     open: false
   }
-
   // https://webpack.docschina.org/configuration/dev-server
   WebpackDevServer.addDevServerEntrypoints(clientConfig, devServerConfig)
   const clientServer = new WebpackDevServer(clientCompiler, devServerConfig)
 
   // TODO: 内存中好办
+  const serverCompiler = compileConfig(serverConfig)
   // serverCompiler.outputFileSystem = mfs
   serverCompiler.watch({ ignored: /node_modules/ }, (error, stats) => {
     if (!error && !stats.hasErrors()) {
       logger.log(stats.toString(serverConfig.stats))
+      // console.log('-------mfs', require('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js').toString())
       // TODO: 这里可以拿到内存中的文件 dosomething
       // https://www.namecheap.com/blog/production-ready-vue-ssr-in-5-simple-steps/
       // https://github.com/vuejs/vue-hackernews-2.0/blob/master/build/setup-dev-server.js#L80

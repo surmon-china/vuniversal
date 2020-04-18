@@ -6,7 +6,6 @@ export function getDefaultDevServerConfig(vunConfig: VunConfig): WebpackDevServe
   return {
     hot: true,
     inline: true,
-    stats: 'minimal',
     overlay: true,
     disableHostCheck: true,
     // Browser log
@@ -25,9 +24,6 @@ export function getDefaultDevServerConfig(vunConfig: VunConfig): WebpackDevServe
     historyApiFallback: true,
     // Enable gzip compression of generated files.
     compress: true,
-    open: true,
-    watchOptions: {
-      ignored: /node_modules/
-    }
+    open: true
   }
 }

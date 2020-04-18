@@ -6,6 +6,9 @@ import { VueEnv } from '../../environment'
 import { VUN_ASSETS_FOLDER } from '../../constants'
 
 export default function modifyClientDevConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
+
+  webpackConfig.stats = 'minimal'
+
   // specify our client entry point /client/index.js
   webpackConfig.entry = {
     client: [vunConfig.clientEntry]

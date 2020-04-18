@@ -5,16 +5,19 @@ import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import { VunConfig } from '../vuniversal'
 import { VUN_ASSETS_FOLDER } from '../../constants'
 
-export default function modifyClientProdConfig(config: Configuration, vunConfig: VunConfig): void {
+export default function modifyClientProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
+
+  webpackConfig.stats = 'verbose'
+
   // Specify production entry point (/client/index.js)
-  config.entry = {
+  webpackConfig.entry = {
     client: vunConfig.clientEntry
   }
 
   // Specify the client output directory and paths. Notice that we have
   // changed the publiPath to just '/' from http://localhost:3001. This is because
   // we will only be using one port in production.
-  config.output = {
+  webpackConfig.output = {
     path: vunConfig.dir.build,
     publicPath: vunConfig.build.publicPath,
     filename: `${VUN_ASSETS_FOLDER}/js/bundle.[chunkhash:8].js`,
@@ -22,8 +25,8 @@ export default function modifyClientProdConfig(config: Configuration, vunConfig:
     libraryTarget: 'var'
   }
 
-  config.plugins = [
-    ...(config.plugins || []),
+  webpackConfig.plugins = [
+    ...(webpackConfig.plugins || []),
     // Extract our CSS into a files.
     new MiniCssExtractPlugin({
       filename: `${VUN_ASSETS_FOLDER}/css/bundle.[contenthash:8].css`,
@@ -33,7 +36,7 @@ export default function modifyClientProdConfig(config: Configuration, vunConfig:
     new webpack.optimize.AggressiveMergingPlugin(),
   ]
 
-  config.optimization = {
+  webpackConfig.optimization = {
     minimize: true,
     minimizer: [
       new TerserPlugin({
