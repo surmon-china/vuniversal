@@ -75,8 +75,12 @@ typings/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
-# Vuniversal build output
-.vun
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
+dist
 
 # Gatsby files
 .cache/
