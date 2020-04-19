@@ -15,6 +15,8 @@ export interface BuildContext {
   environment: NodeEnv
 }
 
+// TODO: 好东西！！ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js
+
 // This is the Webpack configuration factory. It's the juice!
 export default function getWebpackConfig(buildContext: BuildContext, vunConfig: VunConfig): Configuration {
 
@@ -121,6 +123,9 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
       }))
     ],
     watchOptions: {
+      // Webpack 5
+      // ignored: ['files/**/*.js', 'node_modules/**']
+      // Webpack 4
       ignored: /node_modules/
     }
   }

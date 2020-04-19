@@ -1,18 +1,21 @@
 
-// import path from 'path'
+import path from 'path'
 // import fs from 'fs-extra'
-// import { vol as mfs } from 'memfs'
+// import { vol } from 'memfs'
+import { vol } from 'memfs'
+import cluster from 'cluster'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import StartServerPlugin from 'start-server-webpack-plugin'
+// import StartServerPlugin from 'start-server-webpack-plugin'
 import logger from '../../utils/logger'
 import { VunConfig } from '../../configs/vuniversal'
 import getWebpackConfig from '../../configs/webpack'
 import { NodeEnv, VueEnv } from '../../environment'
 import { getDefaultDevServerConfig } from '../../configs/webpack/base'
+// import { VUN_DEV_TEMPLATE_PATH } from '../../constants'
 import { VUN_DEV_TEMPLATE_PATH, SERVER_JS_NAME } from '../../constants'
 import { compileConfig, compilerToPromise, getAssetsServerPort, getDevServerUrl } from '../../configs/webpack/helper'
-import { args } from '../../arguments'
+// import { args } from '../../arguments'
 
 export default function startSSRServer(vunConfig: VunConfig) {
 
@@ -29,6 +32,7 @@ export default function startSSRServer(vunConfig: VunConfig) {
   if (serverConfig.output) {
     // 3001?
     serverConfig.output.publicPath = assetsServerUrl
+    serverConfig.output.filename = SERVER_JS_NAME
   }
 
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
@@ -36,14 +40,19 @@ export default function startSSRServer(vunConfig: VunConfig) {
     inject: false
   }) as any)
 
+  /*
   // Auro run ssr server when build done.
+  const StartServerPlugin = require('./start')
   serverConfig.plugins?.push(new StartServerPlugin({
+    // https://github.com/ericclemmons/start-server-webpack-plugin/blob/master/src/StartServerPlugin.js#L110
+    // TODO: TEST 这里的名字需要约束与 bound name 保持一致
     name: SERVER_JS_NAME,
     // Capture any --inspect or --inspect-brk flags (with optional values) so that we
     // can pass them when we invoke nodejs
     nodeArgs: args || [],
     keyboard: true
   }))
+  */
 
   const clientCompiler = compileConfig(clientConfig)
   const devServerConfig: WebpackDevServer.Configuration = {
@@ -58,11 +67,23 @@ export default function startSSRServer(vunConfig: VunConfig) {
 
   // TODO: 内存中好办
   const serverCompiler = compileConfig(serverConfig)
-  // serverCompiler.outputFileSystem = mfs
+  // https://github.com/webpack/webpack-dev-middleware/blob/v4.0.0-rc.1/src/utils/setupOutputFileSystem.js#L3
+  const mfs = vol
+  // @ts-ignore
+  global.mfs = vol
+  // require('fs-monkey').patchRequire(mfs)
+  // @ts-ignore
+  serverCompiler.outputFileSystem = mfs
+  serverCompiler.outputFileSystem.join = path.join.bind(path)
   serverCompiler.watch({ ignored: /node_modules/ }, (error, stats) => {
     if (!error && !stats.hasErrors()) {
-      logger.log(stats.toString(serverConfig.stats))
-      // console.log('-------mfs', require('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js').toString())
+      // logger.log(stats.toString(serverConfig.stats))
+      console.log('--------watch', stats.toString(serverConfig.stats))
+      // const serverjs = mfs.readFileSync('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js', 'utf8').toString()
+      // console.log('-------mfs', serverjs)
+      // eval(serverjs)
+      // patchRequire(mfs)
+      // console.log('-------mfs', require('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js'))
       // TODO: 这里可以拿到内存中的文件 dosomething
       // https://www.namecheap.com/blog/production-ready-vue-ssr-in-5-simple-steps/
       // https://github.com/vuejs/vue-hackernews-2.0/blob/master/build/setup-dev-server.js#L80
@@ -76,14 +97,50 @@ export default function startSSRServer(vunConfig: VunConfig) {
     }
 
     if (stats.hasErrors()) {
-      logger.errors('Failed to compile.', stats.toJson().errors)
+      logger.errors('Failed to bundling.', stats.toJson().errors)
     }
+  })
+
+  // https://github.com/ericclemmons/start-server-webpack-plugin/blob/master/src/StartServerPlugin.js#L142
+  let ssrDevworkers: cluster.Worker[] = []
+  // serverCompiler.apply()
+  serverCompiler.hooks.afterEmit.tapAsync('StartServer', (compilation, callback) => {
+    // @ts-ignore
+    console.log('--------听说 done 啦', !!compilation.compiler.outputFileSystem)
+
+    const serverjs = mfs.readFileSync('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js', 'utf8').toString()
+    // console.log('-------mfs', typeof serverjs)
+    // console.log('-------cluster', path.join(__dirname, 'test.js'))
+
+    // worker??
+    cluster.setupMaster({
+      // exec: compilation.assets[SERVER_JS_NAME].existsAt,
+      exec: path.join(__dirname, 'test.js'),
+      args: ['-e', serverjs]
+      // execArgv: [`--eval="console.log('xzxczxc')"`]
+    })
+    cluster.on('online', worker => {
+      console.log('-------cluster online', ssrDevworkers.length)
+      ssrDevworkers.push(worker)
+
+      const endpoint = ssrDevworkers.length - 2
+      for (let index = 0; index < endpoint; index++) {
+        ssrDevworkers[index].disconnect()
+        ssrDevworkers.splice(1)
+      }
+    })
+    cluster.fork()
+    // const vm = require('vm')
+    // new vm.Script(serverjs, { filename: 'server.js' }).runInNewContext()
+    // ('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js')
+    return callback()
   })
 
   Promise.all([
     compilerToPromise(clientCompiler, VueEnv.Client),
     compilerToPromise(serverCompiler, VueEnv.Server)
   ]).then(() => {
+    console.log('-------promise done')
     clientServer.listen(assetsServerPost, vunConfig.dev.host, error => {
       if (error) {
         logger.br()

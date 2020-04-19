@@ -12,6 +12,7 @@ export default function modifyServerConfig(webpackConfig: Configuration, buildCo
   // Specify webpack Node.js output path and filename
   webpackConfig.output = {
     path: vunConfig.dir.build,
+    // TODO: 生产环境不应该产出 server.js，应该有规则
     filename: SERVER_JS_NAME,
     libraryTarget: 'commonjs2'
   }

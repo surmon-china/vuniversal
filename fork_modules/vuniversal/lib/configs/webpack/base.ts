@@ -21,9 +21,9 @@ export function getDefaultDevServerConfig(vunConfig: VunConfig): WebpackDevServe
     publicPath: vunConfig.build.publicPath,
     contentBase: vunConfig.dir.static,
     watchContentBase: true,
-    historyApiFallback: true,
+    // historyApiFallback: true,
     // Enable gzip compression of generated files.
     compress: true,
-    open: true
+    // open: true
   }
 }

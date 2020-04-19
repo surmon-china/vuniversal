@@ -23,7 +23,12 @@ export default function startSPAServer(vunConfig: VunConfig) {
   }) as any)
 
   const clientCompiler = compileConfig(clientConfig)
-  const devServerConfig = getDefaultDevServerConfig(vunConfig)
+  const devServerConfig: WebpackDevServer.Configuration = {
+    ...getDefaultDevServerConfig(vunConfig),
+    port: vunConfig.dev.port,
+    historyApiFallback: true,
+    open: true
+  }
 
   // https://webpack.docschina.org/configuration/dev-server
   WebpackDevServer.addDevServerEntrypoints(clientConfig, devServerConfig)

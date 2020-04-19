@@ -5,7 +5,7 @@ import { VuniversalConfig, VunConfig, normalizeConfig } from '../lib/configs/vun
 export function getVuniversalConfig(): VuniversalConfig | null {
   try {
     // TODO: 到时候看怎么办，也许这个文件是需要移除的
-    return require('/Users/surmon/Projects/JavaScript/vue-next-test/vun.config.js')
+    return require('/Users/surmon/Projects/JavaScript/NPM/vuniversal/vun.config.js')
   } catch (error) {
     return null
   }
