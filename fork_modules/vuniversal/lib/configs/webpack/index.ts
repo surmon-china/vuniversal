@@ -7,7 +7,7 @@ import { NodeEnv, VueEnv } from '../../environment'
 import getBabelOptions from '../babel'
 import modifyClientConfig from './client'
 import modifyServerConfig from './server'
-import { VUN_NODE_MODULES_PATH, VUN_ASSETS_FOLDER } from '../../constants'
+import { VUN_NODE_MODULES_PATH, APP_VUN_ASSETS_FOLDER } from '../../constants'
 import { transformToProcessEnvObject } from './helper'
 
 export interface BuildContext {
@@ -95,7 +95,7 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
           ],
           loader: require.resolve('file-loader'),
           options: {
-            name: `${VUN_ASSETS_FOLDER}/media/[name].[hash:8].[ext]`,
+            name: `${APP_VUN_ASSETS_FOLDER}/media/[name].[hash:8].[ext]`,
             emitFile: IS_CLIENT
           }
         },
@@ -104,7 +104,7 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
           loader: require.resolve('url-loader'),
           options: {
             limit: 10000,
-            name: `${VUN_ASSETS_FOLDER}/image/[name].[hash:8].[ext]`,
+            name: `${APP_VUN_ASSETS_FOLDER}/image/[name].[hash:8].[ext]`,
             emitFile: IS_CLIENT
           }
         }

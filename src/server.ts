@@ -9,7 +9,7 @@ app.disable('x-powered-by')
 app.use(vuniversalMiddleware({ appCreater: createVueApp }))
 
 const server = app.listen(config.port, () => {
-  console.log(`App runwew: http://localhost:3000`)
+  console.log(`App run: http://localhost:3000`)
 })
 
 if ((module as any).hot) {

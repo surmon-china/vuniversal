@@ -3,7 +3,7 @@ import TerserPlugin from 'terser-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import { VunConfig } from '../vuniversal'
-import { VUN_ASSETS_FOLDER } from '../../constants'
+import { APP_VUN_ASSETS_FOLDER } from '../../constants'
 
 export default function modifyClientProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
 
@@ -20,8 +20,8 @@ export default function modifyClientProdConfig(webpackConfig: Configuration, vun
   webpackConfig.output = {
     path: vunConfig.dir.build,
     publicPath: vunConfig.build.publicPath,
-    filename: `${VUN_ASSETS_FOLDER}/js/bundle.[chunkhash:8].js`,
-    chunkFilename: `${VUN_ASSETS_FOLDER}/js/[name].[chunkhash:8].chunk.js`,
+    filename: `${APP_VUN_ASSETS_FOLDER}/js/bundle.[chunkhash:8].js`,
+    chunkFilename: `${APP_VUN_ASSETS_FOLDER}/js/[name].[chunkhash:8].chunk.js`,
     libraryTarget: 'var'
   }
 
@@ -29,8 +29,8 @@ export default function modifyClientProdConfig(webpackConfig: Configuration, vun
     ...(webpackConfig.plugins || []),
     // Extract our CSS into a files.
     new MiniCssExtractPlugin({
-      filename: `${VUN_ASSETS_FOLDER}/css/bundle.[contenthash:8].css`,
-      chunkFilename: `${VUN_ASSETS_FOLDER}/css/[name].[contenthash:8].chunk.css`
+      filename: `${APP_VUN_ASSETS_FOLDER}/css/bundle.[contenthash:8].css`,
+      chunkFilename: `${APP_VUN_ASSETS_FOLDER}/css/[name].[contenthash:8].chunk.css`
     }),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),

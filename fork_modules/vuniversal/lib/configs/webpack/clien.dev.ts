@@ -3,7 +3,7 @@ import webpack, { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import { VunConfig } from '../vuniversal'
 import { VueEnv } from '../../environment'
-import { VUN_ASSETS_FOLDER } from '../../constants'
+import { APP_VUN_ASSETS_FOLDER } from '../../constants'
 
 export default function modifyClientDevConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
 
@@ -20,8 +20,8 @@ export default function modifyClientDevConfig(webpackConfig: Configuration, vunC
     publicPath: vunConfig.build.publicPath,
     pathinfo: true,
     libraryTarget: 'var',
-    filename: `${VUN_ASSETS_FOLDER}/js/bundle.js`,
-    chunkFilename: `${VUN_ASSETS_FOLDER}/js/[name].chunk.js`,
+    filename: `${APP_VUN_ASSETS_FOLDER}/js/bundle.js`,
+    chunkFilename: `${APP_VUN_ASSETS_FOLDER}/js/[name].chunk.js`,
     devtoolModuleFilenameTemplate: info => path.resolve(info.resourcePath).replace(/\\/g, '/')
   }
 

@@ -12,6 +12,7 @@ export const APP_PACKAGE_JSON_PATH = resolveAppRoot('package.json')
 export const APP_JS_CONFIG_PATH = resolveAppRoot('jsconfig.json')
 export const APP_TS_CONFIG_PATH = resolveAppRoot('tsconfig.json')
 export const APP_VUN_CONFIG_PATH = resolveAppRoot('vun.config.js')
+export const APP_VUN_ASSETS_FOLDER = 'vun'
 
 // ---------------------------------------------------------
 // Vun constants
@@ -23,21 +24,19 @@ export const VUN_ROOT_PATH = resolveVunRoot('.')
 export const VUN_NODE_MODULES_PATH = resolveVunRoot('node_modules')
 export const VUN_DEFAULT_HTML_TEMPLATE_PATH = path.resolve(__dirname, 'configs', 'template', 'index.html')
 export const VUN_DEV_TEMPLATE_PATH = path.resolve(__dirname, 'configs', 'template', 'dev.html')
+export const VUN_DEV_FOLDER_PATH = resolveVunRoot('.vun')
 
 // ---------------------------------------------------------
 // Butid time constants
-export const VUN_ASSETS_FOLDER = 'vun'
 export const CLIENT_ASSETS_MANIFEST = 'client.assets.json'
 export const CLIENT_CHUNKS_MANIFEST = 'client.chunks.json'
+// 这俩函数不应该存在
 export const resolveClientAssetsManifest = (relativePath: string): string => {
   return path.resolve(relativePath, CLIENT_ASSETS_MANIFEST)
 }
 export const resolveClientChunksManifest = (relativePath: string): string => {
   return path.resolve(relativePath, CLIENT_CHUNKS_MANIFEST)
 }
-
-// ---------------------------------------------------------
-// Butid time constants
 export const SERVER_JS_NAME = 'server.js'
 export const resolveServerJs = (relativePath: string): string => {
   return path.resolve(relativePath, SERVER_JS_NAME)

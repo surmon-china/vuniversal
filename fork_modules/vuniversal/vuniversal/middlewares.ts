@@ -5,6 +5,7 @@ import { getVunConfig } from './config'
 import { getAssets } from './assets'
 import { AppCreater } from './helper'
 import { render } from './render'
+import { APP_VUN_ASSETS_FOLDER } from '../lib/constants'
 
 export interface VuniversalMiddlewareOptions {
   appCreater: AppCreater
@@ -30,7 +31,7 @@ export function vuniversalMiddleware(options: VuniversalMiddlewareOptions): Hand
     }
 
     const proxyer = () => {
-      if (request.path.startsWith('/vun/')) {
+      if (request.path.startsWith(`/${APP_VUN_ASSETS_FOLDER}/`) || request.path.includes('hot-update')) {
         createProxyMiddleware({ target: 'http://localhost:3001', changeOrigin: true })(request, response, renderer)
       } else {
         renderer()

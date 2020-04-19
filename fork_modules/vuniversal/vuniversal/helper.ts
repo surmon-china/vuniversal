@@ -15,7 +15,7 @@ export function clientOnly(callback: () => any): void {
 
 // Auto create app with env
 export const createUniversalApp: CreateAppFunction<Element> = (...args) => {
-  console.log('------createUniversalApp', 'isClient:', isClient)
+  // console.log('------createUniversalApp', 'isClient:', isClient)
   return isClient
     ? createApp(...args)
     : createSSRApp(...args)
@@ -26,7 +26,7 @@ export const createUniversalApp: CreateAppFunction<Element> = (...args) => {
 export function createUniversalHistory(...args: ArgumentTypes<typeof createWebHistory>): RouterHistory
 export function createUniversalHistory(...args: ArgumentTypes<typeof createMemoryHistory>): RouterHistory
 export function createUniversalHistory(...args: any): RouterHistory {
-  console.log('------createUniversalHistory', 'isClient:', isClient)
+  // console.log('------createUniversalHistory', 'isClient:', isClient)
   return isClient
     ? createWebHistory(...args)
     : createMemoryHistory(...args)
