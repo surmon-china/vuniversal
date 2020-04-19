@@ -4,6 +4,7 @@ import path from 'path'
 // import { vol } from 'memfs'
 import { vol } from 'memfs'
 import cluster from 'cluster'
+// import module from 'module'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 // import StartServerPlugin from 'start-server-webpack-plugin'
@@ -108,15 +109,25 @@ export default function startSSRServer(vunConfig: VunConfig) {
     // @ts-ignore
     console.log('--------听说 done 啦', !!compilation.compiler.outputFileSystem)
 
-    const serverjs = mfs.readFileSync('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js', 'utf8').toString()
-    // console.log('-------mfs', typeof serverjs)
+    const serverjs = mfs.readFileSync('/Users/surmon/Projects/JavaScript/NPM/vuniversal/.vun/server.js', 'utf8')
+    console.log('-------mfs', serverjs)
+    console.log('-------mfs', typeof serverjs)
+    /*
     // console.log('-------cluster', path.join(__dirname, 'test.js'))
+    const Module = module.constructor
+    // @ts-ignore
+    const m = new Module()
+    // 用module去解析javascript String的内容，它会给我们去生成一个新的模块
+    // ERROR!! 原因未知
+    m._compile(serverjs, 'server.js') // 指定一个名字
+    // console.log('---------module', m)
+    */
 
     // worker??
     cluster.setupMaster({
       // exec: compilation.assets[SERVER_JS_NAME].existsAt,
       exec: path.join(__dirname, 'test.js'),
-      args: ['-e', serverjs]
+      args: ['-e', serverjs.toString()]
       // execArgv: [`--eval="console.log('xzxczxc')"`]
     })
     cluster.on('online', worker => {
