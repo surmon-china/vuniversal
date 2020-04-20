@@ -1,7 +1,7 @@
 {
   "name": "razzle-plugin-typescript",
   "version": "3.0.0",
-  "description": "Use TypeScript with Razzle",
+  "description": "Use TypeScript with Vuniversal",
   "main": "index.js",
   "repository": "git@github.com:jaredpalmer/razzle.git",
   "author": "Lucas Terra <lucasterra7@gmail.com>",

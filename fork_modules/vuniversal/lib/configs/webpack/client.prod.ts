@@ -7,8 +7,6 @@ import { APP_VUN_ASSETS_FOLDER } from '../../constants'
 
 export default function modifyClientProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
 
-  webpackConfig.stats = 'verbose'
-
   // Specify production entry point (/client/index.js)
   webpackConfig.entry = {
     client: vunConfig.clientEntry

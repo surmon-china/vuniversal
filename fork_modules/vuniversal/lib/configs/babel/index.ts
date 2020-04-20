@@ -2,13 +2,12 @@
 import fs from 'fs-extra'
 import { VunConfig } from '../vuniversal'
 import { BuildContext } from '../webpack'
-import { NodeEnv } from '../../environment'
-import * as constants from '../../constants'
+import { NodeEnv, APP_BABEL_RC_PATH } from '../../constants'
 
 export default function getBabelOptions(buildContext: BuildContext, vunConfig: VunConfig) {
   // First we check to see if the user has a custom .babelrc file, otherwise
   // we just use babel-preset-razzle.
-  const hasBabelRc = fs.existsSync(constants.APP_BABEL_RC_PATH)
+  const hasBabelRc = fs.existsSync(APP_BABEL_RC_PATH)
   const mainBabelOptions = {
     babelrc: hasBabelRc,
     cacheDirectory: true,

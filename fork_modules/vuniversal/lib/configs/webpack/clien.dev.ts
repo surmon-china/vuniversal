@@ -2,12 +2,9 @@ import path from 'path'
 import webpack, { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import { VunConfig } from '../vuniversal'
-import { VueEnv } from '../../environment'
-import { APP_VUN_ASSETS_FOLDER } from '../../constants'
+import { VueEnv, APP_VUN_ASSETS_FOLDER } from '../../constants'
 
 export default function modifyClientDevConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
-
-  webpackConfig.stats = 'minimal'
 
   // specify our client entry point /client/index.js
   webpackConfig.entry = {

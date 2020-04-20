@@ -83,12 +83,12 @@ module.exports = (resolve, rootDir) => {
     if (unsupportedKeys.length) {
       console.error(
         chalk.red(
-          'Out of the box, Razzle only supports overriding ' +
+          'Out of the box, Vuniversal only supports overriding ' +
             'these Jest options:\n\n' +
             supportedKeys.map(key => chalk.bold('  \u2022 ' + key)).join('\n') +
             '.\n\n' +
             'These options in your package.json Jest configuration ' +
-            'are not currently supported by Razzle:\n\n' +
+            'are not currently supported by Vuniversal:\n\n' +
             unsupportedKeys.map(key => chalk.bold('  \u2022 ' + key)).join('\n')
         )
       );

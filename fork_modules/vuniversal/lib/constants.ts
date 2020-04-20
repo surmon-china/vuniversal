@@ -2,17 +2,35 @@ import fs from 'fs'
 import path from 'path'
 
 // ---------------------------------------------------------
+// Environments and contexts
+export enum UniversalMode {
+  SPA = 'spa',
+  UNIVERSAL = 'universal'
+}
+
+export enum VueEnv {
+  Client = 'client',
+  Server = 'server'
+}
+
+export enum NodeEnv {
+  Development = 'development',
+  Production = 'production',
+  Test = 'test'
+}
+
+// ---------------------------------------------------------
 // Make sure any symlinks in the project folder are resolved
 export const APP_ROOT_DIRECTORY_PATH = fs.realpathSync(process.cwd())
 export const resolveAppRoot = (relativePath: string): string => {
   return path.resolve(APP_ROOT_DIRECTORY_PATH, relativePath)
 }
 export const APP_VUN_ASSETS_FOLDER = 'vun'
+export const APP_VUN_CONFIG_PATH = resolveAppRoot('vun.config.js')
 export const APP_BABEL_RC_PATH = resolveAppRoot('.babelrc')
 export const APP_PACKAGE_JSON_PATH = resolveAppRoot('package.json')
 export const APP_JS_CONFIG_PATH = resolveAppRoot('jsconfig.json')
 export const APP_TS_CONFIG_PATH = resolveAppRoot('tsconfig.json')
-export const APP_VUN_CONFIG_PATH = resolveAppRoot('vun.config.js')
 
 // ---------------------------------------------------------
 // Vun constants

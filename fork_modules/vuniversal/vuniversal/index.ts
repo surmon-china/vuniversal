@@ -1,4 +1,4 @@
-export * from './render'
 export * from './assets'
+export * from './render'
 export * from './middleware'
-export * from '../helper/environment'
+export { getVunConfig } from './config'

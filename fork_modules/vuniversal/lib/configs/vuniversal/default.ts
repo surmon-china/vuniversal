@@ -7,11 +7,11 @@ export const defaultConfig: VunConfig = {
   serverEntry: 'src/server',
   env: {},
   dir: {
-    build: '.vun',
+    build: 'dist',
     static: 'static',
     source: 'src',
     root: '.',
-    modules: ['node_modules']
+    modules: []
   },
   dev: {
     host: 'localhost',

@@ -22,9 +22,9 @@
     "removeComments": false,
     "jsx": "preserve",
     "lib": [
-      "esnext"
+      "esnext",
+      "DOM"
     ],
     "types": ["node", "types"]
-  },
-  "exclude": ["node_modules"]
+  }
 }

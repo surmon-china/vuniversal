@@ -3,11 +3,10 @@ import webpack, { Configuration } from 'webpack'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
 import { VunConfig } from '../vuniversal'
-import { NodeEnv, VueEnv } from '../../environment'
 import getBabelOptions from '../babel'
 import modifyClientConfig from './client'
 import modifyServerConfig from './server'
-import { VUN_NODE_MODULES_PATH, APP_VUN_ASSETS_FOLDER } from '../../constants'
+import { NodeEnv, VueEnv, VUN_NODE_MODULES_PATH, APP_VUN_ASSETS_FOLDER } from '../../constants'
 import { transformToProcessEnvObject } from './helper'
 
 export interface BuildContext {
@@ -33,6 +32,9 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
     context: process.cwd(),
     // Specify target (either 'node' or 'web')
     target: IS_SERVER ? 'node' : 'web',
+    watch: IS_DEV,
+    // Quite when dev
+    stats: IS_DEV ? 'none': 'verbose',
     // Controversially, decide on sourcemaps.
     devtool: IS_DEV ? 'cheap-module-source-map' : 'source-map',
     // Logging
@@ -41,14 +43,10 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
     infrastructureLogging: {
       level: 'info'
     },
-    // We need to tell webpack how to resolve both Razzle's node_modules and
-    // the users', so we use resolve and resolveLoader.
+    // We need to tell webpack how to resolve both Vuniversal's node_modules and the users', so we use resolve.
     resolve: {
-      modules: ['node_modules', ...vunConfig.dir.modules],
+      modules: ['node_modules', VUN_NODE_MODULES_PATH, ...vunConfig.dir.modules],
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.json', '.vue']
-    },
-    resolveLoader: {
-      modules: [VUN_NODE_MODULES_PATH, ...vunConfig.dir.modules]
     },
     module: {
       strictExportPresence: true,
@@ -75,6 +73,32 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
             {
               loader: require.resolve('babel-loader'),
               options: getBabelOptions(buildContext, vunConfig)
+            }
+          ]
+        },
+        {
+          test: /\.css$/,
+          oneOf: [
+            // `<style module>` || `.module.css`
+            {
+              resourceQuery: /module/,
+              use: [
+                'vue-style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: true,
+                    localIdentName: '[local]_[hash:base64:5]'
+                  }
+                }
+              ]
+            },
+            // `<style>` || `<style scoped>` || `.css`
+            {
+              use: [
+                'vue-style-loader',
+                'css-loader'
+              ]
             }
           ]
         },

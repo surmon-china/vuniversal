@@ -1,8 +1,8 @@
 # razzle-plugin-scss
 
-This package contains a plugin for using [SCSS/SASS](https://sass-lang.com/) with Razzle
+This package contains a plugin for using [SCSS/SASS](https://sass-lang.com/) with Vuniversal
 
-## Usage in Razzle Projects
+## Usage in Vuniversal Projects
 
 ```bash
 yarn add razzle-plugin-scss --dev

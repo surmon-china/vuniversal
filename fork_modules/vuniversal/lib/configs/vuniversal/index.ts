@@ -3,7 +3,7 @@ import { VunConfig } from './type'
 import { defaultConfig } from './default'
 import { transformConfig, normalizeConfig } from './transformer'
 import { APP_VUN_CONFIG_PATH } from '../../constants'
-import logger from '../../utils/logger'
+import logger from '../../services/logger'
 
 export * from './type'
 export * from './default'

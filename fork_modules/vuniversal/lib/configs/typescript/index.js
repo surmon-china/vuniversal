@@ -24,7 +24,7 @@ function modify(baseConfig, { target, dev }, webpack, userOptions = {}) {
 
   config.resolve.extensions = [...config.resolve.extensions, '.ts', '.tsx'];
 
-  // Safely locate Babel-Loader in Razzle's webpack internals
+  // Safely locate Babel-Loader in Vuniversal's webpack internals
   const babelLoader = config.module.rules.find(babelLoaderFinder);
   if (!babelLoader) {
     throw new Error(
@@ -33,7 +33,7 @@ function modify(baseConfig, { target, dev }, webpack, userOptions = {}) {
   }
 
   // Get the correct `include` option, since that hasn't changed.
-  // This tells Razzle which directories to transform.
+  // This tells Vuniversal which directories to transform.
   const { include } = babelLoader;
 
   // Configure ts-loader

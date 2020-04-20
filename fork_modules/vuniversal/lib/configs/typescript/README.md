@@ -1,8 +1,8 @@
 # razzle-plugin-typescript
 
-This package contains a plugin for using TypeScript with Razzle
+This package contains a plugin for using TypeScript with Vuniversal
 
-## Usage in Razzle Projects
+## Usage in Vuniversal Projects
 
 ```
 yarn add razzle-plugin-typescript

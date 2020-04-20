@@ -4,8 +4,6 @@ import { VunConfig } from '../vuniversal'
 
 export default function modifyServerProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
 
-  webpackConfig.stats = 'verbose'
-
   webpackConfig.entry = {
     server: vunConfig.serverEntry
   }

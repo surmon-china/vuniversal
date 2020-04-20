@@ -1,7 +1,13 @@
 
 import webpack, { Configuration } from 'webpack'
+import logger from '../../services/logger'
 import { IVunEnvObject } from '../vuniversal'
-import logger from '../../utils/logger'
+import { VueEnv } from '../../constants'
+import { BuildContext } from '.'
+
+export function isClientTarget(buildContext: BuildContext): boolean {
+  return buildContext.target === VueEnv.Client
+}
 
 // Webpack compile in a try-catch
 export function compileConfig(config: Configuration) {

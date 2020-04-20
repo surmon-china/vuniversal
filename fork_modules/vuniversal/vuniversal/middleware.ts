@@ -33,6 +33,7 @@ export function vuniversal(options: VuniversalMiddlewareOptions): Handler {
     const proxyer = () => {
       // TODO: 需要和 webpack 抽象在一起维护
       if (request.path.startsWith(`/${APP_VUN_ASSETS_FOLDER}/`) || request.path.includes('hot-update')) {
+        // TODO: 反代有问题，有时候会响应失败，测热更新就可以了
         createProxyMiddleware({ target: 'http://localhost:3001', changeOrigin: true })(request, response, renderer)
       } else {
         renderer()

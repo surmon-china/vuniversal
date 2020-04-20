@@ -3,7 +3,7 @@ import chalk from 'chalk'
 import boxen from 'boxen'
 import prettyBytes from 'pretty-bytes'
 import getVunPackageJson from '../configs/vuniversal/package'
-import { NodeEnv, UniversalMode } from '../environment'
+import { NodeEnv, UniversalMode } from '../constants'
 import { VUN_NAME } from '../constants'
 import { command } from '../arguments'
 

@@ -1,7 +1,7 @@
 {
   "name": "razzle-plugin-scss",
   "version": "3.0.0",
-  "description": "Use SCSS/SASS with Razzle",
+  "description": "Use SCSS/SASS with Vuniversal",
   "main": "index.js",
   "repository": "git@github.com:jaredpalmer/razzle.git",
   "author": "Ray Andrew <raydreww@gmail.com>",

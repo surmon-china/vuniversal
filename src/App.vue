@@ -1,5 +1,11 @@
+<style>
+  .main {
+    background-color: #eeeeee;
+  }
+</style>
+
 <template>
-  <div class="assas">
+  <div class="main">
     <pre>{{ currentLocation }}</pre>
     <section class="info">
       name:

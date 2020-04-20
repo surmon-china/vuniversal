@@ -1,16 +1,9 @@
 import webpack, { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
-import { VueEnv } from '../../environment'
 import { VunConfig } from '../vuniversal'
-import { resolveClientAssetsManifest, resolveClientChunksManifest } from '../../constants'
+import { VueEnv, resolveClientAssetsManifest, resolveClientChunksManifest } from '../../constants'
 
 export default function modifyServerDevConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
-
-  // Use watch mode
-  webpackConfig.watch = true
-
-  // quite
-  webpackConfig.stats = 'none'
 
   // https://github.com/ericclemmons/start-server-webpack-plugin
   webpackConfig.entry = {

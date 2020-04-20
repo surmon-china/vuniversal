@@ -4,12 +4,11 @@ import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import getWebpackConfig from '../../configs/webpack'
 import { getDefaultDevServerConfig } from '../../configs/webpack/base'
-import { resolveAppRoot } from '../../constants'
+import { NodeEnv, VueEnv, resolveAppRoot } from '../../constants'
 import { VunConfig } from '../../configs/vuniversal'
-import { NodeEnv, VueEnv } from '../../environment'
 import { compileConfig, compilerToPromise, getDevServerUrl } from '../../configs/webpack/helper'
-import { success as successNotifier } from '../../utils/notifier'
-import logger from '../../utils/logger'
+import { success as successNotifier } from '../../services/notifier'
+import logger from '../../services/logger'
 
 export default function startSPAServer(vunConfig: VunConfig) {
 

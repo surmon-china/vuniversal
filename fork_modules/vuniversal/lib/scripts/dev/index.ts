@@ -1,9 +1,8 @@
 import fs from 'fs-extra'
 import getVunConfig from '../../configs/vuniversal'
-import { NodeEnv, UniversalMode } from '../../environment'
-import { VUN_DEV_FOLDER_PATH } from '../../constants'
+import { NodeEnv, UniversalMode, VUN_DEV_FOLDER_PATH } from '../../constants'
 import { getDevServerUrl } from '../../configs/webpack/helper'
-import { headBanner } from '../../utils/banner'
+import { headBanner } from '../../services/banner'
 import startSSRServer from './ssr'
 import startSPAServer from './spa'
 

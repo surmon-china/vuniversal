@@ -2,6 +2,7 @@
 import { CreateAppFunction, createApp, createSSRApp } from 'vue'
 import { createWebHistory, createMemoryHistory, RouterHistory } from 'vue-router'
 import { isClient } from './environment'
+
 export * from './environment'
 export * from './creater'
 
