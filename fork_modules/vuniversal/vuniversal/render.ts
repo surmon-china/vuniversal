@@ -1,7 +1,7 @@
 
 // import templateParser from 'lodash/template'
 import { renderToString } from '@vue/server-renderer'
-import { AppCreater } from './helper'
+import { AppCreater } from '../helper/creater'
 import { Assets } from './assets'
 
 export interface RenderTemplateParams {

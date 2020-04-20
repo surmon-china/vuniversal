@@ -1,7 +1,7 @@
 import VueApp from './App.vue';
 import { router } from './router'
 import { globalState } from './store'
-import { createUniversalApp, AppCreater } from '../fork_modules/vuniversal/vuniversal/helper'
+import { createUniversalApp, AppCreater } from '../fork_modules/vuniversal/helper'
 
 export const createVueApp: AppCreater = () => {
   const app = createUniversalApp(VueApp)

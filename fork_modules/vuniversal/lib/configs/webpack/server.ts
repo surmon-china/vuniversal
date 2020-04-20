@@ -17,13 +17,14 @@ export default function modifyServerConfig(webpackConfig: Configuration, buildCo
     libraryTarget: 'commonjs2'
   }
 
-  // TODO: 是否有必要
+  // TODO: 待测试
   // We want to uphold node's __filename, and __dirname.
-  webpackConfig.node = {
-    __console: false,
-    __dirname: false,
-    __filename: false,
-  }
+  webpackConfig.node = false
+  // webpackConfig.node = {
+  //   __console: false,
+  //   __dirname: false,
+  //   __filename: false,
+  // }
 
   // We need to tell webpack what to bundle into our Node bundle.
   webpackConfig.externals = [

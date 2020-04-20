@@ -7,12 +7,12 @@ export const APP_ROOT_DIRECTORY_PATH = fs.realpathSync(process.cwd())
 export const resolveAppRoot = (relativePath: string): string => {
   return path.resolve(APP_ROOT_DIRECTORY_PATH, relativePath)
 }
+export const APP_VUN_ASSETS_FOLDER = 'vun'
 export const APP_BABEL_RC_PATH = resolveAppRoot('.babelrc')
 export const APP_PACKAGE_JSON_PATH = resolveAppRoot('package.json')
 export const APP_JS_CONFIG_PATH = resolveAppRoot('jsconfig.json')
 export const APP_TS_CONFIG_PATH = resolveAppRoot('tsconfig.json')
 export const APP_VUN_CONFIG_PATH = resolveAppRoot('vun.config.js')
-export const APP_VUN_ASSETS_FOLDER = 'vun'
 
 // ---------------------------------------------------------
 // Vun constants

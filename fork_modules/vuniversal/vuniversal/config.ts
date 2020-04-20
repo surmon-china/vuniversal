@@ -1,11 +1,15 @@
 
-// import { APP_VUN_CONFIG } from '../lib/constants'
-import { VuniversalConfig, VunConfig, normalizeConfig } from '../lib/configs/vuniversal'
+import { APP_VUN_CONFIG_PATH } from '../lib/constants'
+import { normalizeConfig } from '../lib/configs/vuniversal/transformer'
+import { VuniversalConfig, VunConfig } from '../lib/configs/vuniversal/type'
 
 export function getVuniversalConfig(): VuniversalConfig | null {
   try {
-    // TODO: 到时候看怎么办，也许这个文件是需要移除的
-    return require('/Users/surmon/Projects/JavaScript/NPM/vuniversal/vun.config.js')
+    // tsc: ts -> js
+    // webpack: commonjs -> webpack compiler -> commonjs
+    // https://webpack.js.org/api/module-variables/#__non_webpack_require__-webpack-specific
+    // @ts-ignore
+    return __non_webpack_require__(APP_VUN_CONFIG_PATH)
   } catch (error) {
     return null
   }

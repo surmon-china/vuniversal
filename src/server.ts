@@ -1,12 +1,12 @@
 import express from 'express'
 import { createVueApp } from './main'
-import { vuniversalMiddleware } from '../fork_modules/vuniversal/vuniversal'
+import { vuniversal } from '../fork_modules/vuniversal/vuniversal'
 
 const config = require('../vun.config')
 const app = express()
 
 app.disable('x-powered-by')
-app.use(vuniversalMiddleware({ appCreater: createVueApp }))
+app.use(vuniversal({ appCreater: createVueApp }))
 
 const server = app.listen(config.port, () => {
   console.log(`App run: http://localhost:3000`)

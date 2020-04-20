@@ -2,11 +2,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "dist",
     "sourceMap": false,
     "noEmit": false,
     "target": "es5",
     "module": "commonjs",
+    "declaration": true,
     "moduleResolution": "node",
     "allowJs": true,
     "noUnusedLocals": true,
@@ -22,8 +22,7 @@
     "removeComments": false,
     "jsx": "preserve",
     "lib": [
-      "esnext",
-      "dom"
+      "esnext"
     ],
     "types": ["node", "types"]
   },

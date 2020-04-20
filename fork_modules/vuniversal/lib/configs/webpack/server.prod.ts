@@ -22,5 +22,7 @@ export default function modifyServerProdConfig(webpackConfig: Configuration, vun
     new webpack.optimize.LimitChunkCountPlugin({
       // maxChunks: 1,
     })
+    // TODO: 为生成的文件头部添加 banner（包含 vuniversal 信息）
+    // new webpack.BannerPlugin(banner)
   ]
 }

@@ -1,5 +1,5 @@
 
-import { VunConfig } from '.'
+import { VunConfig } from './type'
 
 export const defaultConfig: VunConfig = {
   universal: true,

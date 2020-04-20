@@ -1,5 +1,5 @@
 import { createRouter } from 'vue-router'
-import { createUniversalHistory } from '../fork_modules/vuniversal/vuniversal/helper'
+import { createUniversalHistory } from '../fork_modules/vuniversal/helper'
 import Home from './views/Home.vue'
 import Nested from './views/Nested.vue'
 import NestedWithId from './views/NestedWithId.vue'

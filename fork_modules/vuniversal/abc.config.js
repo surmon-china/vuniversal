@@ -1,15 +1,12 @@
 module.exports = [
   {
-    entry: 'vuniversal/index.ts',
-    outDir: './',
-    fileName: 'vun',
-    targets: ['cjs'],
-    minimize: false
-  },
-  {
-    entry: 'src/core/index.ts',
-    outDir: 'dist',
+    entry: 'helper/index.ts',
+    outDir: 'helper',
     targets: ['cjs', 'esm'],
-    minimize: false
+    minimize: false,
+    external: [
+      'vue-router',
+      'vue'
+    ]
   }
 ]
