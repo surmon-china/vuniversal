@@ -1,11 +1,11 @@
-<style>
+<style lang="scss" module>
   .main {
-    background-color: #eeeeee;
+    background-color: red;
   }
 </style>
 
 <template>
-  <div class="main">
+  <div :class="$style.main">
     <pre>{{ currentLocation }}</pre>
     <section class="info">
       name:

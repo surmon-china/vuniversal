@@ -1,17 +1,15 @@
 
 import webpack, { Configuration } from 'webpack'
-import { VunConfig } from '../vuniversal'
+import { SERVER_JS_FILE, getServerBuildPath } from '../../paths'
+import vunConfig from '../vuniversal'
 
-export default function modifyServerProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
-
-  webpackConfig.entry = {
-    server: vunConfig.serverEntry
-  }
-
+export default function modifyServerProdConfig(webpackConfig: Configuration): void {
   // Specify webpack Node.js output path and filename
   webpackConfig.output = {
-    ...webpackConfig.output,
-    publicPath: '/'
+    path: getServerBuildPath(vunConfig),
+    publicPath: '/',
+    filename: SERVER_JS_FILE,
+    libraryTarget: 'commonjs2'
   }
 
   webpackConfig.plugins = [

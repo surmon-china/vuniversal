@@ -79,6 +79,7 @@ typings/
 
 # Vuniversal build output
 .vun
+dist
 
 # Gatsby files
 .cache/

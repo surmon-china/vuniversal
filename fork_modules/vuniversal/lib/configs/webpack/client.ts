@@ -1,85 +1,52 @@
 import path from 'path'
 import { Configuration } from 'webpack'
-import AssetsPlugin from 'assets-webpack-plugin'
+import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
-import { VunConfig } from '../vuniversal'
-import { BuildContext } from '.'
+import vunConfig from '../vuniversal'
 import modifyClientDevConfig from './clien.dev'
 import modifyClientProdConfig from './client.prod'
-import { CLIENT_ASSETS_MANIFEST, CLIENT_CHUNKS_MANIFEST } from '../../constants'
-import { isDev, isUniversal, getAssetsPath } from '../../utils'
+import { VueEnv, isDev, isUniversal } from '../../environment'
+import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath } from '../../paths'
+import { BuildContext } from '.'
 
-export default function modifyClientConfig(config: Configuration, buildContext: BuildContext, vunConfig: VunConfig): void {
+export default function modifyClientConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   const IS_DEV = isDev(buildContext.environment)
-  const IS_UNIVERSAL = isUniversal(vunConfig)
-  const ASSETS_PATH = getAssetsPath(buildContext.environment, vunConfig)
 
-  config.plugins = [
-    ...(config.plugins || []),
-    // TODO: 确定好作用，和下面的插件之间只留一个
-    // Output our JS and CSS files in a manifest file called assets.json
-    // in the build directory.
-    new AssetsPlugin({
-      path: ASSETS_PATH,
-      filename: CLIENT_ASSETS_MANIFEST,
-      prettyPrint: IS_DEV,
-      // TODO:  确定如何工作
-      keepInMemory: false
+  // specify our client entry point /client/index.js
+  webpackConfig.entry = {
+    [CLIENT_ENTRY]: [vunConfig.clientEntry]
+  }
+
+  webpackConfig.plugins?.push(
+    new WebpackBar({
+      color: 'green',
+      name: VueEnv.Client
     }),
     // Output our JS and CSS files in a manifest file called chunks.json
     // in the build directory.
     // based on https://github.com/danethurber/webpack-manifest-plugin/issues/181#issuecomment-467907737
     new ManifestPlugin({
-      fileName: path.resolve(ASSETS_PATH, CLIENT_CHUNKS_MANIFEST),
-      writeToFileEmit: (IS_DEV && IS_UNIVERSAL) || !IS_DEV,
-      // filter: item => item.isChunk,
-      /*
-      generate(seed, files) {
-        const entrypoints = new Set()
-        files.forEach(file =>
-          // @ts-ignore
-          (file.chunk?._groups || []).forEach(group => entrypoints.add(group))
-        )
-        // @ts-ignore
-        const entries = [...entrypoints]
-        const entryArrayManifest = entries.reduce((acc, entry) => {
-          const name =
-            (entry.options || {}).name || (entry.runtimeChunk || {}).name;
-          const files = []
-            .concat(
-              // @ts-ignore
-              ...(entry.chunks || []).map(
-                // @ts-ignore
-                chunk => chunk.files.map(
-                  // @ts-ignore
-                  path => config.output.publicPath + path
-                )
-              )
-            )
-            .filter(Boolean);
-  
-          // @ts-ignore
-          const cssFiles = files.filter(item => item.includes('.css'))
-          // @ts-ignore
-          const jsFiles = files.filter(item => item.includes('.js'))
-  
-          return name
-            ? {
-                ...acc,
-                [name]: {
-                  css: cssFiles,
-                  js: jsFiles,
-                },
-              }
-            : acc
-        }, seed)
-        return entryArrayManifest
+      fileName: path.join(
+        getManifestPath(buildContext.environment, vunConfig),
+        CLIENT_MANIFEST_FILE
+      ),
+      writeToFileEmit: isUniversal(vunConfig),
+      filter: item => item.isChunk,
+      generate(_, __, entrypoints) {
+        return {
+          js: entrypoints[CLIENT_ENTRY]
+            .filter(file => file.endsWith('.js'))
+            .map(file => webpackConfig.output?.publicPath + file)
+          ,
+          css: entrypoints[CLIENT_ENTRY]
+            .filter(file => file.endsWith('.css'))
+            .map(file => webpackConfig.output?.publicPath + file)
+        }
       }
-    */
     })
-  ]
+  )
 
   IS_DEV
-    ? modifyClientDevConfig(config, vunConfig)
-    : modifyClientProdConfig(config, vunConfig)
+    ? modifyClientDevConfig(webpackConfig)
+    : modifyClientProdConfig(webpackConfig)
 }

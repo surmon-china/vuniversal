@@ -1,19 +1,20 @@
+import path from 'path'
 import { Configuration } from 'webpack'
+import WebpackBar from 'webpackbar'
+import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
-import { VunConfig } from '../vuniversal'
-import { NodeEnv, SERVER_JS_NAME } from '../../constants'
-import { BuildContext } from '.'
+import vunConfig from '../vuniversal'
+import { NodeEnv, VueEnv } from '../../environment'
 import modifyServerDevConfig from './server.dev'
 import modifyServerProdConfig from './server.prod'
+import { SERVER_ENTRY, SERVER_MANIFEST_FILE, getManifestPath } from '../../paths'
+import { BuildContext } from '.'
 
-export default function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext, vunConfig: VunConfig): void {
+export default function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
 
-  // Specify webpack Node.js output path and filename
-  webpackConfig.output = {
-    path: vunConfig.dir.build,
-    // TODO: 生产环境不应该产出 server.js，应该有规则
-    filename: SERVER_JS_NAME,
-    libraryTarget: 'commonjs2'
+  // https://github.com/ericclemmons/start-server-webpack-plugin
+  webpackConfig.entry = {
+    [SERVER_ENTRY]: [vunConfig.serverEntry]
   }
 
   // TODO: 待测试
@@ -38,7 +39,24 @@ export default function modifyServerConfig(webpackConfig: Configuration, buildCo
     })
   ]
 
+  webpackConfig.plugins?.push(
+    new WebpackBar({
+      color: 'orange',
+      name: VueEnv.Server
+    }),
+    // Output our JS and CSS files in a manifest file called chunks.json
+    // in the build directory.
+    // based on https://github.com/danethurber/webpack-manifest-plugin/issues/181#issuecomment-467907737
+    new ManifestPlugin({
+      fileName: path.join(
+        getManifestPath(buildContext.environment, vunConfig),
+        SERVER_MANIFEST_FILE
+      ),
+      writeToFileEmit: true
+    })
+  )
+
   buildContext.environment === NodeEnv.Development
-    ? modifyServerDevConfig(webpackConfig, vunConfig)
-    : modifyServerProdConfig(webpackConfig, vunConfig)
+    ? modifyServerDevConfig(webpackConfig)
+    : modifyServerProdConfig(webpackConfig)
 }

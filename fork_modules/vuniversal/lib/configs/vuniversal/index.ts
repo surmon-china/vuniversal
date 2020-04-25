@@ -1,15 +1,15 @@
 import fs from 'fs-extra'
-import { VunConfig } from './type'
+import { VunLibConfig } from './interface'
 import { defaultConfig } from './default'
 import { transformConfig, normalizeConfig } from './transformer'
-import { APP_VUN_CONFIG_PATH } from '../../constants'
+import { APP_VUN_CONFIG_PATH } from '../../paths'
 import logger from '../../services/logger'
 
-export * from './type'
+export * from './interface'
 export * from './default'
-export * from './package'
 export * from './transformer'
-export default function getVunConfig(): VunConfig {
+
+export function getVunConfig(): VunLibConfig {
   // Check for vuniversal.config.js file
   if (!fs.existsSync(APP_VUN_CONFIG_PATH)) {
     return transformConfig(defaultConfig)
@@ -22,3 +22,6 @@ export default function getVunConfig(): VunConfig {
     process.exit(1)
   }
 }
+
+const vunConfig: VunLibConfig = getVunConfig()
+export default vunConfig

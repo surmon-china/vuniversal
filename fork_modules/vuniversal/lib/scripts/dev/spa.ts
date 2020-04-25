@@ -3,16 +3,17 @@ import path from 'path'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import getWebpackConfig from '../../configs/webpack'
-import { getDefaultDevServerConfig } from '../../configs/webpack/base'
-import { NodeEnv, VueEnv, resolveAppRoot } from '../../constants'
-import { VunConfig } from '../../configs/vuniversal'
+import { defaultDevServerConfig } from '../../configs/dev-server'
+import { resolveAppRoot } from '../../paths'
+import { NodeEnv, VueEnv } from '../../environment'
 import { compileConfig, compilerToPromise, getDevServerUrl } from '../../configs/webpack/helper'
 import { success as successNotifier } from '../../services/notifier'
+import vunConfig from '../../configs/vuniversal'
 import logger from '../../services/logger'
 
-export default function startSPAServer(vunConfig: VunConfig) {
+export default function startSPAServer() {
 
-  const clientConfig = getWebpackConfig({ target: VueEnv.Client, environment: NodeEnv.Development }, vunConfig)
+  const clientConfig = getWebpackConfig({ target: VueEnv.Client, environment: NodeEnv.Development })
 
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
     filename: resolveAppRoot(path.resolve(vunConfig.dir.build, 'index.html')),
@@ -23,7 +24,7 @@ export default function startSPAServer(vunConfig: VunConfig) {
 
   const clientCompiler = compileConfig(clientConfig)
   const devServerConfig: WebpackDevServer.Configuration = {
-    ...getDefaultDevServerConfig(vunConfig),
+    ...defaultDevServerConfig,
     port: vunConfig.dev.port,
     historyApiFallback: true,
     open: true

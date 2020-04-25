@@ -1,17 +1,14 @@
 
-import { VunConfig } from './configs/vuniversal'
-import { NodeEnv, VUN_DEV_FOLDER_PATH } from './constants'
+import fs from 'fs'
+import { resolveAppRoot, resolveVunRoot } from './paths'
 
-export function isUniversal(vunConfig: VunConfig): boolean {
-  return vunConfig.universal !== false
-}
+export const appPackageJSON = require(resolveAppRoot('package.json'))
+export const vunPackageJSON = require(resolveVunRoot('package.json'))
 
-export function isDev(environment: NodeEnv): boolean {
-  return environment === NodeEnv.Development
-}
-
-export function getAssetsPath(environment: NodeEnv, vunConfig: VunConfig): string {
-  return isUniversal(vunConfig) && isDev(environment)
-    ? VUN_DEV_FOLDER_PATH
-    : vunConfig.dir.build
+export function findExistingFile(files: string[]): any {
+  for (const file of files) {
+    if (fs.existsSync(resolveAppRoot(file))) {
+      return file
+    }
+  }
 }

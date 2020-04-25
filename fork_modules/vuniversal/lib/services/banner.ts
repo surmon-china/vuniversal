@@ -1,11 +1,11 @@
 import wrapAnsi from 'wrap-ansi'
 import chalk from 'chalk'
-import boxen from 'boxen'
+import boxen, { BorderStyle } from 'boxen'
 import prettyBytes from 'pretty-bytes'
-import getVunPackageJson from '../configs/vuniversal/package'
-import { NodeEnv, UniversalMode } from '../constants'
-import { VUN_NAME } from '../constants'
-import { command } from '../arguments'
+import { VUN_NAME } from '../paths'
+import { args } from '../arguments'
+import { vunPackageJSON } from '../utils'
+import { NodeEnv, UniversalMode } from '../environment'
 
 // 80% of terminal column width
 // this is a fn because console width can have changed since startup
@@ -30,16 +30,20 @@ function foldLines(string: string, spaces: number, firstLineSpaces: number, char
 }
 
 export default function bannerBox(message: string, title?: string, options?: boxen.Options) {
-  return boxen([
-    title || chalk.white(`${VUN_NAME} Message`),
-    '',
-    chalk.white(foldLines(message, 0, 0, maxCharsPerLine()))
-  ].join('\n'), Object.assign({
-    borderColor: 'white',
-    borderStyle: 'round',
-    padding: 1,
-    margin: 1
-  }, options)) + '\n'
+  return boxen(
+    [
+      title || chalk.white(`${VUN_NAME} Message`),
+      '',
+      chalk.white(foldLines(message, 0, 0, maxCharsPerLine()))
+    ].join('\n'),
+    {
+      borderColor: 'white',
+      borderStyle: BorderStyle.Round,
+      padding: 1,
+      margin: 1,
+      ...options
+    }
+  ) + '\n'
 }
 
 export function success(message: string, title?: string) {
@@ -62,7 +66,7 @@ export function error(message: string, title?: string) {
 
 export interface IHeadBannerOptions {
   univservalMode?: UniversalMode
-  command?: boolean
+  command?: string
   memory?: boolean
   runningIn?: string
   listeningOn?: string
@@ -71,12 +75,14 @@ export interface IHeadBannerOptions {
 export function headBanner(options: IHeadBannerOptions = {}) {
   const messages = []
   const titles = [
-    `${chalk.green.bold(VUN_NAME)} v${chalk(getVunPackageJson().version)}`
+    `${chalk.green.bold(VUN_NAME)} v${chalk(vunPackageJSON.version)}`
   ]
 
   // Execute command
   if (options.command) {
-    titles.push(`Execute ${chalk.green.bold(command || '...')}`)
+    titles.push(`Execute ${chalk.green.bold(
+      'vun' + ' ' + options.command + ' ' + args.join(' ')
+    )}`)
   }
 
   if (options.runningIn || options.univservalMode) {

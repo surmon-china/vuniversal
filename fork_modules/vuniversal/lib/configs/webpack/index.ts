@@ -1,23 +1,28 @@
 
+import path from 'path'
 import webpack, { Configuration } from 'webpack'
+import mergeConfig from 'webpack-merge'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
-import { VunConfig } from '../vuniversal'
+import vunConfig from '../vuniversal'
 import getBabelOptions from '../babel'
 import modifyClientConfig from './client'
 import modifyServerConfig from './server'
-import { NodeEnv, VueEnv, VUN_NODE_MODULES_PATH, APP_VUN_ASSETS_FOLDER } from '../../constants'
-import { transformToProcessEnvObject } from './helper'
+import { modifyCssConfig } from '../css'
+import { VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '../../paths'
+import { transformToProcessEnvObject, getAssetsServerUrl } from './helper'
+import { NodeEnv, VueEnv } from '../../environment'
+import { getManifestPath } from '../../paths'
 
 export interface BuildContext {
   target: VueEnv
   environment: NodeEnv
 }
-
 // TODO: 好东西！！ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js
 
 // This is the Webpack configuration factory. It's the juice!
-export default function getWebpackConfig(buildContext: BuildContext, vunConfig: VunConfig): Configuration {
+export default function getWebpackConfig(buildContext: BuildContext): Configuration {
 
   // Define some useful shorthands.
   const IS_SERVER = buildContext.target === VueEnv.Server
@@ -25,7 +30,7 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
   const IS_DEV = buildContext.environment === NodeEnv.Development
 
   // This is our base webpack config.
-  const config: Configuration = {
+  let webpackConfig: Configuration = {
     // Set webpack mode:
     mode: IS_DEV ? NodeEnv.Development : NodeEnv.Production,
     // Set webpack context to the current command's directory
@@ -53,7 +58,10 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
       rules: [
         {
           test: /\.vue$/,
-          loader: require.resolve('vue-loader')
+          loader: require.resolve('vue-loader'),
+          options: {
+            extractCSS: true
+          }
         },
         {
           test: /\.(ts|tsx)$/,
@@ -77,32 +85,6 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
           ]
         },
         {
-          test: /\.css$/,
-          oneOf: [
-            // `<style module>` || `.module.css`
-            {
-              resourceQuery: /module/,
-              use: [
-                'vue-style-loader',
-                {
-                  loader: 'css-loader',
-                  options: {
-                    modules: true,
-                    localIdentName: '[local]_[hash:base64:5]'
-                  }
-                }
-              ]
-            },
-            // `<style>` || `<style scoped>` || `.css`
-            {
-              use: [
-                'vue-style-loader',
-                'css-loader'
-              ]
-            }
-          ]
-        },
-        {
           exclude: [
             /\.html$/,
             /\.(js|jsx|mjs)$/,
@@ -119,7 +101,7 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
           ],
           loader: require.resolve('file-loader'),
           options: {
-            name: `${APP_VUN_ASSETS_FOLDER}/media/[name].[hash:8].[ext]`,
+            name: `${vunConfig.build.assetsDir}/media/[name].[hash:8].[ext]`,
             emitFile: IS_CLIENT
           }
         },
@@ -128,7 +110,7 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
           loader: require.resolve('url-loader'),
           options: {
             limit: 10000,
-            name: `${APP_VUN_ASSETS_FOLDER}/image/[name].[hash:8].[ext]`,
+            name: `${vunConfig.build.assetsDir}/image/[name].[hash:8].[ext]`,
             emitFile: IS_CLIENT
           }
         }
@@ -138,12 +120,21 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
       new CleanWebpackPlugin(),
       // @ts-ignore
       new VueLoaderPlugin(),
+      // https://github.com/Urthen/case-sensitive-paths-webpack-plugin
+      new CaseSensitivePathsPlugin({ debug: false }),
       // Define environment vars
       // We define environment variables that can be accessed globally in our
       new webpack.DefinePlugin(transformToProcessEnvObject({
         ...vunConfig.env,
         NODE_ENV: buildContext.environment,
-        VUE_ENV: buildContext.target
+        VUE_ENV: buildContext.target,
+        VUN_PUBLIC_DIR: vunConfig.dir.public,
+        VUN_ASSETS_DIR: vunConfig.build.assetsDir,
+        VUN_DEV_SERVER_URL: getAssetsServerUrl(vunConfig.dev.host, vunConfig.dev.port),
+        VUN_CLIENT_MANIFEST: path.join(
+          getManifestPath(buildContext.environment, vunConfig),
+          CLIENT_MANIFEST_FILE
+        )
       }))
     ],
     watchOptions: {
@@ -154,20 +145,31 @@ export default function getWebpackConfig(buildContext: BuildContext, vunConfig: 
     }
   }
 
+  // modifyTypeScriptConfig
+
+  modifyCssConfig(webpackConfig, buildContext)
+
   if (IS_CLIENT) {
-    modifyClientConfig(config, buildContext, vunConfig)
+    modifyClientConfig(webpackConfig, buildContext)
   }
 
   if (IS_SERVER) {
-    modifyServerConfig(config, buildContext, vunConfig)
+    modifyServerConfig(webpackConfig, buildContext)
   }
 
   // Apply vun plugins, if they are present in vun.config.js
   // Check if vun.config has a modify function. If it does, call it on the
   // configs we created.
-  if (typeof vunConfig.webpack === 'function') {
-    vunConfig.webpack(config, buildContext)
+  if (vunConfig.webpack) {
+    if (typeof vunConfig.webpack === 'function') {
+      const response = vunConfig.webpack(webpackConfig, buildContext)
+      if (response) {
+        webpackConfig = mergeConfig(webpackConfig, response)
+      }
+    } else {
+      webpackConfig = mergeConfig(webpackConfig, vunConfig.webpack)
+    }
   }
 
-  return config
+  return webpackConfig
 }

@@ -1,38 +1,32 @@
 import webpack, { Configuration } from 'webpack'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
-import { VunConfig } from '../vuniversal'
-import { APP_VUN_ASSETS_FOLDER } from '../../constants'
+// import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
+import { getClientBuildPath } from '../../paths'
+import vunConfig from '../vuniversal'
 
-export default function modifyClientProdConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
+export default function modifyClientProdConfig(webpackConfig: Configuration): void {
 
-  // Specify production entry point (/client/index.js)
-  webpackConfig.entry = {
-    client: vunConfig.clientEntry
-  }
+  const clientBuildPath = getClientBuildPath(vunConfig)
 
   // Specify the client output directory and paths. Notice that we have
   // changed the publiPath to just '/' from http://localhost:3001. This is because
   // we will only be using one port in production.
   webpackConfig.output = {
-    path: vunConfig.dir.build,
+    path: clientBuildPath,
     publicPath: vunConfig.build.publicPath,
-    filename: `${APP_VUN_ASSETS_FOLDER}/js/bundle.[chunkhash:8].js`,
-    chunkFilename: `${APP_VUN_ASSETS_FOLDER}/js/[name].[chunkhash:8].chunk.js`,
+    filename: `${vunConfig.build.assetsDir}/js/bundle.[chunkhash:8].js`,
+    chunkFilename: `${vunConfig.build.assetsDir}/js/[name].[chunkhash:8].chunk.js`,
     libraryTarget: 'var'
   }
 
-  webpackConfig.plugins = [
-    ...(webpackConfig.plugins || []),
-    // Extract our CSS into a files.
-    new MiniCssExtractPlugin({
-      filename: `${APP_VUN_ASSETS_FOLDER}/css/bundle.[contenthash:8].css`,
-      chunkFilename: `${APP_VUN_ASSETS_FOLDER}/css/[name].[contenthash:8].chunk.css`
-    }),
+  webpackConfig.plugins?.push(
+    new CopyWebpackPlugin([
+      { from: vunConfig.dir.public, to: clientBuildPath }
+    ]),
     new webpack.HashedModuleIdsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
-  ]
+  )
 
   webpackConfig.optimization = {
     minimize: true,
@@ -77,6 +71,7 @@ export default function modifyClientProdConfig(webpackConfig: Configuration, vun
         // @todo add flag for sourcemaps
         sourceMap: true,
       }),
+      /*
       new OptimizeCSSAssetsPlugin({
         cssProcessorOptions: {
           parser: require('postcss-safe-parser'),
@@ -91,6 +86,7 @@ export default function modifyClientProdConfig(webpackConfig: Configuration, vun
           }
         }
       })
+      */
     ]
   }
 }

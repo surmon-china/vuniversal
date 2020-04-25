@@ -1,15 +1,8 @@
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
-import WebpackBar from 'webpackbar'
-import { VunConfig } from '../vuniversal'
-import { VueEnv, APP_VUN_ASSETS_FOLDER } from '../../constants'
+import vunConfig from '../vuniversal'
 
-export default function modifyClientDevConfig(webpackConfig: Configuration, vunConfig: VunConfig): void {
-
-  // specify our client entry point /client/index.js
-  webpackConfig.entry = {
-    client: [vunConfig.clientEntry]
-  }
+export default function modifyClientDevConfig(webpackConfig: Configuration): void {
 
   // Configure our client bundles output. Not the public path is to 3001.
   webpackConfig.output = {
@@ -17,19 +10,15 @@ export default function modifyClientDevConfig(webpackConfig: Configuration, vunC
     publicPath: vunConfig.build.publicPath,
     pathinfo: true,
     libraryTarget: 'var',
-    filename: `${APP_VUN_ASSETS_FOLDER}/js/bundle.js`,
-    chunkFilename: `${APP_VUN_ASSETS_FOLDER}/js/[name].chunk.js`,
+    filename: `${vunConfig.build.assetsDir}/js/bundle.js`,
+    chunkFilename: `${vunConfig.build.assetsDir}/js/[name].chunk.js`,
     devtoolModuleFilenameTemplate: info => path.resolve(info.resourcePath).replace(/\\/g, '/')
   }
 
   // Add client-only development plugins
   webpackConfig.plugins = [
     ...(webpackConfig.plugins || []),
-    new webpack.HotModuleReplacementPlugin(),
-    new WebpackBar({
-      color: 'green',
-      name: VueEnv.Client
-    })
+    new webpack.HotModuleReplacementPlugin()
   ]
 
   webpackConfig.optimization = {

@@ -38,7 +38,7 @@
 //     this.builder = builder;
 
 //     // Set variables
-//     this.staticRoutes = path.resolve(this.options.srcDir, this.options.dir.static);
+//     this.staticRoutes = path.resolve(this.options.srcDir, this.options.dir.public);
 //     this.srcBuiltPath = path.resolve(this.options.buildDir, 'dist', 'client');
 //     this.distPath = this.options.generate.dir;
 //     this.distNuxtPath = path.join(

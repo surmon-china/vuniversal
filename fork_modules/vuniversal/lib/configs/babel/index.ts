@@ -1,10 +1,11 @@
 
 import fs from 'fs-extra'
-import { VunConfig } from '../vuniversal'
+import { VunLibConfig } from '../vuniversal'
 import { BuildContext } from '../webpack'
-import { NodeEnv, APP_BABEL_RC_PATH } from '../../constants'
+import { APP_BABEL_RC_PATH } from '../../paths'
+import { NodeEnv } from '../../environment'
 
-export default function getBabelOptions(buildContext: BuildContext, vunConfig: VunConfig) {
+export default function getBabelOptions(buildContext: BuildContext, vunConfig: VunLibConfig) {
   // First we check to see if the user has a custom .babelrc file, otherwise
   // we just use babel-preset-razzle.
   const hasBabelRc = fs.existsSync(APP_BABEL_RC_PATH)
@@ -35,7 +36,8 @@ export default function getBabelOptions(buildContext: BuildContext, vunConfig: V
 
   // Allow app to override babel options
   const babelOptions = vunConfig.babel
-    ? vunConfig.babel(mainBabelOptions)
+    ? mainBabelOptions
+    // ? vunConfig.babel(mainBabelOptions)
     : mainBabelOptions
 
   if (hasBabelRc) {

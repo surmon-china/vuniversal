@@ -27,5 +27,5 @@
     ],
     "types": ["node"]
   },
-  "exclude": ["vuniversal", "vuniversal-bak", "src/server.bak.ts", "src/client.bak.ts", "fork_modules", "node_modules", "node_modules/vue-router/dist/vue-router.d.ts"]
+  "exclude": ["vuniversal", "cli-service", "vuniversal-bak", "src/server.bak.ts", "src/client.bak.ts", "fork_modules", "node_modules", "node_modules/vue-router/dist/vue-router.d.ts"]
 }

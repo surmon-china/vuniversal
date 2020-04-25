@@ -1,9 +1,9 @@
 
 import { CreateAppFunction, createApp, createSSRApp } from 'vue'
 import { createWebHistory, createMemoryHistory, RouterHistory } from 'vue-router'
-import { isClient } from './environment'
+import { isClient } from './env'
 
-export * from './environment'
+export * from './env'
 export * from './creater'
 
 // Get function's arguments type

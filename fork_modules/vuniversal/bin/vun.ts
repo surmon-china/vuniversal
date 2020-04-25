@@ -9,6 +9,7 @@ switch (script) {
     require('../lib/scripts/build')
   case 'test':
     require('../lib/scripts/test')
+  case '':
   case 'dev':
     require('../lib/scripts/dev')
   default:

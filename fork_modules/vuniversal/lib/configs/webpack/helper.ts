@@ -2,7 +2,7 @@
 import webpack, { Configuration } from 'webpack'
 import logger from '../../services/logger'
 import { IVunEnvObject } from '../vuniversal'
-import { VueEnv } from '../../constants'
+import { VueEnv } from '../../environment'
 import { BuildContext } from '.'
 
 export function isClientTarget(buildContext: BuildContext): boolean {

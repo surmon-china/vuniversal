@@ -1,9 +1,9 @@
 import lodash from 'lodash'
 import { defaultConfig } from './default'
-import { VunConfig, VuniversalConfig } from './type'
-import { VUN_DEFAULT_HTML_TEMPLATE_PATH, resolveAppRoot } from '../../constants'
+import { VuniversalConfig, VunLibConfig } from './interface'
+import { VUN_DEFAULT_HTML_TEMPLATE_PATH, resolveAppRoot } from '../../paths'
 
-export function transformConfig(config: VunConfig): VunConfig {
+export function transformConfig(config: VunLibConfig): VunLibConfig {
   return {
     ...config,
     clientEntry: resolveAppRoot(config.clientEntry),
@@ -14,7 +14,7 @@ export function transformConfig(config: VunConfig): VunConfig {
       : VUN_DEFAULT_HTML_TEMPLATE_PATH,
     dir: {
       build: resolveAppRoot(config.dir.build),
-      static: resolveAppRoot(config.dir.static),
+      public: resolveAppRoot(config.dir.public),
       source: resolveAppRoot(config.dir.source),
       root: resolveAppRoot(config.dir.root),
       modules: config.dir.modules.map(resolveAppRoot)
@@ -22,10 +22,10 @@ export function transformConfig(config: VunConfig): VunConfig {
   }
 }
 
-export function mergeDefaultConfig(config: VuniversalConfig): VunConfig {
+export function mergeDefaultConfig(config: VuniversalConfig): VunLibConfig {
   return lodash.merge({}, defaultConfig, config)
 }
 
-export function normalizeConfig(config: VuniversalConfig): VunConfig {
+export function normalizeConfig(config: VuniversalConfig): VunLibConfig {
   return transformConfig(mergeDefaultConfig(config))
 }
