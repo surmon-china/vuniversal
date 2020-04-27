@@ -1,25 +1,20 @@
 
 import path from 'path'
 import fs from 'fs-extra'
-// import templateParser from 'lodash/template'
 import { renderToString } from '@vue/server-renderer'
 import { AppCreater } from '../helper/creater'
+import { Helme } from '../helper/helmet'
 import { isDev } from '../helper/env'
 
 const defaultTemplate = (params: RenderTemplateParams) => `
   <!doctype html>
-  <html lang="en">
+  <html>
     <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta charset="utf-8" />
-      <title>Welcome to Vuniversa 2323</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>TODO: title meta</title>
       ${params.assets.css.map(css => `<link rel="stylesheet" href="${css}">`)}
     </head>
     <body>
-      <div id="app">
-        ${params.appHTML}
-      </div>
+      <div id="app">${params.appHTML}</div>
       ${params.assets.js.map(js => `<script src="${js}" defer crossorigin></script>`)}
     </body>
   </html>
@@ -27,7 +22,7 @@ const defaultTemplate = (params: RenderTemplateParams) => `
 
 export interface RenderTemplateParams {
   url: string
-  meta: any
+  helmet: Helme
   appHTML: string
   assets: {
     js: string[]
@@ -42,7 +37,7 @@ export interface RenderOptions {
 }
 
 export async function render(options: RenderOptions): Promise<string> {
-  const { app, router } = options.appCreater()
+  const { app, router, helmet } = options.appCreater()
   // TODO: 404 路由会如何反应呢，会不会是 404，这里应该区分 404 和 500
   await router.push(options.url)
   const appHTML = await renderToString(app)
@@ -55,7 +50,7 @@ export async function render(options: RenderOptions): Promise<string> {
   return template({
     assets,
     appHTML,
-    meta: {},
+    helmet,
     url: options.url
   })
 }

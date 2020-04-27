@@ -1,5 +1,6 @@
 
 import { VunLibConfig } from './interface'
+import { NodeEnv, isProd } from '../../environment'
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
@@ -30,11 +31,15 @@ export const defaultConfig: VunLibConfig = {
     transpileDependencies: [],
     lintOnSave: true,
     get parallel() {
-      return require('os').cpus().length > 1
+      try {
+        return require('os').cpus().length > 1
+      } catch (error) {
+        return false
+      }
     },
     css: {
       get extract() {
-        return process.env.NODE_ENV === 'production'
+        return isProd(process.env.NODE_ENV as NodeEnv)
       },
       requireModuleExtension: true,
       sourceMap: false,

@@ -16,6 +16,7 @@ export default function startSPAServer() {
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
     filename: path.resolve(getClientBuildPath(vunConfig), 'index.html'),
     // TODO: 假的
+    // 如果我用了 html 模板，则将会导致 这里需要用函数，并且要引入 vue 进行 to string in 假 context 来做到，但应该是可以的
     template: vunConfig.template,
     chunks: 'all'
   }) as any)

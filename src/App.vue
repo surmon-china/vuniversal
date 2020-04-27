@@ -1,11 +1,13 @@
-<style lang="scss" module>
+<style lang="scss" scoped>
   .main {
-    background-color: red;
+    background-color: bisque;
   }
 </style>
 
 <template>
-  <div :class="$style.main">
+  <div class="main">
+    <test v-if="showTest" />
+    <button @click="toggleTest">test</button>
     <pre>{{ currentLocation }}</pre>
     <section class="info">
       name:
@@ -152,39 +154,69 @@
 </template>
 
 <script>
-import { defineComponent, inject, computed } from 'vue'
-import { scrollWaiter } from './scrollWaiter'
-import { useRoute } from 'vue-router'
+  import { defineComponent, ref, inject, computed, onMounted } from 'vue'
+  import { scrollWaiter } from './scrollWaiter'
+  import Test from './views/test.vue'
+  import { useRoute } from 'vue-router'
+  import { useHelmet } from '../fork_modules/vuniversal/helper/helmet'
 
-export default defineComponent({
-  name: 'App',
-  setup() {
-    const route = useRoute()
-    const state = inject('state')
+  export default defineComponent({
+    name: 'App',
+    components: {
+      Test
+    },
+    data() {
+      return {
+        aaaa: 10
+      }
+    },
+    helmet() {
+      return {
+        title: this.aaaa
+      }
+    },
+    created() {
+      // console.log('=-------created', this)
+    },
+    setup() {
+      const route = useRoute()
+      const helmet = useHelmet({ title: '卧槽我操卧槽' })
+      const state = inject('state')
 
-    const currentLocation = computed(() => {
-      const { matched, ...rest } = route
-      return rest
-    })
+      onMounted(() => {
+        // console.log('app onMounted')
+      })
+      // console.log('hooks', helmet)
 
-    function flushWaiter() {
-      scrollWaiter.flush()
+      const currentLocation = computed(() => {
+        const { matched, ...rest } = route
+        return rest
+      })
+
+      function flushWaiter() {
+        scrollWaiter.flush()
+      }
+      function setupWaiter() {
+        scrollWaiter.add()
+      }
+
+      const nextUserLink = computed(
+        () => '/users/' + String((Number(route.value.params.id) || 0) + 1)
+      )
+
+      const showTest = ref(false)
+
+      return {
+        currentLocation,
+        nextUserLink,
+        state,
+        flushWaiter,
+        setupWaiter,
+        showTest,
+        toggleTest() {
+          showTest.value = !showTest.value
+        }
+      }
     }
-    function setupWaiter() {
-      scrollWaiter.add()
-    }
-
-    const nextUserLink = computed(
-      () => '/users/' + String((Number(route.value.params.id) || 0) + 1)
-    )
-
-    return {
-      currentLocation,
-      nextUserLink,
-      state,
-      flushWaiter,
-      setupWaiter,
-    }
-  },
-})
+  })
 </script>
