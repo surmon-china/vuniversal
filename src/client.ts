@@ -1,6 +1,6 @@
 
 import { createVueApp } from './main'
 
-const { app, helmet } = createVueApp()
-console.log('-------客户端安装', app, helmet)
+const { app, meta } = createVueApp()
+console.log('-------客户端安装', app, meta)
 app.mount('#app')

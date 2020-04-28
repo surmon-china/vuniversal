@@ -1,11 +1,10 @@
 import fs from 'fs-extra'
-// import { APP_VUN_CONFIG_PATH } from '../lib/paths'
-// import { VunLibConfig } from '../lib/configs/vuniversal/interface'
-// import { normalizeConfig } from '../lib/configs/vuniversal/transformer'
+import { APP_VUN_CONFIG_PATH } from '../base/paths'
+import { VunLibConfig, VuniversalConfig } from '../base/config/interface'
+import { normalizeConfig } from '../base/config/transformer'
 
-/*
 export function getVunConfig(): VunLibConfig {
-  let vunConfig: VunLibConfig = {} as any as VunLibConfig
+  let vunConfig = {} as any as VuniversalConfig
   try {
     // - dev: tsc -> ts -> js
     // - prod: app -> webpack -> commonjs -> webpack compiler -> commonjs
@@ -14,11 +13,10 @@ export function getVunConfig(): VunLibConfig {
     // @ts-ignore
     vunConfig = __non_webpack_require__(APP_VUN_CONFIG_PATH)
   } catch (_) {
-    vunConfig = {} as any as VunLibConfig
+    vunConfig = {} as any as VuniversalConfig
   }
   return normalizeConfig(vunConfig)
 }
-*/
 
 export interface Assets {
   js: string[]

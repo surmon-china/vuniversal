@@ -34,5 +34,5 @@ export const createVueApp: AppCreater = () => {
   app.use(router)
   app.use(helmet)
 
-  return { app, router, helmet }
+  return { app, router, meta: helmet }
 }

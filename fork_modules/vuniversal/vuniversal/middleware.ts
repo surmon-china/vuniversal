@@ -13,15 +13,11 @@ export interface VuniversalMiddlewareOptions {
 }
 
 export function vuniversal(options: VuniversalMiddlewareOptions): Handler {
-  // const vunConfig = getVunConfig()
   return (request, response) => {
     const renderer = () => {
       render({
         appCreater: options.appCreater,
         url: request.originalUrl,
-        // template({ css, scripts }) {
-        //   return ''
-        // },
       })
       .then(html => response.status(200).send(html))
       .catch(error => response.status(404).send(String(error)))

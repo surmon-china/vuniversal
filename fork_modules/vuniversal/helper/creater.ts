@@ -1,10 +1,10 @@
 
 import { CreateAppFunction } from 'vue'
 import { Router } from 'vue-router'
-import { Helme } from './helmet'
+// import { Helme } from './helmet'
 
 export type AppCreater = () => {
   app: ReturnType<CreateAppFunction<Element>>
   router: Router
-  helmet: Helme
+  meta: any
 }

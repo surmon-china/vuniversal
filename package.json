@@ -3,9 +3,9 @@
   "version": "0.0.2",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node fork_modules/vuniversal/lib/scripts/dev",
-    "build": "ts-node fork_modules/vuniversal/lib/scripts/build",
-    "start": "ts-node fork_modules/vuniversal/lib/scripts/start",
+    "dev": "ts-node fork_modules/vuniversal/cli/scripts/dev",
+    "build": "ts-node fork_modules/vuniversal/cli/scripts/build",
+    "start": "ts-node fork_modules/vuniversal/cli/scripts/start",
     "test": "node vuniversal/bin/vuniversal test --env=jsdom",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -15,6 +15,7 @@
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@intervolga/optimize-cssnano-plugin": "^1.0.6",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.4",
+    "@types/dedent": "^0.7.0",
     "@types/webpack-merge": "^4.1.5",
     "@vue/compiler-sfc": "^3.0.0-beta.2",
     "@vue/server-renderer": "^3.0.0-beta.2",
@@ -29,6 +30,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.2",
+    "dedent": "^0.7.0",
     "eslint-plugin-vue": "^7.0.0-alpha.0",
     "express": "^4.17.1",
     "file-loader": "^6.0.0",
