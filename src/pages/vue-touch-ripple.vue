@@ -1,0 +1,45 @@
+<template>
+  <homepage :repositorie-id="repositorieId" :class="repositorieId">
+    <homepage-examples :examples="examples" slot="content" />
+  </homepage>
+</template>
+
+<script lang="ts">
+  import { defineComponent } from 'vue'
+  import { getComponentExampleMeta, getHomePageHeadMeta } from '@/transformers/page-meta'
+  import { GitHubRepositorieIDs } from '@/constants'
+  import { isBrowser } from '@/environment'
+  import HomepageExamples, { IExample } from '@/components/homepage/examples.vue'
+  import Homepage from '@/components/homepage/index.vue'
+
+  const repositorieId = GitHubRepositorieIDs.VueTouchRipple
+  const examples: IExample[] = []
+
+  if (isBrowser) {
+    getComponentExampleMeta(require('@/projects/vue-touch-ripple/examples'))
+      .forEach(({ component, fileName, ...others }) => {
+        examples.push({
+          ...others,
+          path: fileName && `projects/${repositorieId}/examples/${fileName}`
+        })
+        Object.assign(HomepageExamples.components, {
+          [component.name]: component
+        })
+      })
+  }
+
+  export default defineComponent({
+    name: `page-${repositorieId}`,
+    components: {
+      Homepage,
+      HomepageExamples
+    },
+    head: getHomePageHeadMeta(repositorieId),
+    setup() {
+      return {
+        repositorieId,
+        examples
+      }
+    }
+  })
+</script>
