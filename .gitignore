@@ -1,15 +1,27 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Node template
 # Logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
 
-# Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+# development components
+development
 
+# local env files
+.env.local
+.env.*.local
+
+# Editor directories and files
+.idea
 .vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
 # Runtime data
 pids
@@ -22,12 +34,11 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
-*.lcov
 
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
 # Bower dependency directory (https://bower.io/)
@@ -46,20 +57,11 @@ jspm_packages/
 # TypeScript v1 declaration files
 typings/
 
-# TypeScript cache
-*.tsbuildinfo
-
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
-
-# Microbundle cache
-.rpt2_cache/
-.rts2_cache_cjs/
-.rts2_cache_es/
-.rts2_cache_umd/
 
 # Optional REPL history
 .node_repl_history
@@ -72,32 +74,34 @@ typings/
 
 # dotenv environment variables file
 .env
-.env.test
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
-# Vuniversal build output
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# Vuniversal
 .vun
 dist
-
-# Gatsby files
-.cache/
-# Comment in the public line in if your project uses Gatsby and *not* Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
 
 # vuepress build output
 .vuepress/dist
 
 # Serverless directories
-.serverless/
+.serverless
 
-# FuseBox cache
-.fusebox/
+# IDE / Editor
+.idea
 
-# DynamoDB Local files
-.dynamodb/
+# Service worker
+sw.*
 
-# TernJS port file
-.tern-port
+# Mac OSX
+.DS_Store
+
+# Vim swap files
+*.swp

@@ -1,31 +1,28 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "dist",
-    "sourceMap": false,
-    "noEmit": false,
-    "target": "es5",
-    "module": "commonjs",
+    "target": "es2018",
+    "module": "esnext",
     "moduleResolution": "node",
-    "allowJs": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "noImplicitReturns": true,
-    "strict": true,
-    "isolatedModules": false,
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "removeComments": false,
-    "jsx": "preserve",
     "lib": [
       "esnext",
+      "esnext.asynciterable",
       "dom"
     ],
-    "types": ["node"]
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/": ["./src"],
+      "~/*": ["./src/*"],
+      "@": ["./src/"],
+      "@/*": ["./src/*"],
+    },
+    "types": [
+      "@types/node",
+      "./src/types"
+    ]
   },
-  "exclude": ["vuniversal", "cli-service", "vuniversal-bak", "src/server.bak.ts", "src/client.bak.ts", "fork_modules", "node_modules", "node_modules/vue-router/dist/vue-router.d.ts"]
+  "exclude": ["fork_modules", "node_modules"]
 }

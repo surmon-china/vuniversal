@@ -10,7 +10,8 @@ export const defaultDevServerConfig: WebpackDevServer.Configuration = {
   // Browser log
   // clientLogLevel: 'error',
   // Hidden webpack bundle info
-  noInfo: true,
+  // TODO: OPEN
+  // noInfo: true,
   // Only output init info when true
   // quiet: true,
   headers: {

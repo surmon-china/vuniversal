@@ -51,7 +51,14 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
     // We need to tell webpack how to resolve both Vuniversal's node_modules and the users', so we use resolve.
     resolve: {
       modules: ['node_modules', VUN_NODE_MODULES_PATH, ...vunConfig.dir.modules],
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.json', '.vue']
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.json', '.vue'],
+      alias: {
+        '@': vunConfig.dir.source,
+        '~': vunConfig.dir.source,
+        'vue$': vunConfig.build.runtimeCompiler
+          ? 'vue/dist/vue.esm.js'
+          : 'vue/dist/vue.runtime.esm-bundler.js'
+      }
     },
     module: {
       strictExportPresence: true,
@@ -66,8 +73,8 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
         {
           test: /\.(ts|tsx)$/,
           loader: 'ts-loader',
-          // TODO: TS 或许也是需要独立的
-          // options: { appendTsSuffixTo: [/\.vue$/] }
+          // TODO: TS 需要独立
+          options: { appendTsSuffixTo: [/\.vue$/] }
         },
         {
           test: /\.mjs$/,

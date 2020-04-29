@@ -1,9 +1,11 @@
 
 module.exports = {
   universal: false,
-  prerender: {
-    routes: ['/', '/nested', '/users/5']
-  },
+  clientEntry: './src/main',
+  template: './app.html',
+  // prerender: {
+  //   routes: ['/', '/nested', '/users/5']
+  // },
   build: {
     css: {
       extract: true
