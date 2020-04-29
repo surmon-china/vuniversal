@@ -9,9 +9,9 @@ export function transformConfig(config: VunLibConfig): VunLibConfig {
     clientEntry: resolveAppRoot(config.clientEntry),
     serverEntry: resolveAppRoot(config.serverEntry),
     // TODO: 或需要单独获取以便于 watch
-    // template: config.template
-    //   ? resolveAppRoot(config.template)
-    //   : VUN_DEFAULT_HTML_TEMPLATE_PATH,
+    template: config.template
+      ? resolveAppRoot(config.template)
+      : defaultConfig.template,
     dir: {
       build: resolveAppRoot(config.dir.build),
       public: resolveAppRoot(config.dir.public),

@@ -23,10 +23,10 @@ export const resolveVunRoot = (...relativePath: string[]): string => {
 export const VUN_NAME = 'Vuniversal'
 export const VUN_ROOT_PATH = resolveVunRoot('.')
 export const VUN_NODE_MODULES_PATH = resolveVunRoot('node_modules')
-// TODO: 没用到
-export const VUN_DEFAULT_HTML_TEMPLATE_PATH = resolveVunRoot('cli', 'templates', 'index.html')
-export const VUN_DEV_TEMPLATE_PATH = resolveVunRoot('cli', 'templates', 'dev.html')
 export const VUN_DEV_CACHE_PATH = resolveVunRoot('.vun')
+
+export const VUN_DEV_TEMPLATE = resolveVunRoot('cli', 'templates', 'dev.html')
+export const VUN_DEFAULT_HTML_TEMPLATE = resolveVunRoot('cli', 'templates', 'index.html')
 
 // ---------------------------------------------------------
 // Butid time constants
@@ -35,6 +35,8 @@ export const CLIENT_ENTRY = 'client'
 export const SERVER_ENTRY = 'server'
 export const CLIENT_MANIFEST_FILE = 'client.manifest.json'
 export const SERVER_MANIFEST_FILE = 'server.manifest.json'
+export const SPA_TEMPLATE_FILE = 'index.html'
+export const SSR_TEMPLATE_FILE = 'template.html'
 
 // Butid time paths
 // TODO: REMOVE

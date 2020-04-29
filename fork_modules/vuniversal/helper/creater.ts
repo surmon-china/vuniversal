@@ -7,4 +7,5 @@ export type AppCreater = () => {
   app: ReturnType<CreateAppFunction<Element>>
   router: Router
   meta: any
+  [key: string]: any
 }

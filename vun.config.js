@@ -1,6 +1,9 @@
 
 module.exports = {
-  universal: true,
+  universal: false,
+  prerender: {
+    routes: ['/', '/nested', '/users/5']
+  },
   build: {
     css: {
       extract: true

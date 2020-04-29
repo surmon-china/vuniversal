@@ -1,10 +1,11 @@
-// import fs from 'fs-extra'
 import path from 'path'
+import fs from 'fs-extra'
+import templateParser from 'lodash/template'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import getWebpackConfig from '../../configs/webpack'
 import { defaultDevServerConfig } from '../../configs/dev-server'
-import { resolveAppRoot } from '../../../base/paths'
+import { resolveAppRoot, SPA_TEMPLATE_FILE } from '../../../base/paths'
 import { NodeEnv, VueEnv } from '../../../base/environment'
 import { compileConfig, compilerToPromise, getDevServerUrl } from '../../configs/webpack/helper'
 import { success as successNotifier } from '../../services/notifier'
@@ -14,23 +15,41 @@ import logger from '../../services/logger'
 export function startSPAServer() {
   const buildContext = { target: VueEnv.Client, environment: NodeEnv.Development }
   const clientConfig = getWebpackConfig(buildContext)
+  const htmlTemplate = fs.readFileSync(vunConfig.template)
+  const templateRender = templateParser(htmlTemplate.toString(), {
+    interpolate: /{{([\s\S]+?)}}/g,
+    evaluate: /{%([\s\S]+?)%}/g
+  })
 
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
     inject: false,
     minify: false,
     chunks: 'all',
-    filename: resolveAppRoot(path.resolve(vunConfig.dir.build, 'index.html')),
-    // template: vunConfig.template,
+    filename: resolveAppRoot(path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)),
     templateContent({ htmlWebpackPlugin }) {
       // console.log('---------vunConfig', vunConfig)
       // console.log('---------htmlWebpackPlugin', htmlWebpackPlugin)
-      // @ts-ignore
-      return vunConfig.templateRender({
-        ...buildContext,
-        assets: {
-          js: htmlWebpackPlugin.files.js,
-          css: htmlWebpackPlugin.files.css
-        }
+      const HTML_ATTRS = ''
+      const HEAD_ATTRS = ''
+      const BODY_ATTRS = ''
+      const APP = 'client'
+
+      const HEAD = [
+        `<title>Welcome to vuniversal! ⚡</title>`,
+        ...htmlWebpackPlugin.files.css.map((css: string) => `<link rel="stylesheet" href="${css}">`)
+      ].join('\n')
+
+      const FOOTER = [
+        ...htmlWebpackPlugin.files.js.map((js: string) => `<script src="${js}" defer crossorigin></script>`)
+      ].join('\n')
+
+      return templateRender({
+        HTML_ATTRS,
+        HEAD_ATTRS,
+        BODY_ATTRS,
+        HEAD,
+        APP,
+        FOOTER
       })
     }
   }))

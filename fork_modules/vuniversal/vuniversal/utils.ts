@@ -1,8 +1,9 @@
 import fs from 'fs-extra'
-import { APP_VUN_CONFIG_PATH } from '../base/paths'
-import { VunLibConfig, VuniversalConfig } from '../base/config/interface'
-import { normalizeConfig } from '../base/config/transformer'
+// import { APP_VUN_CONFIG_PATH } from '../base/paths'
+// import { VunLibConfig, VuniversalConfig } from '../base/config/interface'
+// import { normalizeConfig } from '../base/config/transformer'
 
+/*
 export function getVunConfig(): VunLibConfig {
   let vunConfig = {} as any as VuniversalConfig
   try {
@@ -17,6 +18,7 @@ export function getVunConfig(): VunLibConfig {
   }
   return normalizeConfig(vunConfig)
 }
+*/
 
 export interface Assets {
   js: string[]

@@ -131,6 +131,7 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
         VUN_PUBLIC_DIR: vunConfig.dir.public,
         VUN_ASSETS_DIR: vunConfig.build.assetsDir,
         VUN_DEV_SERVER_URL: getAssetsServerUrl(vunConfig.dev.host, vunConfig.dev.port),
+        VUN_SSR_TEMPLATE: vunConfig.template,
         VUN_CLIENT_MANIFEST: path.join(
           getManifestPath(buildContext.environment, vunConfig),
           CLIENT_MANIFEST_FILE

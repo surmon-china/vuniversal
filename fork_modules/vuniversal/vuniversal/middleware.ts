@@ -2,9 +2,9 @@
 import path from 'path'
 import express, { Handler } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
-import { render } from './render'
 import { AppCreater } from '../helper/creater'
 import { isDev } from '../helper/env'
+import { render } from './render'
 
 export interface VuniversalMiddlewareOptions {
   appCreater: AppCreater

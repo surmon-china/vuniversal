@@ -1,13 +1,15 @@
 
-import dedent from 'dedent'
-import { VunLibConfig, TemplateRenderParameters } from './interface'
-import { NodeEnv, isProd, isServerTarget } from '../environment'
+import { VunLibConfig } from './interface'
+import { VUN_DEFAULT_HTML_TEMPLATE } from '../../base/paths'
+import { NodeEnv, isProd } from '../environment'
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
   modern: true,
   clientEntry: 'src/client',
   serverEntry: 'src/server',
+  template: VUN_DEFAULT_HTML_TEMPLATE,
+  prerender: false,
   env: {},
   dir: {
     build: 'dist',
@@ -45,44 +47,6 @@ export const defaultConfig: VunLibConfig = {
       sourceMap: false,
       loaderOptions: {}
     }
-  },
-  templateRender(params: TemplateRenderParameters) {
-    const { target, assets, appHTML = '', state } = params
-    const isServer = isServerTarget(target)
-
-    const stateHTML = !isServer
-      ? ''
-      : `<script>window.__INIT_STATE__ = ${JSON.stringify(state)}</script>`
-
-    const headHTML = !isServer
-      ? `<title>Welcome to vuniversal!</title>`
-      : `<title>Vuniversal SSR!</title>`
-      // : ([
-      //     meta.title.text(),
-      //     meta.link.text(),
-      //     meta.style.text(),
-      //     meta.script.text(),
-      //     meta.noscript.text()
-      //   ].join('\n'))
-
-    return dedent`
-      <!doctype html>
-      <html>
-        <head>
-          ${headHTML}
-          ${assets.css.map(css => `<link rel="stylesheet" href="${css}">`)}
-        </head>
-        <body>
-          <div id="app">${appHTML}</div>
-          ${assets.js.map(js => `<script src="${js}" defer crossorigin></script>`)}
-          ${stateHTML}
-        </body>
-      </html>
-    `
-  },
-  prerender: {
-    routers: [],
-    fallback: true
   },
   babel: {},
   webpack: {

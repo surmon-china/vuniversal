@@ -8,7 +8,7 @@ import logger from '../../services/logger'
 import vunConfig from '../../../base/config'
 import getWebpackConfig from '../../configs/webpack'
 import { defaultDevServerConfig } from '../../configs/dev-server'
-import { VUN_DEV_TEMPLATE_PATH, SERVER_ENTRY, SERVER_JS_FILE } from '../../../base/paths'
+import { VUN_DEV_TEMPLATE, SERVER_ENTRY, SERVER_JS_FILE } from '../../../base/paths'
 import { compileConfig, compilerToPromise, getAssetsServerPort } from '../../configs/webpack/helper'
 import { NodeEnv, VueEnv } from '../../../base/environment'
 import { args } from '../../utils'
@@ -25,7 +25,7 @@ export function startSSRServer() {
     publicPath: '/'
   }
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
-    template: VUN_DEV_TEMPLATE_PATH,
+    template: VUN_DEV_TEMPLATE,
     inject: false
   }))
 

@@ -1,7 +1,6 @@
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
 import { BuildContext } from '../../cli/configs/webpack'
-import { NodeEnv, VueEnv } from '../environment'
 
 // TODO: 取决于内部是否使用
 // import ChainableWebpackConfig from 'webpack-chain'
@@ -59,18 +58,6 @@ export interface BuildOptions {
   // pwa?: object;
 }
 
-export interface TemplateRenderParameters {
-  target: VueEnv
-  environment: NodeEnv
-  state?: any,
-  meta?: any
-  appHTML?: string
-  assets: {
-    js: string[]
-    css: string[]
-  }
-}
-
 // TODO: !!!
 type RecursiveRequired<T> = {
   [P in keyof T]-?:
@@ -93,6 +80,15 @@ export interface VuniversalConfig {
   clientEntry: string
   // 服务端入口
   serverEntry: string
+  // 模板
+  template?: string
+  // 转换配置
+  prerender?: false | {
+    // 需要转换的路由
+    routes?: string[]
+    // 是否回退为 SPA
+    fallback?: boolean | string
+  }
   // 目录配置
   dir?: {
     // 构建出的路径
@@ -117,17 +113,6 @@ export interface VuniversalConfig {
     devServer?: WebpackDevServer.Configuration
   }
   build?: BuildOptions
-  // TODO: template
-  // template?: string
-  // 模板
-  templateRender?: (parameters: TemplateRenderParameters) => string
-  // 转换配置
-  prerender?: boolean | {
-    // 需要转换的路由
-    routers?: string[]
-    // 是否回退为 SPA
-    fallback?: boolean
-  }
   // Webpack 逃生通道
   webpack?: webpack.Configuration | ((config: webpack.Configuration, buildContext: BuildContext) => (webpack.Configuration | void));
   babel?: any
