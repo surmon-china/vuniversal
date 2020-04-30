@@ -1,10 +1,7 @@
 <template>
   <div class="homepage-card">
-    <template #header>
-      <div
-        v-if="title"
-        class="header"
-      >
+    <!-- <template v-slot:header>
+      <div v-if="title" class="header">
         <a
           v-if="titleLink"
           :href="titleLink"
@@ -17,11 +14,8 @@
         <span v-else>{{ title }}</span>
         <slot name="actions" />
       </div>
-    </template>
-    <div
-      class="content"
-      :class="contentClass"
-    >
+    </template> -->
+    <div class="content" :class="contentClass">
       <slot />
     </div>
   </div>

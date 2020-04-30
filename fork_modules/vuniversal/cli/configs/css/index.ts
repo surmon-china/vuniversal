@@ -14,6 +14,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
   const buildOptions = vunConfig.build
   const cssOptions = buildOptions.css
   const loaderOptions = cssOptions.loaderOptions || {}
+  const styleResources = cssOptions.styleResources || {}
   const sourceMap = cssOptions.sourceMap
 
   // About css module
@@ -57,9 +58,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
 
   if (!hasPostCSSConfig) {
     loaderOptions.postcss = {
-      plugins: [
-        require('autoprefixer')
-      ]
+      plugins: () => [require('autoprefixer')]
     }
   }
 
@@ -78,10 +77,12 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
     cssnanoOptions.map = { inline: false }
   }
 
-  function createCSSRule(test: RegExp, loader?: string, options?: any): RuleSetRule {
+  function createCSSRule(params: { test: RegExp, loader?: string, options?: any, resources?: string[] }): RuleSetRule {
+
     const createLoaders = (rule: RuleSetRule, isCssModule: boolean): RuleSetRule => {
       rule.use = []
 
+      // extract
       if (shouldExtract && canExtract) {
         rule.use.push({
           loader: MiniCssExtractPlugin.loader,
@@ -114,6 +115,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
         ...loaderOptions.css
       }
 
+      // css-loader options
       if (isCssModule) {
         cssLoaderOptions.modules = {
           localIdentName: '[name]_[local]_[hash:base64:5]',
@@ -123,37 +125,52 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
         delete cssLoaderOptions.modules
       }
 
+      // css-loader
       rule.use.push({
         loader: require.resolve('css-loader'),
         options: cssLoaderOptions
       })
 
+      // inline
       if (needInlineMinification) {
         rule.use.push({
           loader: require.resolve('postcss-loader'),
           options: {
             sourceMap,
-            plugins: [require('cssnano')(cssnanoOptions)]
+            plugins: () => [require('cssnano')(cssnanoOptions)]
           }
         })
       }
 
+      // postcss
       rule.use.push({
         loader: require.resolve('postcss-loader'),
         options: { sourceMap, ...loaderOptions.postcss }
       })
 
-      if (loader) {
+      // loader
+      if (params.loader) {
         let resolvedLoader
         try {
-          resolvedLoader = require.resolve(loader)
+          resolvedLoader = require.resolve(params.loader)
         } catch (error) {
-          resolvedLoader = loader
+          resolvedLoader = params.loader
         }
 
         rule.use.push({
           loader: resolvedLoader,
-          options: { sourceMap, ...options }
+          options: { sourceMap, ...params.options }
+        })
+      }
+
+      // style-resource-loader
+      if (params.resources?.length) {
+        rule.use.push({
+          // https://github.com/yenshih/style-resources-loader
+          loader: require.resolve('style-resources-loader'),
+          options: {
+            patterns: params.resources
+          }
         })
       }
 
@@ -161,7 +178,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
     }
 
     return {
-      test,
+      test: params.test,
       oneOf: [
         // rules for <style lang="module">
         // vue-modules
@@ -178,35 +195,55 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
 
   // css
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.css$/)
+    createCSSRule({ test: /\.css$/ })
   )
   // postcss
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.p(ost)?css$/)
+    createCSSRule({ test: /\.p(ost)?css$/ })
   )
   // less
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.less$/, 'less-loader', loaderOptions.less)
+    createCSSRule({
+      test: /\.less$/,
+      loader: 'less-loader',
+      options: loaderOptions.less,
+      resources: styleResources.less
+    })
   )
   // scss
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.scss$/, 'sass-loader', loaderOptions.scss || loaderOptions.sass)
+    createCSSRule({
+      test: /\.scss$/,
+      loader: 'sass-loader',
+      options: loaderOptions.scss || loaderOptions.sass,
+      resources: styleResources.scss
+    })
   )
   // sass
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.sass$/, 'sass-loader', {
-      ...loaderOptions.sass,
-      sassOptions: {
-        ...loaderOptions.sass?.sassOptions,
-        indentedSyntax: true
+    createCSSRule({
+      test: /\.sass$/,
+      loader: 'sass-loader',
+      resources: styleResources.sass,
+      options: {
+        ...loaderOptions.sass,
+        sassOptions: {
+          ...loaderOptions.sass?.sassOptions,
+          indentedSyntax: true
+        }
       }
     })
   )
   // stylus
   webpackConfig.module?.rules.push(
-    createCSSRule(/\.styl(us)?$/, 'stylus-loader', {
-      preferPathResolver: 'webpack',
-      ...loaderOptions.stylus
+    createCSSRule({
+      test: /\.styl(us)?$/,
+      loader: 'stylus-loader',
+      resources: styleResources.stylus,
+      options: {
+        preferPathResolver: 'webpack',
+        ...loaderOptions.stylus
+      }
     })
   )
 

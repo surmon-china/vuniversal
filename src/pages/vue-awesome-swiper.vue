@@ -31,27 +31,24 @@
 <script lang="ts">
   import { defineComponent } from 'vue'
   import { getComponentExampleMeta, getHomePageHeadMeta } from '@/transformers/page-meta'
-  import { GitHubRepositorieIDs } from '@/constants'
-  import { isBrowser } from '@/environment'
+  import { GITHUB_REPOSITORIEL_IDS } from '@/constants'
   import HomepageExamples, { IExample } from '@/components/homepage/examples.vue'
   import HomepageLink from '@/components/homepage/link.vue'
   import Homepage from '@/components/homepage/index.vue'
 
-  const repositorieId = GitHubRepositorieIDs.VueAwesomeSwiper
+  const repositorieId = GITHUB_REPOSITORIEL_IDS.VueAwesomeSwiper
   const examples: IExample[] = []
 
-  if (isBrowser) {
-    getComponentExampleMeta(require('@/projects/vue-awesome-swiper/examples'))
-      .forEach(({ component, fileName, ...others }) => {
-        examples.push({
-          ...others,
-          path: fileName && `projects/${repositorieId}/examples/${fileName}`
-        })
-        Object.assign(HomepageExamples.components, {
-          [component.name]: component
-        })
+  getComponentExampleMeta(require('@/projects/vue-awesome-swiper/examples'))
+    .forEach(({ component, fileName, ...others }) => {
+      examples.push({
+        ...others,
+        path: fileName && `projects/${repositorieId}/examples/${fileName}`
       })
-  }
+      Object.assign(HomepageExamples.components, {
+        [component.name]: component
+      })
+    })
 
   export default defineComponent({
     name: `page-${repositorieId}`,

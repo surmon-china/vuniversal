@@ -1,29 +1,27 @@
 <template>
   <div class="main">
-    <!-- <transition
+    <transition
       name="fade"
       mode="out-in"
-      @before-enter="flushWaiter"
-      @before-leave="setupWaiter"
-    > -->
-    <Suspense>
-      <template #default>
-        <router-view />
-      </template>
-      <template #fallback>
-        Loading...
-      </template>
-    </Suspense>
-    <!-- </transition> -->
+    >
+      <Suspense>
+        <template #default>
+          <router-view />
+        </template>
+        <template #fallback>
+          Loading...
+        </template>
+      </Suspense>
+    </transition>
   </div>
 </template>
 
-<script lang="ts">
+<script>
   import { defineComponent, onBeforeMount } from 'vue'
   import { StoreNames, useStore } from './store'
 
   export default defineComponent({
-    name: 'app',
+    name: 'App',
     setup() {
       const store = useStore()
       onBeforeMount(() => {
@@ -32,9 +30,3 @@
     }
   })
 </script>
-
-<style lang="scss" scoped>
-  .main {
-    background-color: bisque;
-  }
-</style>

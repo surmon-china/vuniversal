@@ -208,13 +208,11 @@
     },
     setup() {
       const store = useStore()
-      const { state, getters } = store
-
       const enableAd = ref(false)
-      const inited = computed(() => state.inited)
-      const userInfo = computed(() => state.userInfo)
-      const organizations = computed(() => state.organizations)
-      const repositories = computed(() => getters[StoreNames.OwnRepositories])
+      const inited = computed(() => store.state.inited)
+      const userInfo = computed(() => store.state.userInfo)
+      const organizations = computed(() => store.state.organizations)
+      const repositories = computed(() => store.getters[StoreNames.OwnRepositories])
       const isFetchingOrganizations = ref(false)
       const exampleRepositories = computed(() => {
         return repositories.value.filter(
@@ -230,21 +228,21 @@
       })
       const packageDownloadTotal = computed(() => {
         return Object
-          .values<number>(state.npmPackagesDownloadsMap)
+          .values<number>(store.state.npmPackagesDownloadsMap)
           .reduce((plus, item) => plus + item, 0)
       })
 
       // NPM Package
       const isNPMPackage = (name: string): boolean => {
-        return getters[StoreNames.NPMRepositories]
+        return store.getters[StoreNames.NPMRepositories]
           .map(({ name }: $TODO) => name)
           .includes(name)
       }
 
       // China user -> random Aliyun (70%) / ADSense (30%)
       // Other user -> ADSense
-      const isMobileDevice = computed(() => state.isMobileDevice)
-      const isChinaGuest = computed(() => state.isChinaGuest)
+      const isMobileDevice = computed(() => store.state.isMobileDevice)
+      const isChinaGuest = computed(() => store.state.isChinaGuest)
       const adProvider = (!isChinaGuest.value || isMobileDevice.value)
         ? MammonProvider.GoogleAdSense1
         : ((Math.ceil(Math.random() * 10) > 7)

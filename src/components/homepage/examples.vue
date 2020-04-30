@@ -1,36 +1,32 @@
 <template>
   <div class="homepage-examples">
     <transition name="module" mode="out-in">
-      <Loading class="loading" v-if="!inited" />
-      <client-only v-else>
-        <div>
-          <div
-            class="example-item"
-            :key="example.name"
-            v-for="(example, index) in examples"
+      <Loading v-if="!inited" class="loading" />
+      <div v-else>
+        <div
+          v-for="(example, index) in examples"
+          :key="example.name"
+          class="example-item"
+        >
+          <homepage-example-card
+            :path="example.path"
+            :title="example.title || example.name"
+            :content-class="contentClass"
           >
-            <homepage-example-card
-              :path="example.path"
-              :title="example.title || example.name"
-              :content-class="contentClass"
-            >
-              <component
-                class="example-component"
-                :class="exampleClass"
-                :is="example.name"
-              />
-            </homepage-example-card>
-            <homepage-basic-card
-              class="example-mammon"
-              v-if="!disabledAutoAd && !!adProviders[index]"
-            >
-              <client-only>
-                <mammon :provider="adProviders[index]" />
-              </client-only>
-            </homepage-basic-card>
-          </div>
+            <component
+              :is="example.name"
+              class="example-component"
+              :class="exampleClass"
+            />
+          </homepage-example-card>
+          <homepage-basic-card
+            v-if="!disabledAutoAd && !!adProviders[index]"
+            class="example-mammon"
+          >
+            <mammon :provider="adProviders[index]" />
+          </homepage-basic-card>
         </div>
-      </client-only>
+      </div>
     </transition>
   </div>
 </template>
@@ -50,6 +46,12 @@
   }
   export default defineComponent({
     name: 'homepage-examples',
+    components: {
+      Mammon,
+      Loading,
+      HomepageBasicCard,
+      HomepageExampleCard
+    },
     props: {
       examples: {
         type: Array as () => Array<IExample>,
@@ -68,12 +70,6 @@
         type: String,
         required: false
       }
-    },
-    components: {
-      Mammon,
-      Loading,
-      HomepageBasicCard,
-      HomepageExampleCard
     },
     setup(props) {
       const store = useStore()

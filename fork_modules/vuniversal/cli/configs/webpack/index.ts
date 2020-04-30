@@ -55,9 +55,11 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
       alias: {
         '@': vunConfig.dir.source,
         '~': vunConfig.dir.source,
-        'vue$': vunConfig.build.runtimeCompiler
-          ? 'vue/dist/vue.esm.js'
-          : 'vue/dist/vue.runtime.esm-bundler.js'
+        'vue': '@vue/runtime-dom'
+        // TODO: ESM 无法启用 HMR 啊
+        // 'vue$': vunConfig.build.runtimeCompiler
+        //   ? 'vue/dist/vue.runtime.esm-bundler.js'
+        //   : 'vue/dist/vue.esm.js'
       }
     },
     module: {
@@ -67,7 +69,7 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
           test: /\.vue$/,
           loader: require.resolve('vue-loader'),
           options: {
-            extractCSS: true
+            extractCSS: !!vunConfig.build.css.extract
           }
         },
         {

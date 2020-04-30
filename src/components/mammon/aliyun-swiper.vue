@@ -1,31 +1,29 @@
 <template>
   <div class="mammon aliyun">
-    <client-only>
-      <swiper
-        class="swiper"
-        :options="swiperOption"
+    <swiper
+      class="swiper"
+      :options="swiperOption"
+    >
+      <swiper-slide
+        v-for="(ad, index) in aliyunAds"
+        :key="index"
+        class="slide"
       >
-        <swiper-slide
-          v-for="(ad, index) in aliyunAds"
-          :key="index"
-          class="slide"
+        <a
+          :href="ad.url"
+          class="link"
+          target="_blank"
         >
-          <a
-            :href="ad.url"
-            class="link"
-            target="_blank"
-          >
-            <div
-              :style="{ backgroundImage: `url(${ad.image})` }"
-              class="image"
-            />
-          </a>
-        </swiper-slide>
-        <template #pagination>
-          <div class="swiper-pagination aliyun-pagination" />
-        </template>
-      </swiper>
-    </client-only>
+          <div
+            :style="{ backgroundImage: `url(${ad.image})` }"
+            class="image"
+          />
+        </a>
+      </swiper-slide>
+      <template #pagination>
+        <div class="swiper-pagination aliyun-pagination" />
+      </template>
+    </swiper>
   </div>
 </template>
 

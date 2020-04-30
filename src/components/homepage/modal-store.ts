@@ -8,7 +8,7 @@ export enum FileFormat {
   'TypeScript' = 'typescript'
 }
 
-const modalSymbol = Symbol()
+const modalSymbol = Symbol('modal-store')
 const createModalStore = () => {
   const visible = ref<boolean>(false)
   const filePath = ref<string | null>(null)
@@ -21,14 +21,14 @@ const createModalStore = () => {
   const isLoading = ref<boolean>(false)
 
   const fileExt = computed(() => {
-    if (filePath) {
-      if (filePath.value?.endsWith('.vue')) {
+    if (filePath.value) {
+      if (filePath.value.endsWith('.vue')) {
         return FileFormat.Vue
       }
-      if (filePath.value?.endsWith('.js')) {
+      if (filePath.value.endsWith('.js')) {
         return FileFormat.JavaScript
       }
-      if (filePath.value?.endsWith('.ts')) {
+      if (filePath.value.endsWith('.ts')) {
         return FileFormat.TypeScript
       }
     }

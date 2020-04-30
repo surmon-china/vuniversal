@@ -5,7 +5,7 @@
 
 // @ts-ignore
 import { createStore, useStore as useVuexStore } from 'vuex'
-import { GitHubRepositorieIDs, GITHUB_UID } from '@/constants'
+import { GITHUB_REPOSITORIEL_IDS, GITHUB_UID } from '@/constants'
 import * as http from '~/services/http'
 
 export enum StoreNames {
@@ -49,13 +49,13 @@ const state = () => ({
 const store =  createStore<RootState>({
   state,
   getters: {
-    [StoreNames.OwnRepositories](state) {
+    [StoreNames.OwnRepositories](state): $TODO[] {
       return state.repositories
         .filter((repositorie: $TODO) => !repositorie.fork)
         .sort((a: $TODO, b: $TODO) => b.stargazers_count - a.stargazers_count)
     },
     [StoreNames.AppRepositories](state) {
-      const ids = Object.values(GitHubRepositorieIDs)
+      const ids = Object.values(GITHUB_REPOSITORIEL_IDS)
       return state.repositories
       .filter((repositorie: $TODO) => ids.includes(repositorie.name))
       .sort((a: $TODO, b: $TODO) => b.stargazers_count - a.stargazers_count)

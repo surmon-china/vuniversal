@@ -26,7 +26,6 @@
 </template>
 
 <script lang="ts">
-  import { isBrowser } from '@/environment'
   import { defineComponent } from 'vue'
   import { transformComponentsToNormalMaterial, getHomePageHeadMeta } from '@/transforms/example'
   import Homepage from '@/components/homepage/index.vue'
@@ -46,13 +45,11 @@
     HomepageExampleCard,
   }
 
-  if (isBrowser) {
-    const { components: exComponents, examples } = transformComponentsToNormalMaterial(
-      require('@/projects/vue-video-player/examples').default
-    )
-    data.examples = examples
-    Object.assign(components, exComponents)
-  }
+  const { components: exComponents, examples } = transformComponentsToNormalMaterial(
+    require('@/projects/vue-video-player/examples').default
+  )
+  data.examples = examples
+  Object.assign(components, exComponents)
 
   export default defineComponent({
     name: repoId,

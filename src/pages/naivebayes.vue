@@ -4,47 +4,43 @@
     :repositorie-id="repositorieId"
     :footer-ad-provider="adProvider"
   >
-    <client-only slot="content">
-      <component
-        :is="example.name"
-        v-for="example in examples"
-        :key="example.name"
-        :path="example.path"
-        :title="example.title || example.name"
-      />
-    </client-only>
+    <component
+      v-slot:content
+      :is="example.name"
+      v-for="example in examples"
+      :key="example.name"
+      :path="example.path"
+      :title="example.title || example.name"
+    />
   </homepage>
 </template>
 
 <script lang="ts">
   import { defineComponent } from 'vue'
   import { getComponentExampleMeta, getHomePageHeadMeta } from '@/transformers/page-meta'
-  import { GitHubRepositorieIDs } from '@/constants'
-  import { isBrowser } from '@/environment'
+  import { GITHUB_REPOSITORIEL_IDS } from '@/constants'
   import { MammonProvider } from '@/components/mammon/index.vue'
   import { IExample } from '@/components/homepage/examples.vue'
   import HomepageExampleCard from '@/components/homepage/card-example.vue'
   import Homepage from '@/components/homepage/index.vue'
 
-  const repositorieId = GitHubRepositorieIDs.Naivebayes
+  const repositorieId = GITHUB_REPOSITORIEL_IDS.Naivebayes
   const examples: IExample[] = []
   const components = {
     Homepage,
     HomepageExampleCard
   }
 
-  if (isBrowser) {
-    getComponentExampleMeta(require('@/projects/naivebayes'))
-      .forEach(({ component, fileName, ...others }) => {
-        examples.push({
-          ...others,
-          path: fileName && `projects/${repositorieId}/${fileName}`
-        })
-        Object.assign(components, {
-          [component.name]: component
-        })
+  getComponentExampleMeta(require('@/projects/naivebayes'))
+    .forEach(({ component, fileName, ...others }) => {
+      examples.push({
+        ...others,
+        path: fileName && `projects/${repositorieId}/${fileName}`
       })
-  }
+      Object.assign(components, {
+        [component.name]: component
+      })
+    })
 
   export default defineComponent({
     name: `page-${repositorieId}`,

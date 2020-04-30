@@ -45,7 +45,13 @@ export const defaultConfig: VunLibConfig = {
       },
       requireModuleExtension: true,
       sourceMap: false,
-      loaderOptions: {}
+      loaderOptions: {} as any,
+      styleResources: {
+        scss: [],
+        sass: [],
+        less: [],
+        stylus: []
+      }
     }
   },
   babel: {},

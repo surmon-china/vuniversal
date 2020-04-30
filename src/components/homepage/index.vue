@@ -3,36 +3,53 @@
     <header class="header">
       <div class="container">
         <div class="main">
-          <a class="author" target="_blank" :href="userUrl">
-            <i class="iconfont icon-github"></i>
+          <a
+            class="author"
+            target="_blank"
+            :href="userUrl"
+          >
+            <i class="iconfont icon-github" />
             <span class="name">{{ githubUID }}</span>
           </a>
-          <a class="author" target="_blank" href="/">
-            <i class="iconfont icon-experiment"></i>
+          <a
+            class="author"
+            target="_blank"
+            href="/"
+          >
+            <i class="iconfont icon-experiment" />
             <span class="name">Projects</span>
           </a>
           <transition name="module">
-            <a class="author" target="_blank" :href="blogUrl" v-if="blogUrl">
-              <i class="iconfont icon-link"></i>
+            <a
+              v-if="blogUrl"
+              class="author"
+              target="_blank"
+              :href="blogUrl"
+            >
+              <i class="iconfont icon-link" />
               <span class="name">Blog</span>
             </a>
           </transition>
-          <a class="author" target="_blank" :href="sponsorUrl">
-            <i class="iconfont icon-heart"></i>
+          <a
+            class="author"
+            target="_blank"
+            :href="sponsorUrl"
+          >
+            <i class="iconfont icon-heart" />
             <span class="name">Sponsor</span>
           </a>
         </div>
         <div class="repositories">
           <span class="current">
             <span>{{ currentRepositorie }}</span>
-            <i class="iconfont icon-dropdown"></i>
+            <i class="iconfont icon-dropdown" />
           </span>
           <ul class="list">
             <li
-              class="item"
-              :key="item.name"
-              :title="`${item.name}: ${item.description}`"
               v-for="item in appRepositories"
+              :key="item.name"
+              class="item"
+              :title="`${item.name}: ${item.description}`"
             >
               <a
                 :href="`/${item.name}`"
@@ -43,14 +60,14 @@
                 <div class="name">
                   <span class="text">
                     {{ item.name }}
-                    <i class="iconfont icon-link-external"></i>
+                    <i class="iconfont icon-link-external" />
                   </span>
                   <span class="meta">
-                    <i class="iconfont icon-star"></i>
+                    <i class="iconfont icon-star" />
                     <span>{{ item.stargazers_count }}</span>
                   </span>
                   <span class="meta">
-                    <i class="iconfont icon-fork"></i>
+                    <i class="iconfont icon-fork" />
                     <span>{{ item.forks }}</span>
                   </span>
                 </div>
@@ -63,15 +80,19 @@
     </header>
     <main class="main">
       <div class="banner">
-        <h1 class="title"><span>{{ repoName }}</span></h1>
+        <h1 class="title">
+          <span>{{ repoName }}</span>
+        </h1>
         <transition name="module" mode="out-in">
-          <h4 class="subtitle" :key="repoDescription">{{ repoDescription || '...' }}</h4>
+          <h4 :key="repoDescription" class="subtitle">
+            {{ repoDescription || '...' }}
+          </h4>
         </transition>
         <div class="github-buttons">
           <github-button-base
             :link="repoUrl"
             :count="repoDetail && repoDetail.stargazers_count || 0"
-            :countLink="`${repoUrl}/stargazers`"
+            :count-link="`${repoUrl}/stargazers`"
             icon="icon-github"
             class="item"
             text="Star"
@@ -128,22 +149,18 @@
           /> -->
         </div>
         <div class="actions">
-          <slot name="actions"></slot>
+          <slot name="actions" />
         </div>
       </div>
       <div class="container">
-        <homepage-basic-card class="homepage-mammon" v-if="headerAdProvider">
-          <client-only>
-            <mammon :provider="headerAdProvider" />
-          </client-only>
+        <homepage-basic-card v-if="headerAdProvider" class="homepage-mammon">
+          <mammon :provider="headerAdProvider" />
         </homepage-basic-card>
         <slot name="content">
           <Loading class="loading" />
         </slot>
-        <homepage-basic-card class="homepage-mammon" v-if="footerAdProvider">
-          <client-only>
-            <mammon :provider="footerAdProvider" />
-          </client-only>
+        <homepage-basic-card v-if="footerAdProvider" class="homepage-mammon">
+          <mammon :provider="footerAdProvider" />
         </homepage-basic-card>
       </div>
     </main>
@@ -163,9 +180,9 @@
 
 <script lang="ts">
   import { PropType, defineComponent, ref, computed, onMounted } from 'vue'
-  import { Route } from 'vue-router'
-  import { StoreNames, RootState } from '@/store'
-  import { IVueComponentData } from '@/types/interfaces'
+  import { useRoute } from 'vue-router'
+  import { StoreNames, RootState, useStore } from '@/store'
+  import { IVueComponentData } from '@/interfaces/component'
   import { getRepositorieUrl, getNPMUrl } from '@/transformers/url'
   import { numberSplit } from '@/transformers/unit'
   import GithubButtonBase from '@/components/github-button/base.vue'
@@ -175,7 +192,7 @@
   import HomepageModal from './modal.vue'
   import Loading from './loading.vue'
   import { provideModalStore } from './modal-store'
-  import CONFIG from '@/constants'
+  import CONSTANTS from '@/constants'
 
   export default defineComponent({
     name: 'homepage',
@@ -205,28 +222,30 @@
         required: false
       }
     },
-    setup(props, { root }) {
+    setup(props) {
+      const route = useRoute()
+      const rootStore = useStore()
       provideModalStore()
 
-      const rootState = root.$store.state as RootState
+      const rootState = rootStore.state
       const repoDetail = computed(() => {
-        return root.$store.getters[StoreNames.GetRepositorieDetail](props.repositorieId)
+        return rootStore.getters[StoreNames.GetRepositorieDetail](props.repositorieId)
       })
-      const githubUID = CONFIG.GITHUB_UID
-      const userUrl = CONFIG.GITHUB_USER_URL
+      const githubUID = CONSTANTS.GITHUB_UID
+      const userUrl = CONSTANTS.GITHUB_USER_URL
       const blogUrl = computed(() => rootState.userInfo?.blog)
-      const currentRepositorie = computed(() => root.$route.name)
+      const currentRepositorie = computed(() => route.name)
       const npmUrl = computed(() => getNPMUrl(props.repositorieId))
       const repoUrl = computed(() => getRepositorieUrl(githubUID, props.repositorieId))
       const repoName = computed(() => props.name || repoDetail.value?.name || props.repositorieId)
       const repoDescription = computed(() => repoDetail.value?.description)
-      const appRepositories = computed(() => root.$store.getters[StoreNames.AppRepositories])
+      const appRepositories = computed(() => rootStore.getters[StoreNames.AppRepositories])
       const packageDownloads = computed(() => {
         const downloads = (rootState.npmPackagesDownloadsMap as any)[repoName.value as any]
         return downloads ? numberSplit(downloads) : '0'
       })
       const isNPMPackage = computed((): boolean => {
-        return root.$store.getters[StoreNames.NPMRepositories]
+        return rootStore.getters[StoreNames.NPMRepositories]
           .map(({ name }: $TODO) => name)
           .includes(repoName.value)
       })
@@ -244,7 +263,7 @@
         packageDownloads,
         appRepositories,
         npmUrl,
-        sponsorUrl: CONFIG.GITHUB_SPONSORS_URL
+        sponsorUrl: CONSTANTS.GITHUB_SPONSORS_URL
       }
     }
   })

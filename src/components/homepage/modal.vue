@@ -1,22 +1,22 @@
 <template>
   <transition name="module">
-    <div class="homepage-modal" v-if="visible">
+    <div v-if="visible" class="homepage-modal">
       <div class="modal">
         <p class="title">
           <a :href="fileUrl" class="link" target="_blank">
             <span>{{ title }} ({{ path }})</span>
-            <i class="iconfont icon-link-external"></i>
+            <i class="iconfont icon-link-external" />
           </a>
           <button class="close" @click="close">
-            <i class="iconfont icon-close"></i>
+            <i class="iconfont icon-close" />
           </button>
         </p>
         <div class="content">
           <transition name="module" mode="out-in">
-            <Loading class="loading" v-if="isLoading" />
+            <Loading v-if="isLoading" class="loading" />
             <p v-else-if="!code">No data</p>
             <pre v-else class="code">
-              <code :data-lang="fileExt" v-html="code" contenteditable></code>
+              <code :data-lang="fileExt" contenteditable v-html="code" />
             </pre>
           </transition>
         </div>

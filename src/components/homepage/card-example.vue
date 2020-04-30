@@ -31,6 +31,9 @@
 
   export default defineComponent({
     name: 'homepage-example-card',
+    components: {
+      HomepageBasicCard
+    },
     props: {
       title: {
         type: String,
@@ -44,9 +47,6 @@
         type: String,
         required: false
       }
-    },
-    components: {
-      HomepageBasicCard
     },
     setup(props) {
       const modalStore = useModalStore()

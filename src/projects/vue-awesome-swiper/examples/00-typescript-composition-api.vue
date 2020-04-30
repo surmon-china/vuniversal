@@ -2,47 +2,45 @@
   <div class="important-example">
     <!-- WORKAROUND!!!! -->
     <p v-show="false">{{ clickedIds }}</p>
-    <client-only>
       <!-- Swiper component -->
-      <swiper
-        ref="swiperComponentRef"
-        class="swiper component"
-        :options="swiperComponentOption"
-        @ready="handleSwiperComponentReady"
-        @click.native="handleSwiperDOMClick"
-        @clickSlide="handleSwiperSlideClick"
-        @slideChangeTransitionStart="handleSwiperSlideChangeTransitionStart"
-      >
-        <swiper-slide>
-          <span>
-            <code>{{ '&lt;' }}client-only{{ '>' }}</code>
-            <span>&nbsp;component</span>
-          </span>
-          <span class="click">{{ isSlideClicked(1) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <swiper-slide>
-          <span>only render on client.</span>
-          <span class="click">{{ isSlideClicked(2) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <swiper-slide>
-          <a target="_blank" href="https://nuxtjs.org/api/components-client-only/">learn more on Nuxt.js</a>
-          <span class="click">{{ isSlideClicked(3) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <swiper-slide>
-          <span>Loop Slide 4</span>
-          <span class="click">{{ isSlideClicked(4) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <swiper-slide>
-          <span>Loop Slide 5</span>
-          <span class="click">{{ isSlideClicked(5) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <swiper-slide v-if="isComponentRendered">
-          <span>Loop Slide 6</span>
-          <span class="click">{{ isSlideClicked(6) ? 'clicked!' : 'click me' }}</span>
-        </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
-      </swiper>
-    </client-only>
+    <swiper
+      ref="swiperComponentRef"
+      class="swiper component"
+      :options="swiperComponentOption"
+      @ready="handleSwiperComponentReady"
+      @click.native="handleSwiperDOMClick"
+      @clickSlide="handleSwiperSlideClick"
+      @slideChangeTransitionStart="handleSwiperSlideChangeTransitionStart"
+    >
+      <swiper-slide>
+        <span>
+          <code>{{ '&lt;' }}client-only{{ '>' }}</code>
+          <span>&nbsp;component</span>
+        </span>
+        <span class="click">{{ isSlideClicked(1) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <swiper-slide>
+        <span>only render on client.</span>
+        <span class="click">{{ isSlideClicked(2) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <swiper-slide>
+        <a target="_blank" href="https://nuxtjs.org/api/components-client-only/">learn more on Nuxt.js</a>
+        <span class="click">{{ isSlideClicked(3) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <swiper-slide>
+        <span>Loop Slide 4</span>
+        <span class="click">{{ isSlideClicked(4) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <swiper-slide>
+        <span>Loop Slide 5</span>
+        <span class="click">{{ isSlideClicked(5) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <swiper-slide v-if="isComponentRendered">
+        <span>Loop Slide 6</span>
+        <span class="click">{{ isSlideClicked(6) ? 'clicked!' : 'click me' }}</span>
+      </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
+    </swiper>
     <!-- Swiper directive -->
     <div
       class="swiper directive"

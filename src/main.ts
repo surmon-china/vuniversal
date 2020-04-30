@@ -1,10 +1,10 @@
 
 import { createApp } from 'vue'
-import router from './routes'
+import router from './router'
 import store from './store'
 import App from './App.vue'
 import Adsense from '@/plugins/vue-google-adsense'
-import Swiper from '@/plugins/vue-awesome-swiper'
+// import Swiper from '@/plugins/vue-awesome-swiper'
 import Codemirror from '@/plugins/vue-codemirror'
 import DragZone from '@/plugins/vue-drag-zone'
 import Quill from '@/plugins/vue-quill-editor'
@@ -18,7 +18,7 @@ app.use(store)
 app.use(router)
 // plugins
 // @ts-ignore
-app.use(Swiper)
+// app.use(Swiper)
 app.use(Codemirror)
 app.use(DragZone)
 app.use(Quill)

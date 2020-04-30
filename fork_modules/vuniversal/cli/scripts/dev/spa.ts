@@ -27,21 +27,16 @@ export function startSPAServer() {
     chunks: 'all',
     filename: resolveAppRoot(path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)),
     templateContent({ htmlWebpackPlugin }) {
-      // console.log('---------vunConfig', vunConfig)
-      // console.log('---------htmlWebpackPlugin', htmlWebpackPlugin)
       const HTML_ATTRS = ''
       const HEAD_ATTRS = ''
       const BODY_ATTRS = ''
-      const APP = 'client'
-
-      const HEAD = [
-        `<title>Welcome to vuniversal! ⚡</title>`,
-        ...htmlWebpackPlugin.files.css.map((css: string) => `<link rel="stylesheet" href="${css}">`)
-      ].join('\n')
-
-      const FOOTER = [
-        ...htmlWebpackPlugin.files.js.map((js: string) => `<script src="${js}" defer crossorigin></script>`)
-      ].join('\n')
+      const APP = ''
+      const HEAD = htmlWebpackPlugin.files.css
+        .map((css: string) => `<link rel="stylesheet" href="${css}">`)
+        .join('\n')
+      const FOOTER = htmlWebpackPlugin.files.js
+        .map((js: string) => `<script src="${js}" defer crossorigin></script>`)
+        .join('\n')
 
       return templateRender({
         HTML_ATTRS,
@@ -64,10 +59,10 @@ export function startSPAServer() {
 
   // https://webpack.docschina.org/configuration/dev-server
   WebpackDevServer.addDevServerEntrypoints(clientConfig, devServerConfig)
-  const server = new WebpackDevServer(clientCompiler, devServerConfig)
+  const devServer = new WebpackDevServer(clientCompiler, devServerConfig)
 
   compilerToPromise(clientCompiler, VueEnv.Client).then(() => {
-    server.listen(vunConfig.dev.port, vunConfig.dev.host, error => {
+    devServer.listen(vunConfig.dev.port, vunConfig.dev.host, error => {
       if (error) {
         logger.br()
         logger.error('Dev server run failed: ', error)
