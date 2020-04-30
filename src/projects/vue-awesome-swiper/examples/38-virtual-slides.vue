@@ -64,7 +64,7 @@
       height: 300px;
       width: 100%;
 
-      /deep/ .swiper-slide {
+      ::v-deep(.swiper-slide) {
         display: flex;
         justify-content: center;
         align-items: center;

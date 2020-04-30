@@ -1,57 +1,39 @@
 import fs from 'fs-extra'
 import path from 'path'
-import webpack from 'webpack'
-import templateParser from 'lodash/template'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import getWebpackConfig from '../../configs/webpack'
-import { SPA_TEMPLATE_FILE } from '../../../base/paths'
-import { NodeEnv, VueEnv } from '../../../base/environment'
-import { compileConfig } from '../../configs/webpack/helper'
-import vunConfig from '../../../base/config'
-import logger from '../../services/logger'
+import { getWebpackConfig } from '../../configs/webpack'
+import { SPA_TEMPLATE_FILE, DEFAULT_FALLBACK_FILE } from '../../paths'
+import { NodeEnv, VueEnv } from '../../environment'
+import { compileConfig, runPromise } from '../../configs/webpack/helper'
+import { spaTemplateRender } from '../../configs/html-plugin'
+import vunConfig from '../../configs/vuniversal'
 
-export default function startSPAServer() {
-
-  const clientConfig = getWebpackConfig({ target: VueEnv.Client, environment: NodeEnv.Production })
-  const htmlTemplate = fs.readFileSync(vunConfig.template)
-  const templateRender = templateParser(htmlTemplate.toString(), {
-    interpolate: /{{([\s\S]+?)}}/g,
-    evaluate: /{%([\s\S]+?)%}/g
+export function startBuildSPA() {
+  const indexHTMLpath = path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)
+  const clientConfig = getWebpackConfig({
+    target: VueEnv.Client,
+    environment: NodeEnv.Production
   })
 
+  // HTML
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
+    filename: indexHTMLpath,
+    templateContent: spaTemplateRender,
     inject: false,
-    minify: true,
-    chunks: 'all',
-    filename: path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE),
-    templateContent({ htmlWebpackPlugin }) {
-      const HTML_ATTRS = ''
-      const HEAD_ATTRS = ''
-      const BODY_ATTRS = ''
-      const APP = 'client'
-
-      const HEAD = [
-        `<title>Welcome to vuniversal! ⚡</title>`,
-        ...htmlWebpackPlugin.files.css.map((css: string) => `<link rel="stylesheet" href="${css}">`)
-      ].join('\n')
-
-      const FOOTER = [
-        ...htmlWebpackPlugin.files.js.map((js: string) => `<script src="${js}" defer crossorigin></script>`)
-      ].join('\n')
-
-      return templateRender({
-        HTML_ATTRS,
-        HEAD_ATTRS,
-        BODY_ATTRS,
-        HEAD,
-        APP,
-        FOOTER
-      })
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true,
+      collapseBooleanAttributes: true,
+      removeScriptTypeAttributes: true
+      // more options:
+      // https://github.com/kangax/html-minifier#options-quick-reference
     }
   }))
 
+  // Prerender
   if (vunConfig.prerender) {
-    const { routes, fallback } = vunConfig.prerender
+    const { routes } = vunConfig.prerender
     if (Array.isArray(routes) && routes.length) {
       const PrerenderSPAPlugin = require('prerender-spa-plugin')
       clientConfig.plugins?.push(new PrerenderSPAPlugin({
@@ -63,25 +45,22 @@ export default function startSPAServer() {
         }
       }))
     }
-
-    if (fallback) {
-      const fallbackFile = fallback === true
-        ? '404.html'
-        : fallback
-      console.log('prerender done! fallback', fallbackFile)
-    }
   }
 
-  const clientCompiler = compileConfig(clientConfig)
-  clientCompiler.run((error: Error, stats: webpack.Stats) => {
-    if (error) {
-      logger.error('Failed to compile.', error)
+  // Run
+  runPromise(compileConfig(clientConfig), VueEnv.Client).then(() => {
+    // Prerender fallback
+    if (typeof vunConfig.prerender === 'object') {
+      const { fallback } = vunConfig.prerender
+      if (fallback) {
+        const fallbackFile = fallback === true
+          ? DEFAULT_FALLBACK_FILE
+          : fallback
+        fs.copySync(
+          indexHTMLpath,
+          path.resolve(vunConfig.dir.build, fallbackFile)
+        )
+      }
     }
-
-    if (stats.hasErrors()) {
-      logger.errors('Failed to bundling.', stats.toJson().errors)
-    }
-
-    logger.done(`Compiled ${VueEnv.Client} successfully.`)
   })
 }

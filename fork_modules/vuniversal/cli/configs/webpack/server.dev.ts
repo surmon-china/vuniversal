@@ -1,7 +1,7 @@
 import webpack, { Configuration } from 'webpack'
-import { SERVER_JS_FILE, VUN_DEV_CACHE_PATH } from '../../../base/paths'
+import { SERVER_JS_FILE, VUN_DEV_CACHE_PATH } from '../../paths'
 
-export default function modifyServerDevConfig(webpackConfig: Configuration): void {
+export function modifyServerDevConfig(webpackConfig: Configuration): void {
   // Specify webpack Node.js output path and filename
   webpackConfig.output = {
     path: VUN_DEV_CACHE_PATH,
@@ -10,8 +10,7 @@ export default function modifyServerDevConfig(webpackConfig: Configuration): voi
     libraryTarget: 'commonjs2'
   }
 
-  webpackConfig.plugins = [
-    ...(webpackConfig.plugins || []),
+  webpackConfig.plugins?.push(
     // Add hot module replacement
     new webpack.HotModuleReplacementPlugin(),
     // Prevent creating multiple chunks for the server
@@ -24,5 +23,5 @@ export default function modifyServerDevConfig(webpackConfig: Configuration): voi
     //   resolveClientAssetsManifest(vunConfig.dir.build),
     //   resolveClientChunksManifest(vunConfig.dir.build)
     // ])
-  ]
+  )
 }

@@ -5,12 +5,12 @@ import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import StartServerPlugin from 'start-server-webpack-plugin'
 import logger from '../../services/logger'
-import vunConfig from '../../../base/config'
-import getWebpackConfig from '../../configs/webpack'
+import vunConfig from '../../configs/vuniversal'
+import { getWebpackConfig } from '../../configs/webpack'
 import { defaultDevServerConfig } from '../../configs/dev-server'
-import { VUN_DEV_TEMPLATE, SERVER_ENTRY, SERVER_JS_FILE } from '../../../base/paths'
+import { VUN_DEV_TEMPLATE, SERVER_ENTRY, SERVER_JS_FILE } from '../../paths'
 import { compileConfig, compilerToPromise, getAssetsServerPort } from '../../configs/webpack/helper'
-import { NodeEnv, VueEnv } from '../../../base/environment'
+import { NodeEnv, VueEnv } from '../../environment'
 import { args } from '../../utils'
 
 export function startSSRServer() {
@@ -76,7 +76,7 @@ export function startSSRServer() {
     clientServer.listen(assetsServerPost, vunConfig.dev.host, error => {
       if (error) {
         logger.br()
-        logger.error('Dev server run failed: ', error)
+        logger.error('Client dev server run failed: ', error)
       }
     })
   }).catch(error => {

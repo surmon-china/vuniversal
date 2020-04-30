@@ -55,7 +55,7 @@
   .swiper {
     height: 460px;
 
-    /deep/ .swiper-slide {
+    ::v-deep(.swiper-slide) {
       &.text {
         font-size: 18px!important;
         text-align: left!important;

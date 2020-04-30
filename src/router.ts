@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { scrollWaiter } from './scrollWaiter'
-import { ROUTES, GITHUB_REPOSITORIEL_IDS } from './constants'
+import { GITHUB_REPOSITORIEL_IDS } from './constants'
 import NotFound from './pages/not-found.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -9,11 +9,16 @@ const routes: RouteRecordRaw[] = [
     name: 'Index',
     component: async () => import('./pages/index.vue')
   },
-  {
-    path: ROUTES.VueTouchRipple,
-    name: GITHUB_REPOSITORIEL_IDS.VueTouchRipple,
-    component: async () => import('./pages/vue-touch-ripple.vue')
-  },
+  // {
+  //   path: `/${GITHUB_REPOSITORIEL_IDS.Naivebayes}`,
+  //   name: GITHUB_REPOSITORIEL_IDS.Naivebayes,
+  //   component: async () => import('./pages/naivebayes.vue')
+  // },
+  // {
+  //   path: `/${GITHUB_REPOSITORIEL_IDS.VueTouchRipple}`,
+  //   name: GITHUB_REPOSITORIEL_IDS.VueTouchRipple,
+  //   component: async () => import('./pages/vue-touch-ripple.vue')
+  // },
   {
     name: NotFound.name,
     path: '/:data(.*)',

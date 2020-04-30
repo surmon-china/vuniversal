@@ -2,19 +2,55 @@ import path from 'path'
 import { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
-import vunConfig from '../../../base/config'
-import modifyClientDevConfig from './clien.dev'
-import modifyClientProdConfig from './client.prod'
-import { VueEnv, isDev, isUniversal } from '../../../base/environment'
-import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath } from '../../../base/paths'
+import vunConfig from '../vuniversal'
+import { modifyClientDevConfig } from './clien.dev'
+import { modifyClientProdConfig } from './client.prod'
+import { VueEnv, isDev, isUniversal } from '../../environment'
+import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '../../paths'
+import { autoHash } from './helper'
 import { BuildContext } from '.'
 
-export default function modifyClientConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
+export function modifyClientConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   const IS_DEV = isDev(buildContext.environment)
+  const clientBuildPath = getClientBuildPath(vunConfig)
+
+  // TODO: morden
+  // isLegacyBundle ? '[name]-legacy.js' : '[name].js'
+  // const outputFilename = getAssetPath(
+  //   options,
+  //   `js/[name]${isLegacyBundle ? `-legacy` : ``}${isProd && options.filenameHashing ? '.[contenthash:8]' : ''}.js`
 
   // specify our client entry point /client/index.js
   webpackConfig.entry = {
     [CLIENT_ENTRY]: [vunConfig.clientEntry]
+  }
+
+  // Specify the client output directory and paths.
+  webpackConfig.output = {
+    path: clientBuildPath,
+    publicPath: vunConfig.build.publicPath,
+    filename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
+    chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
+  }
+
+  webpackConfig.optimization = {
+    ...vunConfig.build.optimization
+  }
+
+  webpackConfig.node = {
+    // prevent webpack from injecting useless setImmediate polyfill because Vue
+    // source contains it (although only uses it if it's native).
+    setImmediate: false,
+    // process is injected via DefinePlugin, although some 3rd party
+    // libraries may require a mock to work properly (#934)
+    process: 'mock',
+    // prevent webpack from injecting mocks to Node native modules
+    // that does not make sense for the client
+    dgram: 'empty',
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty',
+    child_process: 'empty'
   }
 
   webpackConfig.plugins?.push(

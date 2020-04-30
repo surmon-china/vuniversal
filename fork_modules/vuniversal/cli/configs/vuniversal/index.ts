@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import { VunLibConfig } from './interface'
 import { defaultConfig } from './default'
 import { transformConfig, normalizeConfig } from './transformer'
-import { APP_VUN_CONFIG_PATH } from '../paths'
+import { APP_VUN_CONFIG_PATH } from '../../paths'
 
 export * from './default'
 export * from './interface'

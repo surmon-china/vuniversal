@@ -1,5 +1,5 @@
 
-import { VunLibConfig } from './config'
+import { VunLibConfig } from './configs/vuniversal'
 
 export enum UniversalMode {
   SPA = 'spa',
@@ -27,6 +27,10 @@ export function isDev(environment: NodeEnv): boolean {
 
 export function isProd(environment: NodeEnv): boolean {
   return environment === NodeEnv.Production
+}
+
+export function isTest(environment: NodeEnv): boolean {
+  return environment === NodeEnv.Test
 }
 
 export function isClientTarget(target: VueEnv): boolean {

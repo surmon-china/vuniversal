@@ -1,23 +1,25 @@
 <template>
   <homepage-example-card v-bind="$attrs">
-    <div class="actions" slot="actions">
-      <button class="button" @click="runClassifier">
-        <i class="iconfont icon-play"></i>
-        <span>运行代码</span>
-      </button>
-      <button class="button" @click="saveLearnHistory">
-        <i class="iconfont icon-download"></i>
-        <span>缓存学习记录</span>
-      </button>
-      <button class="button" @click="loadLearnHistory">
-        <i class="iconfont icon-upload"></i>
-        <span>载入上次学习记录</span>
-      </button>
-      <button class="button" @click="clearLearnHistory">
-        <i class="iconfont icon-close"></i>
-        <span>清空学习记录</span>
-      </button>
-    </div>
+    <template #actions>
+      <div class="actions">
+        <button class="button" @click="runClassifier">
+          <i class="iconfont icon-play" />
+          <span>运行代码</span>
+        </button>
+        <button class="button" @click="saveLearnHistory">
+          <i class="iconfont icon-download" />
+          <span>缓存学习记录</span>
+        </button>
+        <button class="button" @click="loadLearnHistory">
+          <i class="iconfont icon-upload" />
+          <span>载入上次学习记录</span>
+        </button>
+        <button class="button" @click="clearLearnHistory">
+          <i class="iconfont icon-close" />
+          <span>清空学习记录</span>
+        </button>
+      </div>
+    </template>
     <codemirror
       v-model="code"
       class="codemirror"
@@ -35,6 +37,7 @@
   import NaiveBayes from 'naivebayes'
   import HomepageExampleCard from '@/components/homepage/card-example.vue'
   import 'codemirror/mode/javascript/javascript.js'
+
   const localStorageKey = '01-classifierJson'
 
   export default {
@@ -43,7 +46,7 @@
     components: {
       HomepageExampleCard
     },
-    data () {
+    data() {
       return {
         classifierLog: 'No output\n',
         editorOption: {
@@ -154,9 +157,6 @@
         `
       }
     },
-    mounted() {
-      this.classifier = new NaiveBayes()
-    },
     computed: {
       console() {
         return {
@@ -168,6 +168,9 @@
           }
         }
       }
+    },
+    mounted() {
+      this.classifier = new NaiveBayes()
     },
     methods: {
       runClassifier() {
@@ -211,7 +214,7 @@
 <style lang="scss" scoped>
   @import './base.scss';
   .codemirror {
-    /deep/ .CodeMirror {
+    ::v-deep(.CodeMirror) {
       height: 460px;
     }
   }

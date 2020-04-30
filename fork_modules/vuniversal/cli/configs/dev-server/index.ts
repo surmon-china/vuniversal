@@ -1,6 +1,6 @@
 
 import WebpackDevServer from 'webpack-dev-server'
-import vunConfig from '../../../base/config'
+import vunConfig from '../vuniversal'
 
 export const defaultDevServerConfig: WebpackDevServer.Configuration = {
   hot: true,
@@ -10,8 +10,7 @@ export const defaultDevServerConfig: WebpackDevServer.Configuration = {
   // Browser log
   // clientLogLevel: 'error',
   // Hidden webpack bundle info
-  // TODO: OPEN
-  // noInfo: true,
+  noInfo: !vunConfig.dev.verbose,
   // Only output init info when true
   // quiet: true,
   headers: {

@@ -22,11 +22,7 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./src/*"]
-    },
-    "types": [
-      "@types/node",
-      "./src/types"
-    ]
+    }
   },
   "include": [
     "./src/**/*.ts",

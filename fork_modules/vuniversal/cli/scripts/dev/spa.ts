@@ -1,52 +1,25 @@
-import path from 'path'
-import fs from 'fs-extra'
-import templateParser from 'lodash/template'
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import getWebpackConfig from '../../configs/webpack'
+import { getWebpackConfig } from '../../configs/webpack'
 import { defaultDevServerConfig } from '../../configs/dev-server'
-import { resolveAppRoot, SPA_TEMPLATE_FILE } from '../../../base/paths'
-import { NodeEnv, VueEnv } from '../../../base/environment'
+import { NodeEnv, VueEnv } from '../../environment'
 import { compileConfig, compilerToPromise, getDevServerUrl } from '../../configs/webpack/helper'
+import { spaTemplateRender } from '../../configs/html-plugin'
 import { success as successNotifier } from '../../services/notifier'
-import vunConfig from '../../../base/config'
+import vunConfig from '../../configs/vuniversal'
 import logger from '../../services/logger'
 
 export function startSPAServer() {
-  const buildContext = { target: VueEnv.Client, environment: NodeEnv.Development }
-  const clientConfig = getWebpackConfig(buildContext)
-  const htmlTemplate = fs.readFileSync(vunConfig.template)
-  const templateRender = templateParser(htmlTemplate.toString(), {
-    interpolate: /{{([\s\S]+?)}}/g,
-    evaluate: /{%([\s\S]+?)%}/g
+  const clientConfig = getWebpackConfig({
+    target: VueEnv.Client,
+    environment: NodeEnv.Development
   })
 
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
     inject: false,
     minify: false,
     chunks: 'all',
-    filename: resolveAppRoot(path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)),
-    templateContent({ htmlWebpackPlugin }) {
-      const HTML_ATTRS = ''
-      const HEAD_ATTRS = ''
-      const BODY_ATTRS = ''
-      const APP = ''
-      const HEAD = htmlWebpackPlugin.files.css
-        .map((css: string) => `<link rel="stylesheet" href="${css}">`)
-        .join('\n')
-      const FOOTER = htmlWebpackPlugin.files.js
-        .map((js: string) => `<script src="${js}" defer crossorigin></script>`)
-        .join('\n')
-
-      return templateRender({
-        HTML_ATTRS,
-        HEAD_ATTRS,
-        BODY_ATTRS,
-        HEAD,
-        APP,
-        FOOTER
-      })
-    }
+    templateContent: spaTemplateRender
   }))
 
   const clientCompiler = compileConfig(clientConfig)

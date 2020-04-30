@@ -1,15 +1,14 @@
 <template>
-  <aliyun-swiper-ad key="aliyun" v-if="isEnabledAd(MammonProvider.Aliyun)" />
-  <adsense-responsive-ad-1 key="gad1" v-else-if="isEnabledAd(MammonProvider.GoogleAdSense1)" />
-  <adsense-responsive-ad-2 key="gad2" v-else-if="isEnabledAd(MammonProvider.GoogleAdSense2)" />
-  <adsense-responsive-ad-3 key="gad2" v-else-if="isEnabledAd(MammonProvider.GoogleAdSense3)" />
+  <aliyun-swiper-ad v-if="isEnabledAd(MammonProvider.Aliyun)" key="aliyun" />
+  <adsense-responsive-ad-1 v-else-if="isEnabledAd(MammonProvider.GoogleAdSense1)" key="gad1" />
+  <adsense-responsive-ad-2 v-else-if="isEnabledAd(MammonProvider.GoogleAdSense2)" key="gad2" />
+  <adsense-responsive-ad-3 v-else-if="isEnabledAd(MammonProvider.GoogleAdSense3)" key="gad2" />
 </template>
 
 <script lang="ts">
   import { defineComponent, computed } from 'vue'
   import AliyunSwiperAd from '@/components/mammon/aliyun-swiper.vue'
 
-  // @ts-ignore
   export enum MammonProvider {
     Aliyun = 'Aliyun',
     GoogleAdSense1 = 'GoogleAdSense1',

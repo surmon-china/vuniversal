@@ -1,7 +1,7 @@
 
 import { VunLibConfig } from './interface'
-import { VUN_DEFAULT_HTML_TEMPLATE } from '../../base/paths'
-import { NodeEnv, isProd } from '../environment'
+import { VUN_DEFAULT_HTML_TEMPLATE } from '../../paths'
+import { NodeEnv, isProd } from '../../environment'
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
@@ -21,6 +21,7 @@ export const defaultConfig: VunLibConfig = {
   dev: {
     host: 'localhost',
     port: 3000,
+    verbose: false,
     proxy: {},
     devServer: {}
   },
@@ -32,6 +33,9 @@ export const defaultConfig: VunLibConfig = {
     productionSourceMap: true,
     transpileDependencies: [],
     lintOnSave: true,
+    get filenameHashing() {
+      return isProd(process.env.NODE_ENV as NodeEnv)
+    },
     get parallel() {
       try {
         return require('os').cpus().length > 1
@@ -52,11 +56,29 @@ export const defaultConfig: VunLibConfig = {
         less: [],
         stylus: []
       }
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            name: 'chunk-vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial'
+          },
+          common: {
+            name: `chunk-common`,
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true
+          }
+        }
+      }
     }
   },
   babel: {},
-  webpack: {
-  }
+  webpack: {}
   // AUTO
   // typescript: {}
 }

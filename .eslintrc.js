@@ -12,6 +12,9 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off',
     'vue/component-definition-name-casing': 'off',
     'vue/require-default-prop': 'off',
+    'vue/valid-v-slot': 'off',
+    'vue/component-tags-order': 'off',
+    'vue/no-use-v-if-with-v-for': 'off',
     'vue/max-attributes-per-line': ['warn', {
       singleline: 4,
       multiline: {
@@ -19,14 +22,11 @@ module.exports = {
         allowFirstLine: true
       }
     }],
-    'vue/valid-v-slot': 'off',
-    'vue/component-tags-order': 'off',
-    'vue/no-use-v-if-with-v-for': 'off',
+    'import/order': 'off',
     'indent': 'off',
     'space-before-function-paren': 'off',
     'arrow-parens': 'off',
     'quotes': 'off',
-    'import/order': 'off',
     'no-console': 'off'
   }
 }

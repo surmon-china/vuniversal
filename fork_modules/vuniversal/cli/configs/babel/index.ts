@@ -1,48 +1,58 @@
 
-import fs from 'fs-extra'
-import { VunLibConfig } from '../../../base/config'
-import { BuildContext } from '../webpack'
-import { APP_BABEL_RC_PATH } from '../../../base/paths'
-import { NodeEnv } from '../../../base/environment'
+import path from 'path'
+import { VunLibConfig } from '../vuniversal'
+import { isWindows } from '../../utils'
 
-export default function getBabelOptions(buildContext: BuildContext, vunConfig: VunLibConfig) {
-  // First we check to see if the user has a custom .babelrc file, otherwise
-  // we just use babel-preset-razzle.
-  const hasBabelRc = fs.existsSync(APP_BABEL_RC_PATH)
+export function getBabelOptions(vunConfig: VunLibConfig) {
   const mainBabelOptions = {
-    babelrc: hasBabelRc,
-    cacheDirectory: true,
-    presets: [] as any[],
-    plugins: [] as any[]
+    presets: [require.resolve('@vue/babel-preset-app')]
   }
 
-  // TODO: 这个检验不严格，还有 bable.config.js
-  if (!hasBabelRc) {
-    mainBabelOptions.presets.push(require.resolve('@babel/preset-env'))
-    mainBabelOptions.plugins.push(require.resolve('@babel/plugin-transform-runtime'))
+  return {
+    ...mainBabelOptions,
+    ...vunConfig.babel
+  }
+}
 
-    if (buildContext.environment === NodeEnv.Test) {
-      mainBabelOptions.plugins.push([
-        // Compiles import() to a deferred require()
-        require.resolve('babel-plugin-dynamic-import-node'),
-        // Transform ES modules to commonjs for Jest support
-        [
-          require.resolve('@babel/plugin-transform-modules-commonjs'),
-          { loose: true }
-        ]
-      ])
+export function getExcluder(vunConfig: VunLibConfig) {
+  const transpileDepRegex = genTranspileDepRegex(vunConfig.build.transpileDependencies)
+  return (filepath: string) => {
+    // always transpile js in vue files
+    if (/\.vue\.jsx?$/.test(filepath)) {
+      return false
     }
+  
+    // only include @babel/runtime when the @vue/babel-preset-app preset is used
+    if (
+      // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/babel-preset-app/index.js#L218
+      // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel#L50
+      // process.env.VUE_CLI_TRANSPILE_BABEL_RUNTIME &&
+      filepath.includes(path.join('@babel', 'runtime'))
+    ) {
+      return false
+    }
+  
+    // check if this is something the user explicitly wants to transpile
+    if (transpileDepRegex && transpileDepRegex.test(filepath)) {
+      return false
+    }
+    // Don't transpile node_modules
+    return /node_modules/.test(filepath)
   }
+}
 
-  // Allow app to override babel options
-  const babelOptions = vunConfig.babel
-    ? mainBabelOptions
-    // ? vunConfig.babel(mainBabelOptions)
-    : mainBabelOptions
-
-  if (hasBabelRc) {
-    console.log('Using .babelrc defined in your app root');
-  }
-
-  return babelOptions
+// https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-plugin-babel/index.js#L5
+function genTranspileDepRegex(transpileDependencies: VunLibConfig['build']['transpileDependencies']) {
+  // @ts-ignore
+  const deps = transpileDependencies.map(dep => {
+    if (typeof dep === 'string') {
+      const depPath = path.join('node_modules', dep, '/')
+      return isWindows
+        ? depPath.replace(/\\/g, '\\\\') // double escape for windows style path
+        : depPath
+    } else if (dep instanceof RegExp) {
+      return dep.source
+    }
+  })
+  return deps.length ? new RegExp(deps.join('|')) : null
 }

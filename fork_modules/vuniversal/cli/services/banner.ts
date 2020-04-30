@@ -2,9 +2,9 @@ import wrapAnsi from 'wrap-ansi'
 import chalk from 'chalk'
 import boxen, { BorderStyle } from 'boxen'
 import prettyBytes from 'pretty-bytes'
-import { VUN_NAME } from '../../base/paths'
+import { VUN_NAME } from '../paths'
 import { vunPackageJSON, args } from '../utils'
-import { NodeEnv, UniversalMode } from '../../base/environment'
+import { NodeEnv, UniversalMode } from '../environment'
 
 // 80% of terminal column width
 // this is a fn because console width can have changed since startup
@@ -29,12 +29,16 @@ function foldLines(string: string, spaces: number, firstLineSpaces: number, char
 }
 
 export default function bannerBox(message: string, title?: string, options?: boxen.Options) {
-  return boxen(
-    [
-      title || chalk.white(`${VUN_NAME} Message`),
+  const content = [title || chalk.white(`${VUN_NAME} Message`)]
+  if (!!message) {
+    content.push(
       '',
       chalk.white(foldLines(message, 0, 0, maxCharsPerLine()))
-    ].join('\n'),
+    )
+  }
+
+  return boxen(
+    content.join('\n'),
     {
       borderColor: 'white',
       borderStyle: BorderStyle.Round,
@@ -74,7 +78,8 @@ export interface IHeadBannerOptions {
 export function headBanner(options: IHeadBannerOptions = {}) {
   const messages = []
   const titles = [
-    `${chalk.green.bold(VUN_NAME)} v${chalk(vunPackageJSON.version)}`
+    `${chalk.green.bold(VUN_NAME)} v${chalk(vunPackageJSON.version)}`,
+    ''
   ]
 
   // Execute command
@@ -112,7 +117,7 @@ export function headBanner(options: IHeadBannerOptions = {}) {
   }
 
   process.stdout.write(success(
-    messages.join('\n'),
+    messages.length ? messages.join('\n') : '',
     titles.join('\n')
   ))
 }

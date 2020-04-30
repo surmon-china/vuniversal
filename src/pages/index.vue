@@ -3,7 +3,7 @@
     <div class="container">
       <aside class="aside">
         <transition name="module">
-          <div class="gravatar" v-if="userInfo">
+          <div v-if="userInfo" class="gravatar">
             <img class="image" :draggable="false" :src="userInfo.avatar_url">
             <h2>{{ userInfo.name || '-' }}</h2>
             <p>{{ userInfo.bio || '-' }}</p>
@@ -11,7 +11,7 @@
               <github-button-base
                 :link="githubSponsorsUrl"
                 :count="userInfo.followers"
-                :countLink="githubFollowersUrl"
+                :count-link="githubFollowersUrl"
                 icon="icon-heart"
                 icon-color="#ea4aaa"
               >
@@ -21,21 +21,21 @@
           </div>
         </transition>
         <transition name="module">
-          <div class="profile" v-if="userInfo">
-            <p class="item" v-if="userInfo.html_url">
-              <i class="iconfont icon-github"></i>
+          <div v-if="userInfo" class="profile">
+            <p v-if="userInfo.html_url" class="item">
+              <i class="iconfont icon-github" />
               <a class="text link" target="_blank" :href="userInfo.html_url">@{{ userInfo.login }}</a>
             </p>
-            <p class="item" v-if="userInfo.email">
-              <i class="iconfont icon-mail"></i>
+            <p v-if="userInfo.email" class="item">
+              <i class="iconfont icon-mail" />
               <a class="text link" target="_blank" :href="'mailto://' + userInfo.email">{{ userInfo.email }}</a>
             </p>
-            <p class="item" v-if="userInfo.blog">
-              <i class="iconfont icon-link"></i>
+            <p v-if="userInfo.blog" class="item">
+              <i class="iconfont icon-link" />
               <a class="text link" target="_blank" :href="userInfo.blog">{{ userInfo.blog }}</a>
             </p>
-            <span class="item" v-if="userInfo.location">
-              <i class="iconfont icon-location"></i>
+            <span v-if="userInfo.location" class="item">
+              <i class="iconfont icon-location" />
               <span class="text">{{ userInfo.location }}</span>
             </span>
           </div>
@@ -51,13 +51,13 @@
               :number="inited ? repositorieStarTotal : 0"
             />
             <p class="name">
-              <i class="iconfont icon-star"></i>
+              <i class="iconfont icon-star" />
               <span>Total GitHub stars</span>
             </p>
           </div>
           <div class="item">
             <a :href="githubSponsorsUrl" target="_blank" class="sponsor">
-              <i class="iconfont icon-heart"></i>
+              <i class="iconfont icon-heart" />
             </a>
           </div>
           <div class="item">
@@ -66,7 +66,7 @@
               :number="inited ? packageDownloadTotal : 0"
             />
             <span class="name">
-              <i class="iconfont icon-npm"></i>
+              <i class="iconfont icon-npm" />
               <span>Total NPM downloads</span>
             </span>
           </div>
@@ -77,12 +77,12 @@
         <transition name="module" mode="out-in">
           <p v-if="!inited">Loading...</p>
           <ul v-else class="homepage-repo-list">
-            <li class="item" :key="repo.clone_url" v-for="repo in exampleRepositories">
+            <li v-for="repo in exampleRepositories" :key="repo.clone_url" class="item">
               <div class="wrapper">
                 <span>
-                  <i class="iconfont icon-link"></i>
+                  <i class="iconfont icon-link" />
                   <a class="name" target="_blacnk" :href="repo.homepage">{{ repo.name }}</a>
-                  <span class="archived" v-if="repo.archived">Archived</span>
+                  <span v-if="repo.archived" class="archived">Archived</span>
                 </span>
                 <span class="meta">
                   <template v-if="!repo.archived">
@@ -100,7 +100,7 @@
                     </transition>
                   </template>
                   <span class="star">
-                    <i class="iconfont icon-star"></i>
+                    <i class="iconfont icon-star" />
                     <span class="count">{{ repo.stargazers_count }}</span>
                   </span>
                 </span>
@@ -110,7 +110,7 @@
         </transition>
         <hr>
         <transition name="module">
-          <div class="index-mammon" v-if="enableAd">
+          <div v-if="enableAd" class="index-mammon">
             <mammon :provider="adProvider" />
           </div>
         </transition>
@@ -119,15 +119,15 @@
         <transition name="module" mode="out-in">
           <p v-if="!inited">Loading...</p>
           <ul v-else class="detail-repo-list">
-            <li class="item" :key="repo.clone_url" v-for="repo in repositories">
+            <li v-for="repo in repositories" :key="repo.clone_url" class="item">
               <p class="title">
                 <span>
-                  <i class="iconfont icon-repo"></i>
+                  <i class="iconfont icon-repo" />
                   <a class="name" target="_blacnk" :href="repo.html_url">{{ repo.full_name }}</a>
-                  <span class="archived" v-if="repo.archived">Archived</span>
+                  <span v-if="repo.archived" class="archived">Archived</span>
                 </span>
                 <template v-if="!repo.archived">
-                  <span class="npm" v-if="isNPMPackage(repo.name)">
+                  <span v-if="isNPMPackage(repo.name)" class="npm">
                     <badge-npm-downloads interval="dy" :name="repo.name" />
                     <badge-npm-version :name="repo.name" />
                   </span>
@@ -137,23 +137,23 @@
               <p class="desc">{{ repo.description }}</p>
               <p class="meta">
                 <span class="item">
-                  <i class="iconfont icon-star"></i>
+                  <i class="iconfont icon-star" />
                   <span>{{ repo.stargazers_count }}</span>
                 </span>
                 <span class="item">
-                  <i class="iconfont icon-fork"></i>
+                  <i class="iconfont icon-fork" />
                   <span>{{ repo.forks_count }}</span>
                 </span>
                 <span class="item">
-                  <i class="iconfont icon-issue"></i>
+                  <i class="iconfont icon-issue" />
                   <span>{{ repo.open_issues_count }}</span>
                 </span>
-                <span class="item license" v-if="repo.license">
-                  <i class="iconfont icon-law"></i>
+                <span v-if="repo.license" class="item license">
+                  <i class="iconfont icon-law" />
                   <span>{{ repo.license.name }}</span>
                 </span>
-                <span class="item language" v-if="repo.language">
-                  <i class="iconfont icon-code"></i>
+                <span v-if="repo.language" class="item language">
+                  <i class="iconfont icon-code" />
                   <span>{{ repo.language }}</span>
                 </span>
               </p>
@@ -167,7 +167,7 @@
           <p v-if="isFetchingOrganizations">Loading...</p>
           <ul v-else class="homepage-org-list">
             <template v-for="org in organizations">
-              <li class="item" v-if="org.description" :key="org.login">
+              <li v-if="org.description" :key="org.login" class="item">
                 <div class="wrapper">
                   <img class="logo" :src="org.avatar_url" :alt="org.login">
                   <div class="content">
@@ -216,7 +216,6 @@
       const isFetchingOrganizations = ref(false)
       const exampleRepositories = computed(() => {
         return repositories.value.filter(
-          // @ts-ignore
           (repo: any) => !!repo.homepage && repo.homepage !== CONSTANTS.PROJECT_URL
         )
       })
@@ -366,7 +365,7 @@
 
             .iconfont {
               font-size: $iconfont-size;
-              margin-right: $xs-gap;
+              margin-right: $sm-gap;
             }
           }
         }
@@ -400,7 +399,7 @@
         .homepage-repo-list,
         .detail-repo-list {
           .archived {
-            margin-left: 2px;
+            margin-left: $xs-gap;
             padding: 1px ($xs-gap / 2);
             border: 1px solid rgba($text-secondary, $golden-ratio);
             border-radius: $radius * 2;
@@ -444,6 +443,10 @@
             .name {
               margin-top: $gap;
               margin-bottom: 0;
+
+              .iconfont {
+                margin-right: $xs-gap;
+              }
             }
           }
         }
@@ -452,7 +455,7 @@
           list-style-type: square;
 
           .iconfont {
-            margin-right: $xs-gap;
+            margin-right: $sm-gap;
           }
 
           > .item {
@@ -477,7 +480,7 @@
                   width: 5em;
                 }
 
-                .badge {
+                ::v-deep(.badge) {
                   margin-right: $gap;
                 }
               }
@@ -534,8 +537,8 @@
               .npm {
                 display: inline-flex;
 
-                .badge {
-                  margin-left: $xs-gap;
+                ::v-deep(.badge) {
+                  margin-left: $sm-gap;
                 }
               }
             }
@@ -549,6 +552,7 @@
               font-size: $font-size-small;
               .iconfont {
                 font-size: $font-size-base;
+                margin-right: $xs-gap;
               }
 
               .item {
@@ -560,7 +564,7 @@
                   align-items: center;
 
                   .iconfont {
-                    margin-right: $xs-gap / 2;
+                    margin-right: $xs-gap;
                   }
                 }
               }

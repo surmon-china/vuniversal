@@ -28,7 +28,7 @@
   }
 }
 
-/deep/ .CodeMirror {
+::v-deep(.CodeMirror) {
   line-height: 21px;
 }
 

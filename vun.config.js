@@ -1,14 +1,22 @@
-
 module.exports = {
   universal: false,
   clientEntry: './src/main',
   template: './src/app.html',
-  // prerender: {
-  //   routes: ['/', '/nested', '/users/5']
-  // },
+  prerender: {
+    fallback: true,
+    routes: [
+      '/',
+      // '/naivebayes',
+      // '/vue-awesome-swiper',
+      // '/vue-quill-editor',
+      // '/vue-video-player',
+      // '/vue-codemirror',
+      // '/vue-touch-ripple',
+      // '/vue-drag-zone'
+    ]
+  },
   build: {
     css: {
-      extract: true,
       styleResources: {
         scss: ['./src/assets/styles/init.scss']
       }

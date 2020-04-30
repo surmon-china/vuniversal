@@ -1,15 +1,15 @@
 
-import { NodeEnv, UniversalMode } from '../../../base/environment'
+import { NodeEnv, UniversalMode } from '../../environment'
 
 // @ts-ignore
 process.noDeprecation = true // turns off that loadQuery clutter.
 process.env.NODE_ENV = NodeEnv.Production
 
 import fs from 'fs-extra'
+import vunConfig from '../../configs/vuniversal'
 import { headBanner } from '../../services/banner'
-import vunConfig from '../../../base/config'
-import startSSRServer from './ssr'
-import startSPAServer from './spa'
+import { startBuildSSR } from './ssr'
+import { startBuildSPA } from './spa'
 
 fs.removeSync(vunConfig.dir.build)
 
@@ -23,7 +23,6 @@ headBanner({
   runningIn: NodeEnv.Production
 })
 
-// Run dev server
 vunConfig.universal
-  ? startSSRServer()
-  : startSPAServer()
+  ? startBuildSSR()
+  : startBuildSPA()

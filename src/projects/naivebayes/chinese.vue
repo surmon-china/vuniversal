@@ -1,40 +1,42 @@
 <template>
   <homepage-example-card v-bind="$attrs">
-    <div class="actions" slot="actions">
-      <button class="button" @click="init" :disabled="initing || inited">
-        <i class="iconfont icon-stop"></i>
-        <span>{{
-          initing
-            ? 'Initing...'
-            : (inited ? 'Inited' : 'Init')
-        }}</span>
-      </button>
-      <button class="button" @click="runClassifier" :disabled="!inited">
-        <i class="iconfont icon-play"></i>
-        <span>运行代码</span>
-      </button>
-      <button class="button" @click="saveLearnHistory" :disabled="!inited">
-        <i class="iconfont icon-download"></i>
-        <span>缓存学习记录</span>
-      </button>
-      <button class="button" @click="loadLearnHistory" :disabled="!inited">
-        <i class="iconfont icon-upload"></i>
-        <span>载入上次学习记录</span>
-      </button>
-      <button class="button" @click="clearLearnHistory" :disabled="!inited">
-        <i class="iconfont icon-close"></i>
-        <span>清空学习记录</span>
-      </button>
-    </div>
+    <template #actions>
+      <div class="actions">
+        <button class="button" :disabled="initing || inited" @click="init">
+          <i class="iconfont icon-stop" />
+          <span>{{
+            initing
+              ? 'Initing...'
+              : (inited ? 'Inited' : 'Init')
+          }}</span>
+        </button>
+        <button class="button" :disabled="!inited" @click="runClassifier">
+          <i class="iconfont icon-play" />
+          <span>运行代码</span>
+        </button>
+        <button class="button" :disabled="!inited" @click="saveLearnHistory">
+          <i class="iconfont icon-download" />
+          <span>缓存学习记录</span>
+        </button>
+        <button class="button" :disabled="!inited" @click="loadLearnHistory">
+          <i class="iconfont icon-upload" />
+          <span>载入上次学习记录</span>
+        </button>
+        <button class="button" :disabled="!inited" @click="clearLearnHistory">
+          <i class="iconfont icon-close" />
+          <span>清空学习记录</span>
+        </button>
+      </div>
+    </template>
     <codemirror
+      v-model="disabledCode"
       class="codemirror-1"
       :options="disabledEditorOption"
-      v-model="disabledCode"
     />
     <codemirror
+      v-model="mlCode"
       class="codemirror-2"
       :options="editorOption"
-      v-model="mlCode"
     />
     <div class="output">
       <p class="title">Console:</p>
@@ -51,14 +53,14 @@
 
   export default {
     name: 'naivebayes-example-chinese',
+    components: {
+      HomepageExampleCard
+    },
     props: {
       localStorageKey: String,
       mlCode: String
     },
-    components: {
-      HomepageExampleCard
-    },
-    data () {
+    data() {
       return {
         inited: false,
         initing: false,
@@ -185,7 +187,7 @@
     overflow-y: hidden!important;
     border-bottom: 1px solid $github-secondary;
 
-    /deep/ .CodeMirror {
+    ::v-deep(.CodeMirror) {
       height: auto!important;
 
       .CodeMirror-lines {
@@ -195,7 +197,7 @@
   }
 
   .codemirror-2 {
-    /deep/ .CodeMirror {
+    ::v-deep(.CodeMirror) {
       height: 460px;
     }
   }

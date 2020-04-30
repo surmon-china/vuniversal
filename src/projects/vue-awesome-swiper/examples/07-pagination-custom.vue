@@ -45,7 +45,7 @@
   @import './base.scss';
 
   .swiper {
-    /deep/ .swiper-pagination-bullet-custom {
+    ::v-deep(.swiper-pagination-bullet-custom) {
       $size: 20px;
       width: $size !important;
       height: $size !important;

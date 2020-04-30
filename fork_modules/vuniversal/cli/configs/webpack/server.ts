@@ -3,15 +3,14 @@ import { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
-import vunConfig from '../../../base/config'
-import { NodeEnv, VueEnv } from '../../../base/environment'
-import modifyServerDevConfig from './server.dev'
-import modifyServerProdConfig from './server.prod'
-import { SERVER_ENTRY, SERVER_MANIFEST_FILE, getManifestPath } from '../../../base/paths'
+import vunConfig from '../vuniversal'
+import { NodeEnv, VueEnv } from '../../environment'
+import { modifyServerDevConfig } from './server.dev'
+import { modifyServerProdConfig } from './server.prod'
+import { SERVER_ENTRY, SERVER_MANIFEST_FILE, getManifestPath } from '../../paths'
 import { BuildContext } from '.'
 
-export default function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
-
+export function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   // https://github.com/ericclemmons/start-server-webpack-plugin
   webpackConfig.entry = {
     [SERVER_ENTRY]: [vunConfig.serverEntry]

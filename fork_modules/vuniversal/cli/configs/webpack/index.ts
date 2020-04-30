@@ -5,15 +5,15 @@ import mergeConfig from 'webpack-merge'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
-import vunConfig from '../../../base/config'
-import getBabelOptions from '../babel'
-import modifyClientConfig from './client'
-import modifyServerConfig from './server'
+import vunConfig from '../vuniversal'
+import { getBabelOptions, getExcluder } from '../babel'
+import { modifyClientConfig } from './client'
+import { modifyServerConfig } from './server'
 import { modifyCssConfig } from '../css'
-import { VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '../../../base/paths'
-import { transformToProcessEnvObject, getAssetsServerUrl } from './helper'
-import { NodeEnv, VueEnv } from '../../../base/environment'
-import { getManifestPath } from '../../../base/paths'
+import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '../../paths'
+import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './helper'
+import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '../../environment'
+import { getManifestPath } from '../../paths'
 
 export interface BuildContext {
   target: VueEnv
@@ -21,13 +21,25 @@ export interface BuildContext {
 }
 // TODO: 好东西！！ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js
 
-// This is the Webpack configuration factory. It's the juice!
-export default function getWebpackConfig(buildContext: BuildContext): Configuration {
+const genAssetSubPath = (dir: string) => {
+  return path.posix.join(
+    vunConfig.build.assetsDir,
+    `${dir}/[name]${autoHash(vunConfig)}.[ext]`
+  )
+}
 
-  // Define some useful shorthands.
-  const IS_SERVER = buildContext.target === VueEnv.Server
-  const IS_CLIENT = buildContext.target === VueEnv.Client
-  const IS_DEV = buildContext.environment === NodeEnv.Development
+// This is the Webpack configuration factory. It's the juice!
+export function getWebpackConfig(buildContext: BuildContext): Configuration {
+  const IS_SERVER = isServerTarget(buildContext.target)
+  const IS_CLIENT = isClientTarget(buildContext.target)
+  const IS_DEV = isDev(buildContext.environment)
+
+  const modules = [
+    'node_modules',
+    APP_NODE_MODULES_PATH,
+    VUN_NODE_MODULES_PATH,
+    ...vunConfig.dir.modules
+  ]
 
   // This is our base webpack config.
   let webpackConfig: Configuration = {
@@ -39,18 +51,22 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
     target: IS_SERVER ? 'node' : 'web',
     watch: IS_DEV,
     // Quite when dev
-    stats: IS_DEV ? 'none': 'verbose',
+    stats: vunConfig.dev.verbose || !IS_DEV
+      ? 'verbose'
+      : 'none',
     // Controversially, decide on sourcemaps.
-    devtool: IS_DEV ? 'cheap-module-source-map' : 'source-map',
-    // Logging
+    devtool: IS_DEV
+      ? 'cheap-module-source-map'
+      : vunConfig.build.productionSourceMap
+        ? 'source-map'
+        : false,
     // TODO: REMOVE when webpack5
-    // @ts-ignore
-    infrastructureLogging: {
-      level: 'info'
-    },
+    // infrastructureLogging: {
+    //   level: 'info'
+    // },
     // We need to tell webpack how to resolve both Vuniversal's node_modules and the users', so we use resolve.
     resolve: {
-      modules: ['node_modules', VUN_NODE_MODULES_PATH, ...vunConfig.dir.modules],
+      modules,
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.json', '.vue'],
       alias: {
         '@': vunConfig.dir.source,
@@ -61,6 +77,9 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
         //   ? 'vue/dist/vue.runtime.esm-bundler.js'
         //   : 'vue/dist/vue.esm.js'
       }
+    },
+    resolveLoader: {
+      modules
     },
     module: {
       strictExportPresence: true,
@@ -79,47 +98,54 @@ export default function getWebpackConfig(buildContext: BuildContext): Configurat
           options: { appendTsSuffixTo: [/\.vue$/] }
         },
         {
-          test: /\.mjs$/,
-          include: /node_modules/,
-          type: 'javascript/auto'
-        },
-        {
           test: /\.(js|jsx|mjs)$/,
           include: [vunConfig.dir.source],
+          exclude: [getExcluder(vunConfig)],
           use: [
             {
               loader: require.resolve('babel-loader'),
-              options: getBabelOptions(buildContext, vunConfig)
+              options: getBabelOptions(vunConfig)
+            },
+            !vunConfig.build.parallel ? {} : {
+              loader: require.resolve('thread-loader'),
+              options: typeof vunConfig.build.parallel === 'number'
+                ? { workers: vunConfig.build.parallel }
+                : {}
             }
           ]
         },
         {
-          exclude: [
-            /\.html$/,
-            /\.(js|jsx|mjs)$/,
-            /\.(ts|tsx)$/,
-            /\.(vue)$/,
-            /\.(less)$/,
-            /\.(re)$/,
-            /\.(s?css|sass)$/,
-            /\.json$/,
-            /\.bmp$/,
-            /\.gif$/,
-            /\.jpe?g$/,
-            /\.png$/,
-          ],
+          test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
+          loader: require.resolve('url-loader'),
+          options: {
+            limit: 10000,
+            name: genAssetSubPath('image'),
+            emitFile: IS_CLIENT
+          }
+        },
+        // do not base64-inline SVGs.
+        // https://github.com/facebookincubator/create-react-app/pull/1180
+        {
+          test: /\.(svg)(\?.*)?$/,
           loader: require.resolve('file-loader'),
           options: {
-            name: `${vunConfig.build.assetsDir}/media/[name].[hash:8].[ext]`,
+            name: genAssetSubPath('image'),
             emitFile: IS_CLIENT
           }
         },
         {
-          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+          test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
           loader: require.resolve('url-loader'),
           options: {
-            limit: 10000,
-            name: `${vunConfig.build.assetsDir}/image/[name].[hash:8].[ext]`,
+            name: genAssetSubPath('media'),
+            emitFile: IS_CLIENT
+          }
+        },
+        {
+          test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
+          loader: require.resolve('url-loader'),
+          options: {
+            name: genAssetSubPath('fonts'),
             emitFile: IS_CLIENT
           }
         }

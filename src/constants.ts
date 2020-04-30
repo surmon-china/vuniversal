@@ -5,23 +5,25 @@
  */
 
 import { getSponsorsUrl, getUserPageUrl, getFollowersUrl } from './transformers/url'
-const packageJSON = require('../package.json')
-const appConfig = require('../app.config')
 
-export const PROJECT_URL = packageJSON.homepage
-export const PROJECT_NAME = packageJSON.name
+export const PACKAGE_JSON = require('../package.json')
+export const PROJECT_URL = PACKAGE_JSON.homepage
+export const PROJECT_NAME = PACKAGE_JSON.name
 
-export const NPM_UID = appConfig.NPM_UID
-export const GITHUB_UID = appConfig.GITHUB_UID
+export const NPM_UID = 'surmon'
+export const GITHUB_UID = 'surmon-china'
 export const GITHUB_USER_URL = getUserPageUrl(GITHUB_UID)
 export const GITHUB_FOLLOWERS_URL = getFollowersUrl(GITHUB_UID)
 export const GITHUB_SPONSORS_URL = getSponsorsUrl(GITHUB_UID)
 
-export const ROUTES = appConfig.ROUTES as {
-  [key: string]: string
-}
-export const GITHUB_REPOSITORIEL_IDS = appConfig.GITHUB_REPOSITORIEL_IDS as {
-  [key: string]: string
+export enum GITHUB_REPOSITORIEL_IDS {
+  Naivebayes = 'naivebayes',
+  VueAwesomeSwiper = 'vue-awesome-swiper',
+  VueQuillEditor = 'vue-quill-editor',
+  VueVideoPlayer = 'vue-video-player',
+  VueCodemirror = 'vue-codemirror',
+  VueTouchRipple = 'vue-touch-ripple',
+  VueDragZone = 'vue-drag-zone'
 }
 
 const ALIYUN_PARTER_URL_FIXED = 'https://www.aliyun.com/minisite/goods?userCode=pu7fghvl'
@@ -40,6 +42,7 @@ export const ALIYUN_ADS = [
 ]
 
 export default Object.freeze({
+  PACKAGE_JSON,
   PROJECT_URL,
   PROJECT_NAME,
 

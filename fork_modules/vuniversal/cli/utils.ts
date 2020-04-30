@@ -1,6 +1,8 @@
 
 import fs from 'fs'
-import { resolveAppRoot, resolveVunRoot } from '../base/paths'
+import { resolveAppRoot, resolveVunRoot } from './paths'
+
+export const isWindows = process.platform === 'win32'
 
 export const command = process.argv.slice(2).join(' ')
 export const args = process.argv.slice(3)

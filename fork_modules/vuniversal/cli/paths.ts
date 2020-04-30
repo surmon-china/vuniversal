@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { NodeEnv, isDev, isUniversal } from './environment'
-import { VunLibConfig } from './config'
+import { VunLibConfig } from './configs/vuniversal'
 
 // ---------------------------------------------------------
 // Make sure any symlinks in the project folder are resolved
@@ -10,6 +10,7 @@ export const resolveAppRoot = (relativePath: string): string => {
   return path.resolve(APP_ROOT_DIRECTORY_PATH, relativePath)
 }
 export const APP_BABEL_RC_PATH = resolveAppRoot('.babelrc')
+export const APP_NODE_MODULES_PATH = resolveAppRoot('node_modules')
 export const APP_VUN_CONFIG_PATH = resolveAppRoot('vun.config.js')
 export const APP_PACKAGE_JSON_PATH = resolveAppRoot('package.json')
 export const APP_JS_CONFIG_PATH = resolveAppRoot('jsconfig.json')
@@ -36,16 +37,10 @@ export const SERVER_ENTRY = 'server'
 export const CLIENT_MANIFEST_FILE = 'client.manifest.json'
 export const SERVER_MANIFEST_FILE = 'server.manifest.json'
 export const SPA_TEMPLATE_FILE = 'index.html'
+export const DEFAULT_FALLBACK_FILE = '404.html'
 export const SSR_TEMPLATE_FILE = 'template.html'
 
 // Butid time paths
-// TODO: REMOVE
-export function getBuildPath(environment: NodeEnv, vunConfig: VunLibConfig): string {
-  return isDev(environment) && isUniversal(vunConfig)
-    ? VUN_DEV_CACHE_PATH
-    : vunConfig.dir.build
-}
-
 export function getServerBuildPath(vunConfig: VunLibConfig): string {
   return path.join(vunConfig.dir.build, SERVER_ENTRY)
 }

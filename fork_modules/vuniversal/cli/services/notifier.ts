@@ -1,7 +1,7 @@
 
 // https://github.com/mikaelbr/node-notifier
 import notifier from 'node-notifier'
-import { VUN_NAME } from '../../base/paths'
+import { VUN_NAME } from '../paths'
 
 export function notify(message: string, title?: string, options?: any) {
   notifier.notify({

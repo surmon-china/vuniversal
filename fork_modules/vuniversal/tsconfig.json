@@ -16,11 +16,9 @@
     "noImplicitReturns": true,
     "strict": true,
     "isolatedModules": false,
-    "experimentalDecorators": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "removeComments": false,
-    "jsx": "preserve",
     "lib": [
       "esnext",
       "DOM"

@@ -5,9 +5,9 @@
     :footer-ad-provider="adProvider"
   >
     <component
-      v-slot:content
       :is="example.name"
       v-for="example in examples"
+      #content
       :key="example.name"
       :path="example.path"
       :title="example.title || example.name"
@@ -35,7 +35,7 @@
     .forEach(({ component, fileName, ...others }) => {
       examples.push({
         ...others,
-        path: fileName && `projects/${repositorieId}/${fileName}`
+        path: `src/projects/${repositorieId}/${fileName}`
       })
       Object.assign(components, {
         [component.name]: component

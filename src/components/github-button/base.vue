@@ -1,19 +1,12 @@
 <template>
   <span class="github-button">
-    <a
-      :href="link"
-      class="button"
-      target="_blank"
-    >
+    <a :href="link" class="button" target="_blank">
       <i
         class="iconfont"
         :class="icon"
         :style="{ color: iconColor }"
       />
-      <span
-        v-if="text"
-        class="text"
-      >{{ text }}</span>
+      <span v-if="text" class="text">{{ text }}</span>
       <slot />
     </a>
     <a
@@ -27,10 +20,7 @@
         class="iconfont"
         :class="countIcon"
       />
-      <transition
-        name="module"
-        mode="out-in"
-      >
+      <transition name="module" mode="out-in">
         <span :key="countContent">{{ countContent }}</span>
       </transition>
     </a>

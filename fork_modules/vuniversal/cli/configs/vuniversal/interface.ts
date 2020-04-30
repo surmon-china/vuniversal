@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
-import { BuildContext } from '../../cli/configs/webpack'
+import { BuildContext } from '../webpack'
 
 // TODO: 取决于内部是否使用
 // import ChainableWebpackConfig from 'webpack-chain'
@@ -46,12 +46,16 @@ export interface BuildOptions {
   assetsDir: string
   // 有关样式的配置项
   css: CSSOptions
+  // 默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存
+  filenameHashing: boolean
   // 是否包含运行时编译
   runtimeCompiler: boolean
   // 默认情况下 babel-loader 会忽略所有 node_modules 中的文件。如果你想要通过 Babel 显式转译一个依赖，可以在这个选项中列出来
   transpileDependencies: Array<string | RegExp>
   // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   productionSourceMap: boolean
+  // webpack optimization
+  optimization: webpack.Configuration['optimization']
   // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
   // default: require('os').cpus().length > 1
   parallel: boolean | number 
@@ -100,7 +104,7 @@ export interface VunLibConfig {
     // 需要转换的路由
     routes: string[]
     // 是否回退为 SPA
-    fallback: boolean | string
+    fallback: true | string
   }
   // 目录配置
   dir: {
@@ -121,6 +125,8 @@ export interface VunLibConfig {
     // 端口地址
     host: string
     port: number
+    // 各种信息
+    verbose: boolean
     // 代理
     proxy: WebpackDevServer.ProxyConfigMap | WebpackDevServer.ProxyConfigArray
     devServer: WebpackDevServer.Configuration

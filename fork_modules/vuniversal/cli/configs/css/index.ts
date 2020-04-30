@@ -1,10 +1,11 @@
 import path from 'path'
 import { Configuration, RuleSetRule } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import { isDev, isClientTarget } from '../../../base/environment'
+import { isDev, isClientTarget } from '../../environment'
 import { findExistingFile, appPackageJSON } from '../../utils'
 import { BuildContext } from '../webpack'
-import vunConfig from '../../../base/config'
+import { autoContentHash } from '../webpack/helper'
+import vunConfig from '../vuniversal'
 
 export function modifyCssConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   // 此文件应该区分服务端和客户端，服务端应该是什么都不需要做的
@@ -32,7 +33,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
 
   const filename = path.posix.join(
     buildOptions.assetsDir,
-    `css/[name].[contenthash:8].css`
+    `css/[name]${autoContentHash(vunConfig)}.css`
   )
 
   const extractOptions = {

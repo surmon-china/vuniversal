@@ -1,5 +1,5 @@
 
-import { NodeEnv } from '../../base/environment'
+import { NodeEnv } from '../environment'
 
 // @ts-ignore
 process.noDeprecation = true

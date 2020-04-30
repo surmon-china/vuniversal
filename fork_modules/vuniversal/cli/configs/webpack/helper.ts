@@ -1,8 +1,8 @@
 
 import webpack, { Configuration } from 'webpack'
 import logger from '../../services/logger'
-import { VunEnvObject } from '../../../base/config'
-import { VueEnv } from '../../../base/environment'
+import { VunEnvObject, VunLibConfig } from '../vuniversal'
+import { VueEnv } from '../../environment'
 import { BuildContext } from '.'
 
 export function isClientTarget(buildContext: BuildContext): boolean {
@@ -19,6 +19,29 @@ export function compileConfig(config: Configuration) {
     process.exit(1)
   }
   return compiler
+}
+
+export function runPromise(compiler: webpack.Compiler, name: string = '') {
+  return new Promise((resolve, reject) => {
+    compiler.run((error: Error, stats: webpack.Stats) => {
+      if (error) {
+        logger.error('Failed to compile.', error)
+        reject(error)
+        return
+      }
+
+      if (stats.hasErrors()) {
+        const errors = stats.toJson().errors
+        logger.errors('Failed to bundling.', errors)
+        reject(errors)
+        return
+      }
+
+      logger.done(`Compiled ${name} successfully.`)
+      resolve(stats)
+      return
+    })
+  }).catch(() => process.exit(1))
 }
 
 export function compilerToPromise(compiler: webpack.Compiler, name: string) {
@@ -47,6 +70,18 @@ export function transformToProcessEnvObject(envObject: VunEnvObject): VunEnvObje
   return {
     'process.env': stringifyEnvObject(envObject)
   }
+}
+
+export function autoHash(vunConfig: VunLibConfig) {
+  return vunConfig.build.filenameHashing ? '.[hash:8]' : ''
+}
+
+export function autoContentHash(vunConfig: VunLibConfig) {
+  return vunConfig.build.filenameHashing ? '.[contenthash:8]' : ''
+}
+
+export function autoChunkHash(vunConfig: VunLibConfig) {
+  return vunConfig.build.filenameHashing ? '.[chunkhash:8]' : ''
 }
 
 export function getDevServerUrl(host: string, port: number): string {
