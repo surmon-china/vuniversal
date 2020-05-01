@@ -1,16 +1,18 @@
 
 import path from 'path'
+import { RuleSetLoader } from 'webpack'
 import { VunLibConfig } from '../vuniversal'
 import { isWindows } from '../../utils'
 
-export function getBabelOptions(vunConfig: VunLibConfig) {
-  const mainBabelOptions = {
-    presets: [require.resolve('@vue/babel-preset-app')]
+export function getBabelLoader(vunConfig: VunLibConfig): RuleSetLoader {
+  const babelOptions = {
+    presets: [require.resolve('@vue/babel-preset-app')],
+    ...vunConfig.babel
   }
 
   return {
-    ...mainBabelOptions,
-    ...vunConfig.babel
+    loader: require.resolve('babel-loader'),
+    options: babelOptions
   }
 }
 

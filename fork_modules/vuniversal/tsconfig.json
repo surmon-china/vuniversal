@@ -22,7 +22,7 @@
     "lib": [
       "esnext",
       "DOM"
-    ],
-    "types": ["node", "types"]
-  }
+    ]
+  },
+  "exclude": ["*.js"]
 }

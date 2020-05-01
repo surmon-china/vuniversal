@@ -6,10 +6,12 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
 import vunConfig from '../vuniversal'
-import { getBabelOptions, getExcluder } from '../babel'
+import { getBabelLoader, getExcluder } from '../babel'
+import { modifyTypeScriptConfig } from '../typescript'
+import { getThreadLoader } from '../parallel'
+import { modifyCssConfig } from '../css'
 import { modifyClientConfig } from './client'
 import { modifyServerConfig } from './server'
-import { modifyCssConfig } from '../css'
 import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '../../paths'
 import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './helper'
 import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '../../environment'
@@ -67,11 +69,13 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     // We need to tell webpack how to resolve both Vuniversal's node_modules and the users', so we use resolve.
     resolve: {
       modules,
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.json', '.vue'],
+      extensions: ['.js', '.jsx', '.mjs', '.json', '.vue'],
       alias: {
         '@': vunConfig.dir.source,
         '~': vunConfig.dir.source,
-        'vue': '@vue/runtime-dom'
+        // 'vue': vunConfig.build.runtimeCompiler
+        //   ? '@vue/runtime-dom'
+        //   : 'vue'
         // TODO: ESM 无法启用 HMR 啊
         // 'vue$': vunConfig.build.runtimeCompiler
         //   ? 'vue/dist/vue.runtime.esm-bundler.js'
@@ -92,26 +96,12 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           }
         },
         {
-          test: /\.(ts|tsx)$/,
-          loader: 'ts-loader',
-          // TODO: TS 需要独立
-          options: { appendTsSuffixTo: [/\.vue$/] }
-        },
-        {
           test: /\.(js|jsx|mjs)$/,
           include: [vunConfig.dir.source],
           exclude: [getExcluder(vunConfig)],
           use: [
-            {
-              loader: require.resolve('babel-loader'),
-              options: getBabelOptions(vunConfig)
-            },
-            !vunConfig.build.parallel ? {} : {
-              loader: require.resolve('thread-loader'),
-              options: typeof vunConfig.build.parallel === 'number'
-                ? { workers: vunConfig.build.parallel }
-                : {}
-            }
+            getBabelLoader(vunConfig),
+            getThreadLoader(vunConfig)
           ]
         },
         {
@@ -181,8 +171,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     }
   }
 
-  // modifyTypeScriptConfig
-
+  modifyTypeScriptConfig(webpackConfig, buildContext)
   modifyCssConfig(webpackConfig, buildContext)
 
   if (IS_CLIENT) {

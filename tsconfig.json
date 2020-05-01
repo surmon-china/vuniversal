@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2018",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
@@ -22,7 +23,12 @@
     "paths": {
       "~/*": ["./src/*"],
       "@/*": ["./src/*"]
-    }
+    },
+    "types": [
+      "node",
+      "./node_modules/@types",
+      "./src/types"
+    ]
   },
   "include": [
     "./src/**/*.ts",

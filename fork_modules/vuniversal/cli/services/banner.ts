@@ -121,4 +121,3 @@ export function headBanner(options: IHeadBannerOptions = {}) {
     titles.join('\n')
   ))
 }
-

@@ -17,6 +17,7 @@
     "@babel/plugin-transform-runtime": "^7.9.0",
     "@intervolga/optimize-cssnano-plugin": "^1.0.6",
     "@types/case-sensitive-paths-webpack-plugin": "^2.1.4",
+    "@types/node": "^13.13.4",
     "@types/webpack-merge": "^4.1.5",
     "@typescript-eslint/parser": "^2.30.0",
     "@vue/babel-preset-app": "^4.3.1",

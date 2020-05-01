@@ -10,13 +10,12 @@ export function modifyClientProdConfig(webpackConfig: Configuration): void {
   const clientBuildPath = getClientBuildPath(vunConfig)
 
   webpackConfig.plugins?.push(
-    new webpack.optimize.AggressiveMergingPlugin(),
     new CopyWebpackPlugin([
       { from: vunConfig.dir.public, to: clientBuildPath }
     ]),
     new webpack.HashedModuleIdsPlugin({
       hashDigest: 'hex'
-    }),
+    })
   )
 
   webpackConfig.optimization = {

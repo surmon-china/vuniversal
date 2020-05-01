@@ -2,6 +2,7 @@
 import { VunLibConfig } from './interface'
 import { VUN_DEFAULT_HTML_TEMPLATE } from '../../paths'
 import { NodeEnv, isProd } from '../../environment'
+import { appPackageJSON } from '../../utils'
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
@@ -78,7 +79,9 @@ export const defaultConfig: VunLibConfig = {
     }
   },
   babel: {},
-  webpack: {}
-  // AUTO
-  // typescript: {}
+  webpack: {},
+  typescript: !Object.keys(appPackageJSON.dependencies).includes('typescript') ? false : {
+    tsLoader: {},
+    forkTsChecker: true
+  }
 }

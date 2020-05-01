@@ -1,5 +1,7 @@
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
+import { Options as TsLoaderOptions } from 'ts-loader'
+import { Options as ForkTsCheckerOptions } from 'fork-ts-checker-webpack-plugin'
 import { BuildContext } from '../webpack'
 
 // TODO: 取决于内部是否使用
@@ -132,9 +134,11 @@ export interface VunLibConfig {
     devServer: WebpackDevServer.Configuration
   }
   build: BuildOptions
+  babel: any
+  typescript: boolean | {
+    tsLoader: Partial<TsLoaderOptions>
+    forkTsChecker: boolean | Partial<ForkTsCheckerOptions>
+  }
   // Webpack 逃生通道
   webpack: webpack.Configuration | ((config: webpack.Configuration, buildContext: BuildContext) => (webpack.Configuration | void));
-  babel: any
-  // typescript: {}
-  // 最终似乎缺一个插件？？？？
 }

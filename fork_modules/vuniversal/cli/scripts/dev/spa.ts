@@ -15,6 +15,8 @@ export function startSPAServer() {
     environment: NodeEnv.Development
   })
 
+  // console.log('-------clientConfig', clientConfig)
+
   clientConfig.plugins?.push(new HtmlWebpackPlugin({
     inject: false,
     minify: false,
