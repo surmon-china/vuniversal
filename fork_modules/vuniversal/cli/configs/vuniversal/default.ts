@@ -1,8 +1,12 @@
 
 import { VunLibConfig } from './interface'
 import { VUN_DEFAULT_HTML_TEMPLATE } from '@cli/paths'
-import { NodeEnv, isProd } from '@cli/environment'
+import { NodeEnv, isProd, isDev } from '@cli/environment'
 import { appPackageJSON } from '@cli/utils'
+
+const dependencies = Object.keys(appPackageJSON.dependencies)
+const devDependencies = Object.keys(appPackageJSON.devDependencies)
+const allDependencies = [...dependencies, ...devDependencies]
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
@@ -20,12 +24,15 @@ export const defaultConfig: VunLibConfig = {
     root: '.',
     modules: []
   },
+  get lintOnSave() {
+    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint')
+  },
   dev: {
     host: 'localhost',
     port: 3000,
     verbose: false,
     proxy: {},
-    devServer: {}
+    devServer: {},
   },
   build: {
     publicPath: '/',
@@ -34,7 +41,6 @@ export const defaultConfig: VunLibConfig = {
     runtimeCompiler: false,
     productionSourceMap: true,
     transpileDependencies: [],
-    lintOnSave: true,
     get filenameHashing() {
       return isProd(process.env.NODE_ENV as NodeEnv)
     },
@@ -81,7 +87,7 @@ export const defaultConfig: VunLibConfig = {
   },
   babel: {},
   webpack: {},
-  typescript: !Object.keys(appPackageJSON.dependencies).includes('typescript') ? false : {
+  typescript: !allDependencies.includes('typescript') ? false : {
     tsLoader: {},
     forkTsChecker: true
   }

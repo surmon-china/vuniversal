@@ -10,7 +10,7 @@
     "build": "ts-node --project fork_modules/vuniversal/tsconfig.json -r tsconfig-paths/register fork_modules/vuniversal/cli/scripts/build",
     "start": "ts-node --project fork_modules/vuniversal/tsconfig.json fork_modules/vuniversal/cli/scripts/start",
     "test": "node vuniversal/bin/vuniversal test --env=jsdom",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.ts,.vue src"
   },
   "dependencies": {
     "@babel/core": "^7.9.0",
@@ -38,6 +38,8 @@
     "core-js": "^3.6.5",
     "css-loader": "^3.5.2",
     "dedent": "^0.7.0",
+    "eslint": "^6.8.0",
+    "eslint-loader": "^4.0.2",
     "eslint-plugin-vue": "^7.0.0-alpha.1",
     "express": "^4.17.1",
     "file-loader": "^6.0.0",

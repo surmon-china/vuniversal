@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import { defineComponent, onBeforeMount } from 'vue'
   import { StoreNames, useStore } from './store'
 

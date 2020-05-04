@@ -12,6 +12,7 @@ import { requireResolve } from '@cli/utils'
 import { getManifestPath } from '@cli/paths'
 import { getBabelLoader, getExcluder } from '../babel'
 import { modifyTypeScriptConfig } from '../typescript'
+import { modifyEslintConfig } from '../eslint'
 import { getThreadLoader } from '../parallel'
 import { modifyCSSConfig } from '../css'
 import { modifyClientConfig } from './client'
@@ -174,13 +175,25 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     }
   }
 
-  modifyTypeScriptConfig(webpackConfig, buildContext)
+  // CSS
   modifyCSSConfig(webpackConfig, buildContext)
 
-  if (IS_CLIENT) {
-    modifyClientConfig(webpackConfig, buildContext)
+  // TypeScript
+  if (vunConfig.typescript) {
+    modifyTypeScriptConfig(webpackConfig, buildContext)
   }
 
+  // Client
+  if (IS_CLIENT) {
+    modifyClientConfig(webpackConfig, buildContext)
+
+    // Eslint
+    if (vunConfig.lintOnSave) {
+      modifyEslintConfig(webpackConfig, buildContext)
+    }
+  }
+
+  // Server
   if (IS_SERVER) {
     modifyServerConfig(webpackConfig, buildContext)
   }

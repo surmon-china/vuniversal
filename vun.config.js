@@ -1,12 +1,7 @@
 module.exports = {
   universal: false,
-  // clientEntry: './src/main.js',
   clientEntry: './src/main',
   template: './src/app.html',
-  dev: {
-    // verbose: true
-  },
-  // inspect: true,
   prerender: {
     fallback: true,
     routes: [

@@ -1,4 +1,3 @@
-// import path from 'path'
 import webpack, { Configuration } from 'webpack'
 
 export function modifyClientDevConfig(webpackConfig: Configuration): void {

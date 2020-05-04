@@ -61,7 +61,6 @@ export interface BuildOptions {
   // integrity: boolean
   // 统计配置
   analyze: boolean | object
-  lintOnSave: boolean | 'default' | 'warning' | 'error'
   // 是不是要通过插件实现啊
   // pwa: object;
 }
@@ -129,8 +128,11 @@ export interface VunLibConfig {
     verbose: boolean
     // 代理
     proxy: WebpackDevServer.ProxyConfigMap | WebpackDevServer.ProxyConfigArray
+    // webpack dev server
     devServer: WebpackDevServer.Configuration
   }
+  // Eslint
+  lintOnSave: boolean | 'default' | 'warning' | 'error'
   build: BuildOptions
   babel: any
   typescript: boolean | {
