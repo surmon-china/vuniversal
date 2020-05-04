@@ -4,10 +4,6 @@ import { Options as TsLoaderOptions } from 'ts-loader'
 import { Options as ForkTsCheckerOptions } from 'fork-ts-checker-webpack-plugin'
 import { BuildContext } from '../webpack'
 
-// TODO: 取决于内部是否使用
-// import ChainableWebpackConfig from 'webpack-chain'
-// chainWebpack: (config: ChainableWebpackConfig) => void;
-
 interface CSSLoaderOptions {
   [key: string]: any
 }
@@ -101,6 +97,8 @@ export interface VunLibConfig {
   serverEntry: string
   // 模板
   template: string
+  // 是否打印 webpack 配置
+  inspect: boolean
   // 转换配置
   prerender: false | {
     // 需要转换的路由

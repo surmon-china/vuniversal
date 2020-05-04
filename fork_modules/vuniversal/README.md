@@ -90,6 +90,21 @@ module.exports = {
 }
 ```
 
+
+### TODO
+
+- [] Webpack5
+  - block by vue-loader
+  - fix bugs with html-webpack-plugin
+  - autofix (cache-loader)
+  - autofix (pnp-loader)
+- [] Meta
+  - Client
+  - Server
+- [] universal 404 context
+- [] universal cache
+- [] morden support
+
 ### Changelog
 
 Detailed changes for each release are documented in the [release notes](https://github.com/surmon-china/vuniversal/blob/master/CHANGELOG.md).

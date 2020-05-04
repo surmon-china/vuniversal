@@ -12,7 +12,7 @@ export const defaultDevServerConfig: WebpackDevServer.Configuration = {
   // Hidden webpack bundle info
   noInfo: !vunConfig.dev.verbose,
   // Only output init info when true
-  // quiet: true,
+  quiet: true,
   headers: {
     'Access-Control-Allow-Origin': '*'
   },

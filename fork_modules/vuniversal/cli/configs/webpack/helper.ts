@@ -1,8 +1,9 @@
 
 import webpack, { Configuration } from 'webpack'
-import logger from '../../services/logger'
+import logger from '@cli/services/logger'
 import { VunEnvObject, VunLibConfig } from '../vuniversal'
-import { VueEnv } from '../../environment'
+import { VueEnv } from '@cli/environment'
+import { FAILED_TO_COMPILE, FAILED_TO_BUNDLING, compiledSuccessfully, compiling } from '@cli/texts'
 import { BuildContext } from '.'
 
 export function isClientTarget(buildContext: BuildContext): boolean {
@@ -14,47 +15,47 @@ export function compileConfig(config: Configuration) {
   let compiler
   try {
     compiler = webpack(config)
-  } catch (e) {
-    logger.errors('Failed to compile.', [e])
+  } catch (error) {
+    logger.br()
+    logger.error(FAILED_TO_COMPILE, error)
     process.exit(1)
   }
   return compiler
 }
 
-export function runPromise(compiler: webpack.Compiler, name: string = '') {
-  return new Promise((resolve, reject) => {
-    compiler.run((error: Error, stats: webpack.Stats) => {
-      if (error) {
-        logger.error('Failed to compile.', error)
-        reject(error)
-        return
-      }
+export function handleCompiler(successHandler: (stats: webpack.Stats) => void, name?: string) {
+  return (error: Error, stats: webpack.Stats) => {
+    if (error) {
+      logger.br()
+      logger.error(FAILED_TO_COMPILE, error)
+      process.exit(1)
+    }
 
-      if (stats.hasErrors()) {
-        const errors = stats.toJson().errors
-        logger.errors('Failed to bundling.', errors)
-        reject(errors)
-        return
-      }
+    if (stats.hasErrors()) {
+      logger.br()
+      logger.errors(FAILED_TO_BUNDLING, stats.toJson().errors)
+      process.exit(1)
+    }
 
-      logger.done(`Compiled ${name} successfully.`)
-      resolve(stats)
-      return
-    })
-  }).catch(() => process.exit(1))
+    logger.done(compiledSuccessfully(name))
+    successHandler(stats)
+  }
+}
+
+export function runPromise(compiler: webpack.Compiler, name?: string) {
+  return new Promise((resolve) => {
+    logger.start(compiling(name))
+    compiler.run(handleCompiler(resolve, name))
+  })
 }
 
 export function compilerToPromise(compiler: webpack.Compiler, name: string) {
   return new Promise((resolve, reject) => {
-      // compiler.hooks.compile.tap(name, () => {
-      //   logger.start(`${name} compiling...`)
-      // })
-      compiler.hooks.done.tap(name, stats => {
-        if (!stats.hasErrors()) {
-          return resolve(stats)
-        }
-        return reject(stats)
-      })
+    compiler.hooks.done.tap(name, stats => {
+      stats.hasErrors()
+        ? reject(stats.toJson().errors)
+        : resolve(stats)
+    })
   })
 }
 

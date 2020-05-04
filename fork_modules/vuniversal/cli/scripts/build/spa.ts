@@ -1,12 +1,12 @@
 import fs from 'fs-extra'
 import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import { getWebpackConfig } from '../../configs/webpack'
-import { SPA_TEMPLATE_FILE, DEFAULT_FALLBACK_FILE } from '../../paths'
-import { NodeEnv, VueEnv } from '../../environment'
-import { compileConfig, runPromise } from '../../configs/webpack/helper'
-import { spaTemplateRender } from '../../configs/html-plugin'
-import vunConfig from '../../configs/vuniversal'
+import { getWebpackConfig } from '@cli/configs/webpack'
+import { SPA_TEMPLATE_FILE, DEFAULT_FALLBACK_FILE } from '@cli/paths'
+import { NodeEnv, VueEnv } from '@cli/environment'
+import { compileConfig, runPromise } from '@cli/configs/webpack/helper'
+import { spaTemplateRender } from '@cli/configs/html-plugin'
+import vunConfig from '@cli/configs/vuniversal'
 
 export function startBuildSPA() {
   const indexHTMLpath = path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)

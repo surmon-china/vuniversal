@@ -2,20 +2,23 @@
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
 import mergeConfig from 'webpack-merge'
+import { stringify } from 'javascript-stringify'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import VueLoaderPlugin from 'vue-loader/dist/plugin'
-import vunConfig from '../vuniversal'
+import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
+import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '@cli/environment'
+import { requireResolve } from '@cli/utils'
+import { getManifestPath } from '@cli/paths'
 import { getBabelLoader, getExcluder } from '../babel'
 import { modifyTypeScriptConfig } from '../typescript'
 import { getThreadLoader } from '../parallel'
-import { modifyCssConfig } from '../css'
+import { modifyCSSConfig } from '../css'
 import { modifyClientConfig } from './client'
 import { modifyServerConfig } from './server'
-import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '../../paths'
 import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './helper'
-import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '../../environment'
-import { getManifestPath } from '../../paths'
+import vunConfig from '../vuniversal'
+import logger from '@cli/services/logger'
 
 export interface BuildContext {
   target: VueEnv
@@ -90,7 +93,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       rules: [
         {
           test: /\.vue$/,
-          loader: require.resolve('vue-loader'),
+          loader: requireResolve('vue-loader'),
           options: {
             extractCSS: !!vunConfig.build.css.extract
           }
@@ -106,7 +109,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         },
         {
           test: /\.(png|jpe?g|gif|webp)(\?.*)?$/,
-          loader: require.resolve('url-loader'),
+          loader: requireResolve('url-loader'),
           options: {
             limit: 10000,
             name: genAssetSubPath('image'),
@@ -117,7 +120,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         // https://github.com/facebookincubator/create-react-app/pull/1180
         {
           test: /\.(svg)(\?.*)?$/,
-          loader: require.resolve('file-loader'),
+          loader: requireResolve('file-loader'),
           options: {
             name: genAssetSubPath('image'),
             emitFile: IS_CLIENT
@@ -125,7 +128,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         },
         {
           test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-          loader: require.resolve('url-loader'),
+          loader: requireResolve('url-loader'),
           options: {
             name: genAssetSubPath('media'),
             emitFile: IS_CLIENT
@@ -133,7 +136,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         },
         {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-          loader: require.resolve('url-loader'),
+          loader: requireResolve('url-loader'),
           options: {
             name: genAssetSubPath('fonts'),
             emitFile: IS_CLIENT
@@ -172,7 +175,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
   }
 
   modifyTypeScriptConfig(webpackConfig, buildContext)
-  modifyCssConfig(webpackConfig, buildContext)
+  modifyCSSConfig(webpackConfig, buildContext)
 
   if (IS_CLIENT) {
     modifyClientConfig(webpackConfig, buildContext)
@@ -194,6 +197,20 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     } else {
       webpackConfig = mergeConfig(webpackConfig, vunConfig.webpack)
     }
+  }
+
+  // Inspect
+  if (vunConfig.inspect) {
+    const { highlight } = require('cli-highlight')
+    const inspectConfig = {
+      ...webpackConfig,
+      // @ts-ignore
+      plugins: webpackConfig?.plugins?.map(plugin => plugin.constructor?.name)
+    }
+    logger.info('Inspect webpack config')
+    logger.br()
+    logger.log(highlight(stringify(inspectConfig, null, 2), { language: 'js' }))
+    logger.br()
   }
 
   return webpackConfig

@@ -1,5 +1,6 @@
 
 import fs from 'fs'
+import logger from './services/logger'
 import { resolveAppRoot, resolveVunRoot } from './paths'
 
 export const isWindows = process.platform === 'win32'
@@ -15,5 +16,14 @@ export function findExistingFile(files: string[]): any {
     if (fs.existsSync(resolveAppRoot(file))) {
       return file
     }
+  }
+}
+
+export function requireResolve(file: string): string {
+  try {
+    return require.resolve(file)
+  } catch (error) {
+    logger.error(error.message, error)
+    process.exit(1)
   }
 }

@@ -1,15 +1,15 @@
 
-import { VUN_DEV_CACHE_PATH } from '../../paths'
-import { NodeEnv, UniversalMode } from '../../environment'
+import { VUN_DEV_CACHE_PATH } from '@cli/paths'
+import { NodeEnv, UniversalMode } from '@cli/environment'
 
 // @ts-ignore
 process.noDeprecation = true // turns off that loadQuery clutter.
 process.env.NODE_ENV = NodeEnv.Development
 
 import fs from 'fs-extra'
-import vunConfig from '../../configs/vuniversal'
-import { getDevServerUrl } from '../../configs/webpack/helper'
-import { headBanner } from '../../services/banner'
+import vunConfig from '@cli/configs/vuniversal'
+import { getDevServerUrl } from '@cli/configs/webpack/helper'
+import { headBanner } from '@cli/services/banner'
 import { startSSRServer } from './ssr'
 import { startSPAServer } from './spa'
 

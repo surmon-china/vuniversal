@@ -5,8 +5,9 @@ import ManifestPlugin from 'webpack-manifest-plugin'
 import vunConfig from '../vuniversal'
 import { modifyClientDevConfig } from './clien.dev'
 import { modifyClientProdConfig } from './client.prod'
-import { VueEnv, isDev, isUniversal } from '../../environment'
-import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '../../paths'
+import { VueEnv, isDev, isUniversal } from '@cli/environment'
+import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '@cli/paths'
+import { requireResolve } from '@cli/utils'
 import { autoHash } from './helper'
 import { BuildContext } from '.'
 
@@ -20,9 +21,10 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
   //   options,
   //   `js/[name]${isLegacyBundle ? `-legacy` : ``}${isProd && options.filenameHashing ? '.[contenthash:8]' : ''}.js`
 
-  // specify our client entry point /client/index.js
+  // specify our client entry point src/client
   webpackConfig.entry = {
-    [CLIENT_ENTRY]: [vunConfig.clientEntry]
+    // Make sure entry file exist
+    [CLIENT_ENTRY]: [requireResolve(vunConfig.clientEntry)]
   }
 
   // Specify the client output directory and paths.

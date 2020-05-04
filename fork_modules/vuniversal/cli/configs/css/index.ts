@@ -1,13 +1,13 @@
 import path from 'path'
 import { Configuration, RuleSetRule } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import { isDev, isClientTarget } from '../../environment'
-import { findExistingFile, appPackageJSON } from '../../utils'
+import { isDev, isClientTarget } from '@cli/environment'
+import { findExistingFile, appPackageJSON, requireResolve } from '@cli/utils'
 import { BuildContext } from '../webpack'
 import { autoContentHash } from '../webpack/helper'
 import vunConfig from '../vuniversal'
 
-export function modifyCssConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
+export function modifyCSSConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   // 此文件应该区分服务端和客户端，服务端应该是什么都不需要做的
   const IS_DEV = isDev(buildContext.environment)
   const IS_CLIENT = isClientTarget(buildContext.target)
@@ -101,7 +101,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
         })
       } else {
         rule.use.push({
-          loader: require.resolve('vue-style-loader'),
+          loader: requireResolve('vue-style-loader'),
           options: { sourceMap }
         })
       }
@@ -128,14 +128,14 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
 
       // css-loader
       rule.use.push({
-        loader: require.resolve('css-loader'),
+        loader: requireResolve('css-loader'),
         options: cssLoaderOptions
       })
 
       // inline
       if (needInlineMinification) {
         rule.use.push({
-          loader: require.resolve('postcss-loader'),
+          loader: requireResolve('postcss-loader'),
           options: {
             sourceMap,
             plugins: () => [require('cssnano')(cssnanoOptions)]
@@ -145,7 +145,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
 
       // postcss
       rule.use.push({
-        loader: require.resolve('postcss-loader'),
+        loader: requireResolve('postcss-loader'),
         options: { sourceMap, ...loaderOptions.postcss }
       })
 
@@ -168,7 +168,7 @@ export function modifyCssConfig(webpackConfig: Configuration, buildContext: Buil
       if (params.resources?.length) {
         rule.use.push({
           // https://github.com/yenshih/style-resources-loader
-          loader: require.resolve('style-resources-loader'),
+          loader: requireResolve('style-resources-loader'),
           options: {
             patterns: params.resources
           }

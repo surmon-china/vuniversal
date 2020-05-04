@@ -1,8 +1,8 @@
 
 import { VunLibConfig } from './interface'
-import { VUN_DEFAULT_HTML_TEMPLATE } from '../../paths'
-import { NodeEnv, isProd } from '../../environment'
-import { appPackageJSON } from '../../utils'
+import { VUN_DEFAULT_HTML_TEMPLATE } from '@cli/paths'
+import { NodeEnv, isProd } from '@cli/environment'
+import { appPackageJSON } from '@cli/utils'
 
 export const defaultConfig: VunLibConfig = {
   universal: true,
@@ -11,6 +11,7 @@ export const defaultConfig: VunLibConfig = {
   serverEntry: 'src/server',
   template: VUN_DEFAULT_HTML_TEMPLATE,
   prerender: false,
+  inspect: false,
   env: {},
   dir: {
     build: 'dist',

@@ -2,7 +2,7 @@ import webpack, { Configuration } from 'webpack'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 // import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
-import { getClientBuildPath } from '../../paths'
+import { getClientBuildPath } from '@cli/paths'
 import { getTerserConfig } from '../terser'
 import vunConfig from '../vuniversal'
 

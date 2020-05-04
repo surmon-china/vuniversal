@@ -34,6 +34,7 @@ export const VUN_DEFAULT_HTML_TEMPLATE = resolveVunRoot('cli', 'templates', 'ind
 export const SERVER_JS_FILE = 'server.js'
 export const CLIENT_ENTRY = 'client'
 export const SERVER_ENTRY = 'server'
+export const WEBPACK_HOT_POLL_ENTRY = 'webpack/hot/poll?100'
 export const CLIENT_MANIFEST_FILE = 'client.manifest.json'
 export const SERVER_MANIFEST_FILE = 'server.manifest.json'
 export const SPA_TEMPLATE_FILE = 'index.html'

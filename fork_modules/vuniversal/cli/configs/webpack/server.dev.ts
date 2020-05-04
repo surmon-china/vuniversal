@@ -1,5 +1,5 @@
 import webpack, { Configuration } from 'webpack'
-import { SERVER_JS_FILE, VUN_DEV_CACHE_PATH } from '../../paths'
+import { SERVER_JS_FILE, VUN_DEV_CACHE_PATH } from '@cli/paths'
 
 export function modifyServerDevConfig(webpackConfig: Configuration): void {
   // Specify webpack Node.js output path and filename

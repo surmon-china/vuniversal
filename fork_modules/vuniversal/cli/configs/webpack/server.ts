@@ -4,10 +4,10 @@ import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
 import vunConfig from '../vuniversal'
-import { NodeEnv, VueEnv } from '../../environment'
+import { NodeEnv, VueEnv } from '@cli/environment'
 import { modifyServerDevConfig } from './server.dev'
 import { modifyServerProdConfig } from './server.prod'
-import { SERVER_ENTRY, SERVER_MANIFEST_FILE, getManifestPath } from '../../paths'
+import { SERVER_ENTRY, SERVER_MANIFEST_FILE, WEBPACK_HOT_POLL_ENTRY, getManifestPath } from '@cli/paths'
 import { BuildContext } from '.'
 
 export function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
@@ -29,7 +29,7 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
   webpackConfig.externals = [
     nodeExternals({
       whitelist: [
-        'webpack/hot/poll?100',
+        WEBPACK_HOT_POLL_ENTRY,
         /\.(eot|woff|woff2|ttf|otf)$/,
         /\.(svg|png|jpg|jpeg|gif|ico)$/,
         /\.(mp4|mp3|ogg|swf|webp)$/,

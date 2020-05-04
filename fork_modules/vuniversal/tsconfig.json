@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "incremental": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
     "baseUrl": ".",
     "rootDir": ".",
     "sourceMap": false,
@@ -22,7 +27,17 @@
     "lib": [
       "esnext",
       "DOM"
-    ]
+    ],
+    "paths": {
+      "@cli/": ["./cli/"],
+      "@cli/*": ["./cli/*"]
+    }
   },
-  "exclude": ["*.js"]
+  "include": [
+    "./**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "*.js"
+  ]
 }

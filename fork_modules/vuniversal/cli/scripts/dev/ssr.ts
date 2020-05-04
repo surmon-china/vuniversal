@@ -4,20 +4,22 @@
 import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import StartServerPlugin from 'start-server-webpack-plugin'
-import logger from '../../services/logger'
-import vunConfig from '../../configs/vuniversal'
-import { getWebpackConfig } from '../../configs/webpack'
-import { defaultDevServerConfig } from '../../configs/dev-server'
-import { VUN_DEV_TEMPLATE, SERVER_ENTRY, SERVER_JS_FILE } from '../../paths'
-import { compileConfig, compilerToPromise, getAssetsServerPort } from '../../configs/webpack/helper'
-import { NodeEnv, VueEnv } from '../../environment'
-import { args } from '../../utils'
+import logger from '@cli/services/logger'
+import vunConfig from '@cli/configs/vuniversal'
+import { getWebpackConfig } from '@cli/configs/webpack'
+import { defaultDevServerConfig } from '@cli/configs/dev-server'
+import { VUN_DEV_TEMPLATE, SERVER_ENTRY, WEBPACK_HOT_POLL_ENTRY, SERVER_JS_FILE } from '@cli/paths'
+import { compileConfig, compilerToPromise, handleCompiler, getAssetsServerPort } from '@cli/configs/webpack/helper'
+import { DEV_SERVER_RUN_FAILED, FAILED_TO_COMPILE } from '@cli/texts'
+import { NodeEnv, VueEnv } from '@cli/environment'
+import { args } from '@cli/utils'
 
 export function startSSRServer() {
   const assetsServerPost = getAssetsServerPort(vunConfig.dev.port)
   const clientConfig = getWebpackConfig({ target: VueEnv.Client, environment: NodeEnv.Development })
   const serverConfig = getWebpackConfig({ target: VueEnv.Server, environment: NodeEnv.Development })
 
+  // Client --------------------------------------------------------------
   clientConfig.output = {
     ...clientConfig.output,
     // chunks url & socket url host & hot-upload url
@@ -40,9 +42,10 @@ export function startSSRServer() {
   const clientCompiler = compileConfig(clientConfig)
   const clientServer = new WebpackDevServer(clientCompiler, devServerConfig)
 
+  // Server --------------------------------------------------------------
   // Start HMR server
   // @ts-ignore
-  serverConfig.entry[SERVER_ENTRY].unshift('webpack/hot/poll?100')
+  serverConfig.entry[SERVER_ENTRY].unshift(WEBPACK_HOT_POLL_ENTRY)
   // Auro run ssr server when build done.
   serverConfig.plugins?.push(new StartServerPlugin({
     // https://github.com/ericclemmons/start-server-webpack-plugin/blob/master/src/StartServerPlugin.js#L110
@@ -53,33 +56,31 @@ export function startSSRServer() {
     keyboard: true
   }))
   const serverCompiler = compileConfig(serverConfig)
-  serverCompiler.watch({ ignored: /node_modules/ }, (error, stats) => {
-    if (!error && !stats.hasErrors()) {
+  serverCompiler.watch(
+    { ignored: /node_modules/ },
+    handleCompiler(stats => {
       // TODO: 如果在这里打印打印，就把 webpack.log 关掉
       logger.log(stats.toString(serverConfig.stats))
-      return
-    }
+    }, VueEnv.Server)
+  )
 
-    if (error) {
-      logger.error('Failed to compile.', error)
-    }
-
-    if (stats.hasErrors()) {
-      logger.errors('Failed to bundling.', stats.toJson().errors)
-    }
-  })
-
+  // Run
   Promise.all([
     compilerToPromise(clientCompiler, VueEnv.Client),
     compilerToPromise(serverCompiler, VueEnv.Server)
-  ]).then(() => {
-    clientServer.listen(assetsServerPost, vunConfig.dev.host, error => {
-      if (error) {
-        logger.br()
-        logger.error('Client dev server run failed: ', error)
-      }
+  ])
+    .then(() => {
+      clientServer.listen(assetsServerPost, vunConfig.dev.host, error => {
+        if (error) {
+          logger.br()
+          logger.error(DEV_SERVER_RUN_FAILED, error)
+          process.exit(1)
+        }
+      })
     })
-  }).catch(error => {
-    logger.error(`Failed to compile.`, error)
-  })
+    .catch(errors => {
+      logger.br()
+      logger.errors(FAILED_TO_COMPILE, errors)
+      process.exit(1)
+    })
 }

@@ -6,8 +6,8 @@
   "private": false,
   "homepage": "https://github.surmon.me",
   "scripts": {
-    "dev": "ts-node --project fork_modules/vuniversal/tsconfig.json fork_modules/vuniversal/cli/scripts/dev",
-    "build": "ts-node --project fork_modules/vuniversal/tsconfig.json fork_modules/vuniversal/cli/scripts/build",
+    "dev": "ts-node --project fork_modules/vuniversal/tsconfig.json -r tsconfig-paths/register fork_modules/vuniversal/cli/scripts/dev",
+    "build": "ts-node --project fork_modules/vuniversal/tsconfig.json -r tsconfig-paths/register fork_modules/vuniversal/cli/scripts/build",
     "start": "ts-node --project fork_modules/vuniversal/tsconfig.json fork_modules/vuniversal/cli/scripts/start",
     "test": "node vuniversal/bin/vuniversal test --env=jsdom",
     "lint": "eslint --ext .js,.vue src"
@@ -32,6 +32,7 @@
     "boxen": "^4.2.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chalk": "4.0.0",
+    "cli-highlight": "^2.1.4",
     "connect-history-api-fallback": "^1.6.0",
     "copy-webpack-plugin": "^5.1.1",
     "core-js": "^3.6.5",
@@ -47,8 +48,10 @@
     "highlight.js": "^9.16.2",
     "html-webpack-plugin": "^4.3.0",
     "http-proxy-middleware": "^1.0.3",
+    "javascript-stringify": "^2.0.1",
     "jest": "^25.3.0",
     "jest-message-util": "^25.3.0",
+    "less-loader": "^6.0.0",
     "lodash": "^4.17.15",
     "memfs": "^3.1.2",
     "mini-css-extract-plugin": "^0.9.0",
@@ -67,8 +70,6 @@
     "sass-loader": "^8.0.2",
     "sass-resources-loader": "^2.0.3",
     "segmentit": "^2.0.2",
-    "sockjs-client": "1.4.0",
-    "source-map-support": "^0.5.16",
     "start-server-webpack-plugin": "^2.2.5",
     "strip-ansi": "6.0.0",
     "style-loader": "^1.1.4",
@@ -94,7 +95,6 @@
     "vue-video-player": "^5.0.2",
     "vuex": "^4.0.0-beta.1",
     "webpack": "^4.42.1",
-    "webpack-chain": "^6.4.0",
     "webpack-dev-server": "^3.10.3",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "^4.2.2",
@@ -125,6 +125,7 @@
     "@types/webpack-manifest-plugin": "^2.1.0",
     "@types/webpack-node-externals": "^1.7.1",
     "@types/webpackbar": "^4.0.0",
-    "@types/wrap-ansi": "^3.0.0"
+    "@types/wrap-ansi": "^3.0.0",
+    "tsconfig-paths": "^3.9.0"
   }
 }

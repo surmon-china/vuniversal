@@ -1,6 +1,6 @@
 
 import webpack, { Configuration } from 'webpack'
-import { SERVER_JS_FILE, getServerBuildPath } from '../../paths'
+import { SERVER_JS_FILE, getServerBuildPath } from '@cli/paths'
 import vunConfig from '../vuniversal'
 
 export function modifyServerProdConfig(webpackConfig: Configuration): void {
