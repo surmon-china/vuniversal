@@ -6,6 +6,7 @@ import { VunLibConfig } from './configs/vuniversal'
 // ---------------------------------------------------------
 // Make sure any symlinks in the project folder are resolved
 export const APP_ROOT_DIRECTORY_PATH = fs.realpathSync(process.cwd())
+console.log('-------APP_ROOT_DIRECTORY_PATH', APP_ROOT_DIRECTORY_PATH)
 export const resolveAppRoot = (relativePath: string): string => {
   return path.resolve(APP_ROOT_DIRECTORY_PATH, relativePath)
 }
