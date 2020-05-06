@@ -4,12 +4,11 @@ import { BuildContext } from '../webpack'
 import vunConfig from '../vuniversal'
 
 export function modifyEslintConfig(webpackConfig: Configuration, buildContext: BuildContext) {
-
   const { lintOnSave } = vunConfig
   const hasTypeScript = !!vunConfig.typescript
   const baseExtensions = ['.js', '.jsx', '.vue']
   const extensions = hasTypeScript
-    ? [...baseExtensions, '.ts', '.tsx']
+    ? ['.ts', '.tsx', ...baseExtensions]
     : baseExtensions
 
   webpackConfig.module?.rules.unshift({
@@ -22,7 +21,9 @@ export function modifyEslintConfig(webpackConfig: Configuration, buildContext: B
         loader: requireResolve('eslint-loader'),
         options: {
           extensions,
-          cache: true,
+          // TODO: CACHE
+          // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-plugin-eslint/index.js
+          // cache: true,
           emitWarning: lintOnSave === true || lintOnSave === 'warning',
           // only emit errors in production mode.
           emitError: lintOnSave === 'error'
