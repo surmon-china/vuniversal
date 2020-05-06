@@ -4,16 +4,19 @@ import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
 import vunConfig from '../vuniversal'
-import { NodeEnv, VueEnv } from '@cli/environment'
+import { NodeEnv, VueEnv, isDev } from '@cli/environment'
 import { modifyServerDevConfig } from './server.dev'
 import { modifyServerProdConfig } from './server.prod'
 import { SERVER_ENTRY, SERVER_MANIFEST_FILE, WEBPACK_HOT_POLL_ENTRY, getManifestPath } from '@cli/paths'
+import { requireResolve } from '@cli/utils'
 import { BuildContext } from '.'
 
 export function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
+  const IS_DEV = isDev(buildContext.environment)
+
   // https://github.com/ericclemmons/start-server-webpack-plugin
   webpackConfig.entry = {
-    [SERVER_ENTRY]: [vunConfig.serverEntry]
+    [SERVER_ENTRY]: [requireResolve(vunConfig.serverEntry)]
   }
 
   // TODO: 待测试
@@ -26,15 +29,17 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
   // }
 
   // We need to tell webpack what to bundle into our Node bundle.
+  const whitelist = [
+    /\.(eot|woff|woff2|ttf|otf)$/,
+    /\.(svg|png|jpg|jpeg|gif|ico)$/,
+    /\.(mp4|mp3|ogg|swf|webp)$/,
+    /\.(css|scss|sass|sss|less)$/
+  ]
   webpackConfig.externals = [
     nodeExternals({
-      whitelist: [
-        WEBPACK_HOT_POLL_ENTRY,
-        /\.(eot|woff|woff2|ttf|otf)$/,
-        /\.(svg|png|jpg|jpeg|gif|ico)$/,
-        /\.(mp4|mp3|ogg|swf|webp)$/,
-        /\.(css|scss|sass|sss|less)$/
-      ]
+      whitelist: IS_DEV
+        ? [WEBPACK_HOT_POLL_ENTRY, ...whitelist]
+        : whitelist
     })
   ]
 

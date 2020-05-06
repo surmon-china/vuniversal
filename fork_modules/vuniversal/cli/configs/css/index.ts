@@ -1,3 +1,4 @@
+// fork form: cli-service css file
 import path from 'path'
 import { Configuration, RuleSetRule } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'

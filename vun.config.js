@@ -1,5 +1,5 @@
 module.exports = {
-  universal: false,
+  universal: true,
   clientEntry: './src/main',
   template: './src/app.html',
   prerender: {

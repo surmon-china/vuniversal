@@ -21,6 +21,8 @@ import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './hel
 import vunConfig from '../vuniversal'
 import logger from '@cli/services/logger'
 
+const PnpWebpackPlugin = require('pnp-webpack-plugin')
+
 export interface BuildContext {
   target: VueEnv
   environment: NodeEnv
@@ -84,13 +86,16 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         // 'vue$': vunConfig.build.runtimeCompiler
         //   ? 'vue/dist/vue.runtime.esm-bundler.js'
         //   : 'vue/dist/vue.esm.js'
-      }
+      },
+      plugins: [PnpWebpackPlugin]
     },
     resolveLoader: {
-      modules
+      modules,
+      plugins: [PnpWebpackPlugin.moduleLoader(module)]
     },
     module: {
       strictExportPresence: true,
+      // TODO: PNP plugin remove when webpack5
       rules: [
         {
           test: /\.vue$/,

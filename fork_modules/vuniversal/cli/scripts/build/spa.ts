@@ -47,6 +47,8 @@ export function startBuildSPA() {
     }
   }
 
+  // TODO: prefetch & preload plugins
+
   // Run
   runPromise(compileConfig(clientConfig), VueEnv.Client).then(() => {
     // Prerender fallback
