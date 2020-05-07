@@ -6,14 +6,14 @@
   "private": false,
   "homepage": "https://github.surmon.me",
   "scripts": {
-    "dev": "cd ./vuniversal && yarn dev",
-    "build": "yarn ts-node --dir ./vuniversal -r ./vuniversal/node_modules/tsconfig-paths/lib/register cli/scripts/build",
-    "test": "node vuniversal/bin/vuniversal test --env=jsdom",
+    "dev": "vun dev",
+    "build": "vun build",
+    "test": "vun test",
+    "start": "http-server ./dist",
     "lint": "eslint --ext .js,.ts,.vue src"
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.0.0-beta.9",
-    "@vue/server-renderer": "^3.0.0-beta.9",
     "axios": "^0.19.2",
     "highlight.js": "^10.0.2",
     "naivebayes": "^0.5.0",
@@ -38,6 +38,7 @@
   "devDependencies": {
     "@typescript-eslint/parser": "^2.31.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^7.0.0-alpha.1",
     "typescript": "^3.8.3"
   }
 }
