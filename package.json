@@ -68,6 +68,7 @@
     "boxen": "^4.2.0",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chalk": "4.0.0",
+    "clean-webpack-plugin": "^3.0.0",
     "cli-highlight": "^2.1.4",
     "connect-history-api-fallback": "^1.6.0",
     "copy-webpack-plugin": "^5.1.1",
