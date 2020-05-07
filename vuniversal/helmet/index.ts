@@ -8,7 +8,7 @@ import {
   onDeactivated,
   App,
   Plugin,
-  StopHandle,
+  WatchStopHandle,
   UnwrapRef,
   HTMLAttributes,
   HtmlHTMLAttributes,
@@ -95,7 +95,7 @@ function getHelmet(initState: HelmetState, initConfig?: HelmetConfig) {
   const helmetOption = {
     ...DEFAULT_CONFIG,
     ...initConfig,
-    disposer: null as StopHandle | null
+    disposer: null as WatchStopHandle | null
   }
 
   // 1. 现在以堆栈的顺序为合成名称，是有问题的，应该以组件的嵌套层级为单位

@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "./cli-dist",
+    "tsBuildInfoFile": "./.cache/cli.tsbuildinfo",
+    "plugins": [{ "transform": "typescript-transform-paths" }]
+  },
+  "include": [
+    "cli"
+  ]
+}

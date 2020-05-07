@@ -4,13 +4,13 @@ const script = process.argv[2]
 
 switch (script) {
   case 'build':
-    require('../lib/scripts/build')
+    require('../cli-dist/scripts/build')
   case 'test':
-    require('../lib/scripts/test')
+    require('../cli-dist/scripts/test')
   case '':
   case 'dev':
-    require('../lib/scripts/dev')
+    require('../cli-dist/scripts/dev')
   default:
-    require('../lib/scripts/dev')
+    require('../cli-dist/scripts/dev')
     break
 }

@@ -100,7 +100,7 @@ module.exports = {
 - [ ] Meta
   - Client
   - Server
-- [ ] Build with tsc & abc
+- [x] Build with tsc & abc
 - [ ] universal 404 context
 - [ ] universal cache
 - [ ] morden support

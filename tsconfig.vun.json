@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./vun-dist",
+    "declaration": true,
+    "declarationDir": "./vun-dist",
+    "tsBuildInfoFile": "./.cache/vun.tsbuildinfo"
+  },
+  "include": [
+    "vuniversal"
+  ]
+}

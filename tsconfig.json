@@ -5,13 +5,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "downlevelIteration": true,
-    "baseUrl": ".",
-    "rootDir": ".",
     "sourceMap": false,
     "noEmit": false,
-    "target": "es5",
+    "target": "es2017",
     "module": "commonjs",
-    "declaration": true,
     "moduleResolution": "node",
     "allowJs": true,
     "noUnusedLocals": true,
@@ -25,22 +22,25 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "removeComments": false,
+    "baseUrl": "./",
     "lib": [
       "esnext",
       "DOM"
     ],
     "paths": {
-      "@cli/": ["./cli/"],
-      "@cli/*": ["./cli/*"]
+      "@cli/*": ["cli/*"]
     }
   },
   "include": [
-    "./bin/**/*.ts",
-    "./cli/**/*.ts",
-    "./vuniversal/**/*.ts"
+    "cli",
+    "vuniversal"
   ],
   "exclude": [
     "node_modules",
-    "*.js"
+    "cli-dist",
+    "vun-dist"
+  ],
+  "typeRoots": [
+    "node_modules/@types"
   ]
 }

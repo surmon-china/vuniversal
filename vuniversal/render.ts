@@ -3,8 +3,8 @@ import path from 'path'
 import fs from 'fs-extra'
 import templateParser from 'lodash/template'
 import { renderToString } from '@vue/server-renderer'
-import { NodeEnv, VueEnv, isDev } from '../helper/env'
-import { AppCreater } from '../helper/creater'
+import { NodeEnv, VueEnv, isDev } from './env'
+import { AppCreater } from './creater'
 
 export interface RenderOptions {
   appCreater: AppCreater

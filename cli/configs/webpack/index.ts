@@ -5,7 +5,6 @@ import mergeConfig from 'webpack-merge'
 import { stringify } from 'javascript-stringify'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
-import VueLoaderPlugin from 'vue-loader/dist/plugin'
 import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
 import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '@cli/environment'
 import { requireResolve } from '@cli/utils'
@@ -21,6 +20,7 @@ import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './hel
 import vunConfig from '../vuniversal'
 import logger from '@cli/services/logger'
 
+const VueLoaderPlugin = require('vue-loader/dist/plugin')
 const PnpWebpackPlugin = require('pnp-webpack-plugin')
 
 export interface BuildContext {
