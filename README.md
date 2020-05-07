@@ -25,9 +25,8 @@ yarn add vuniversal
 "scripts": {
   "dev": "vun",
   "build": "vun build",
-  "start": "vun start",
   "test": "vun test",
-  "lint": "eslint --ext .js,.vue src"
+  "lint": "eslint --ext .js,.ts,.vue src"
 }
 ```
 
