@@ -93,17 +93,18 @@ module.exports = {
 
 ### TODO
 
-- [] Webpack5
+- [ ] Webpack5
   - block by vue-loader
   - fix bugs with html-webpack-plugin
-  - autofix (cache-loader)
-  - autofix (pnp-loader)
-- [] Meta
+  - ~~autofix (cache-loader)~~
+  - ~~autofix (pnp-loader)~~
+- [ ] Meta
   - Client
   - Server
-- [] universal 404 context
-- [] universal cache
-- [] morden support
+- [ ] Build with tsc & abc
+- [ ] universal 404 context
+- [ ] universal cache
+- [ ] morden support
 
 ### Changelog
 
