@@ -194,7 +194,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
 
     // Eslint
     if (vunConfig.lintOnSave) {
-      modifyEslintConfig(webpackConfig, buildContext)
+      modifyEslintConfig(webpackConfig)
     }
   }
 
