@@ -35,12 +35,13 @@ yarn add vuniversal
 **vun.config.js**
 
 ```js
-module.exports = {
-  universal: true,
+module.exports = {universal: true,
   modern: true,
   clientEntry: 'src/client',
   serverEntry: 'src/server',
-  template: '',
+  template: VUN_DEFAULT_HTML_TEMPLATE,
+  prerender: false,
+  inspect: false,
   env: {},
   dir: {
     build: 'dist',
@@ -49,11 +50,15 @@ module.exports = {
     root: '.',
     modules: []
   },
+  get lintOnSave() {
+    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint')
+  },
   dev: {
     host: 'localhost',
     port: 3000,
+    verbose: false,
     proxy: {},
-    devServer: {}
+    devServer: {},
   },
   build: {
     publicPath: '/',
@@ -62,7 +67,9 @@ module.exports = {
     runtimeCompiler: false,
     productionSourceMap: true,
     transpileDependencies: [],
-    lintOnSave: true,
+    get filenameHashing() {
+      return isProd(process.env.NODE_ENV as NodeEnv)
+    },
     get parallel() {
       try {
         return require('os').cpus().length > 1
@@ -76,16 +83,40 @@ module.exports = {
       },
       requireModuleExtension: true,
       sourceMap: false,
-      loaderOptions: {}
+      loaderOptions: {} as any,
+      styleResources: {
+        scss: [],
+        sass: [],
+        less: [],
+        stylus: []
+      }
+    },
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendors: {
+            name: 'chunk-vendors',
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial'
+          },
+          common: {
+            name: `chunk-common`,
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true
+          }
+        }
+      }
     }
   },
-  generate: {
-    routers: [],
-    fallback: true
-  },
   babel: {},
-  webpack: {}，
-  typescript: {}
+  webpack: {},
+  typescript: !allDependencies.includes('typescript') ? false : {
+    tsLoader: {},
+    forkTsChecker: true
+  }
 }
 ```
 
