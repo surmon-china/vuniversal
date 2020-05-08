@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ### TODO
 
-- Builder
+- Cli
   - [x] Build with tsc & abc
   - [x] Webpack5
       - Remove cache-loader
@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
   - [x] block by vue-loader & webpack 5
   - [x] fix bugs with html-webpack-plugin@^4.0.0-beta.11
   - [ ] fix prerender plugin with webpack 5
+  - [ ] notifier logo & texts
   - [ ] modern support
   - [ ] analyze support
   - [ ] Jest support
