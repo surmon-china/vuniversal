@@ -1,4 +1,3 @@
-
 import { VunLibConfig } from './configs/vuniversal'
 
 export enum UniversalMode {
