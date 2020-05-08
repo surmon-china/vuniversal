@@ -1,9 +1,9 @@
-import wrapAnsi from 'wrap-ansi'
 import chalk from 'chalk'
-import boxen, { BorderStyle } from 'boxen'
+import wrapAnsi from 'wrap-ansi'
 import prettyBytes from 'pretty-bytes'
+import boxen, { BorderStyle } from 'boxen'
 import { VUN_NAME } from '../paths'
-import { vunPackageJSON, args } from '../utils'
+import { vunPackageJSON } from '../utils'
 import { NodeEnv, UniversalMode } from '../environment'
 
 // 80% of terminal column width
@@ -84,12 +84,10 @@ export function headBanner(options: IHeadBannerOptions = {}) {
 
   // Execute command
   if (options.command) {
-    titles.push(`Execute ${chalk.green.bold(
-      'vun' + ' ' + options.command + ' ' + args.join(' ')
-    )}`)
+    titles.push(`Execute ${chalk.green.bold(options.command)}`)
   }
 
-  if (options.runningIn || options.univservalMode) {
+  if (options.runningIn) {
     // Running mode
     const environment = !options.runningIn
       ? ''

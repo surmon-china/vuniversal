@@ -7,7 +7,7 @@ import { spaTemplateRender } from '@cli/configs/html-plugin'
 import { success as successNotifier } from '@cli/services/notifier'
 import { NodeEnv, VueEnv } from '@cli/environment'
 import { DEV_SERVER_RUN_FAILED, FAILED_TO_COMPILE, yourApplicationIsRunningAt } from '@cli/texts'
-import vunConfig from '@cli/configs/vuniversal'
+import { vunConfig } from '@cli/configs/vuniversal'
 import logger from '@cli/services/logger'
 
 export function startSPAServer() {

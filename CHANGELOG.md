@@ -6,11 +6,12 @@ All notable changes to this project will be documented in this file.
 
 - Builder
   - [x] Build with tsc & abc
-  - [ ] Webpack5
+  - [x] Webpack5
       - Remove cache-loader
       - https://juejin.im/post/5df5cdf66fb9a0161a0c3092
   - [x] block by vue-loader & webpack 5
-  - [ ] fix bugs with html-webpack-plugin@^4.0.0-beta.11
+  - [x] fix bugs with html-webpack-plugin@^4.0.0-beta.11
+  - [ ] fix prerender plugin with webpack 5
   - [ ] modern support
   - [ ] analyze support
   - [ ] Jest support
@@ -23,6 +24,14 @@ All notable changes to this project will be documented in this file.
   - [ ] Meta
   - [ ] universal 404 context
   - [ ] universal cache
+
+### 0.0.10 (2020-05-08)
+
+**NIP**
+- Logo
+
+**Upgrade**
+- Webpack 5
 
 ### 0.0.5 (2020-05-08)
 

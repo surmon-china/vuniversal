@@ -9,7 +9,7 @@ interface CSSLoaderOptions {
 }
 
 export interface VunEnvObject {
-  [key: string]: webpack.DefinePlugin.CodeValueObject
+  [key: string]: any
 }
 
 export interface CSSOptions {

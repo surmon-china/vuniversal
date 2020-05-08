@@ -1,7 +1,7 @@
 import lodash from 'lodash'
-import { defaultConfig } from './default'
-import { VuniversalConfig, VunLibConfig } from './interface'
 import { resolveAppRoot } from '@cli/paths'
+import { VuniversalConfig, VunLibConfig } from './interface'
+import { defaultConfig } from './default'
 
 export function transformConfig(config: VunLibConfig): VunLibConfig {
   return {

@@ -1,4 +1,4 @@
-
+export const VUN_COMMND = 'vun'
 export const DEV_SERVER_RUN_FAILED = 'Dev server run failed'
 export const FAILED_TO_COMPILE = 'Failed to compile'
 export const FAILED_TO_BUNDLING = 'Failed to bundling'

@@ -1,4 +1,4 @@
-import { RuleSetLoader } from 'webpack'
+import { RuleSetRule } from 'webpack'
 import { requireResolve } from '@cli/utils'
 import { VunLibConfig } from '../vuniversal'
 
@@ -9,7 +9,7 @@ export function isNumberParallel(vunConfig: VunLibConfig) {
   return typeof vunConfig.build.parallel === 'number'
 }
 
-export function getThreadLoader(vunConfig: VunLibConfig): RuleSetLoader {
+export function getThreadLoader(vunConfig: VunLibConfig): RuleSetRule {
   return !enableParallel(vunConfig) ? {} : {
     loader: requireResolve('thread-loader'),
     options: isNumberParallel(vunConfig)

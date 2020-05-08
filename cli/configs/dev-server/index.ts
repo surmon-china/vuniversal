@@ -1,6 +1,5 @@
-
 import WebpackDevServer from 'webpack-dev-server'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 
 export const defaultDevServerConfig: WebpackDevServer.Configuration = {
   hot: true,

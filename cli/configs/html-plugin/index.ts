@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
 import templateParser from 'lodash/template'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 
 const htmlTemplate = fs.readFileSync(vunConfig.template)
 const templateRender = templateParser(htmlTemplate.toString(), {

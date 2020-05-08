@@ -3,7 +3,7 @@ import { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 import { NodeEnv, VueEnv, isDev } from '@cli/environment'
 import { modifyServerDevConfig } from './server.dev'
 import { modifyServerProdConfig } from './server.prod'
@@ -51,6 +51,7 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
     // Output our JS and CSS files in a manifest file called chunks.json
     // in the build directory.
     // based on https://github.com/danethurber/webpack-manifest-plugin/issues/181#issuecomment-467907737
+    // @ts-ignore
     new ManifestPlugin({
       fileName: path.join(
         getManifestPath(buildContext.environment, vunConfig),

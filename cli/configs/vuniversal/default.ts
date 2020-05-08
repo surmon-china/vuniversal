@@ -1,4 +1,3 @@
-
 import { VunLibConfig } from './interface'
 import { VUN_DEFAULT_HTML_TEMPLATE } from '@cli/paths'
 import { NodeEnv, isProd, isDev } from '@cli/environment'

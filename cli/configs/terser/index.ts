@@ -1,7 +1,6 @@
-import TerserPlugin from 'terser-webpack-plugin'
 import { VunLibConfig } from '../vuniversal'
 
-export function getTerserConfig(vunConfig: VunLibConfig): TerserPlugin.TerserPluginOptions {
+export function getTerserConfig(vunConfig: VunLibConfig) {
   return {
     terserOptions: {
       compress: {

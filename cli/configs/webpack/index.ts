@@ -1,4 +1,3 @@
-
 import path from 'path'
 import webpack, { Configuration } from 'webpack'
 import mergeConfig from 'webpack-merge'
@@ -17,10 +16,10 @@ import { modifyCSSConfig } from '../css'
 import { modifyClientConfig } from './client'
 import { modifyServerConfig } from './server'
 import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './helper'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 import logger from '@cli/services/logger'
 
-const VueLoaderPlugin = require('vue-loader/dist/plugin')
+const VueLoader = require('vue-loader')
 const PnpWebpackPlugin = require('pnp-webpack-plugin')
 
 export interface BuildContext {
@@ -68,10 +67,11 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       : vunConfig.build.productionSourceMap
         ? 'source-map'
         : false,
-    // TODO: REMOVE when webpack5
-    // infrastructureLogging: {
-    //   level: 'info'
-    // },
+    infrastructureLogging: {
+      level: vunConfig.dev.verbose || !IS_DEV
+        ? 'verbose'
+        : 'none'
+    },
     // We need to tell webpack how to resolve both Vuniversal's node_modules and the users', so we use resolve.
     resolve: {
       modules,
@@ -95,7 +95,6 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     },
     module: {
       strictExportPresence: true,
-      // TODO: PNP plugin remove when webpack5
       rules: [
         {
           test: /\.vue$/,
@@ -152,8 +151,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     },
     plugins: [
       new CleanWebpackPlugin(),
-      // @ts-ignore
-      new VueLoaderPlugin(),
+      new VueLoader.VueLoaderPlugin(),
       // https://github.com/Urthen/case-sensitive-paths-webpack-plugin
       new CaseSensitivePathsPlugin({ debug: false }),
       // Define environment vars
@@ -173,10 +171,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       }))
     ],
     watchOptions: {
-      // Webpack 5
-      // ignored: ['files/**/*.js', 'node_modules/**']
-      // Webpack 4
-      ignored: /node_modules/
+      ignored: ['node_modules/**']
     }
   }
 

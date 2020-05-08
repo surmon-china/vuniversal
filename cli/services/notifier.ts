@@ -1,4 +1,3 @@
-
 // https://github.com/mikaelbr/node-notifier
 import notifier from 'node-notifier'
 import { VUN_NAME } from '../paths'

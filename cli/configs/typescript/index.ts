@@ -9,7 +9,7 @@ import { isProd, isClientTarget } from '@cli/environment'
 import { BuildContext } from '../webpack'
 import { getBabelLoader } from '../babel'
 import { enableParallel, getThreadLoader } from '../parallel'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 
 // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-plugin-typescript/index.js
 export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContext: BuildContext) {
@@ -37,7 +37,7 @@ export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContex
 
   // loaders
   webpackConfig.resolve?.extensions?.unshift('.ts', '.tsx')
-  webpackConfig.module?.rules.unshift({
+  webpackConfig.module?.rules?.unshift({
     test: /\.(ts|tsx)$/,
     include: [vunConfig.dir.source],
     exclude: [/node_modules/],

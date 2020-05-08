@@ -16,12 +16,6 @@ export function modifyServerDevConfig(webpackConfig: Configuration): void {
     // Prevent creating multiple chunks for the server
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
-    }),
-    // TODO: 如果放到内存中就不再需要了 Webpack5 有问题
-    // Ignore assets.json and chunks.json to avoid infinite recompile bug
-    // new webpack.WatchIgnorePlugin([
-    //   resolveClientAssetsManifest(vunConfig.dir.build),
-    //   resolveClientChunksManifest(vunConfig.dir.build)
-    // ])
+    })
   )
 }

@@ -1,4 +1,4 @@
-// fork form: cli-service css file
+// Fork form: https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-service/lib/config/css.js
 import path from 'path'
 import { Configuration, RuleSetRule } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
@@ -6,10 +6,9 @@ import { isDev, isClientTarget } from '@cli/environment'
 import { findExistingFile, appPackageJSON, requireResolve } from '@cli/utils'
 import { BuildContext } from '../webpack'
 import { autoContentHash } from '../webpack/helper'
-import vunConfig from '../vuniversal'
+import { vunConfig } from '../vuniversal'
 
 export function modifyCSSConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
-  // 此文件应该区分服务端和客户端，服务端应该是什么都不需要做的
   const IS_DEV = isDev(buildContext.environment)
   const IS_CLIENT = isClientTarget(buildContext.target)
 
@@ -195,34 +194,26 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
     }
   }
 
-  // css
-  webpackConfig.module?.rules.push(
-    createCSSRule({ test: /\.css$/ })
-  )
-  // postcss
-  webpackConfig.module?.rules.push(
-    createCSSRule({ test: /\.p(ost)?css$/ })
-  )
-  // less
-  webpackConfig.module?.rules.push(
+  webpackConfig.module?.rules?.push(
+    // css
+    createCSSRule({ test: /\.css$/ }),
+    // postcss
+    createCSSRule({ test: /\.p(ost)?css$/ }),
+    // less
     createCSSRule({
       test: /\.less$/,
       loader: 'less-loader',
       options: loaderOptions.less,
       resources: styleResources.less
-    })
-  )
-  // scss
-  webpackConfig.module?.rules.push(
+    }),
+    // scss
     createCSSRule({
       test: /\.scss$/,
       loader: 'sass-loader',
       options: loaderOptions.scss || loaderOptions.sass,
       resources: styleResources.scss
-    })
-  )
-  // sass
-  webpackConfig.module?.rules.push(
+    }),
+    // sass
     createCSSRule({
       test: /\.sass$/,
       loader: 'sass-loader',
@@ -234,10 +225,8 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
           indentedSyntax: true
         }
       }
-    })
-  )
-  // stylus
-  webpackConfig.module?.rules.push(
+    }),
+    // stylus
     createCSSRule({
       test: /\.styl(us)?$/,
       loader: 'stylus-loader',
@@ -252,6 +241,7 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
   // inject CSS extraction plugin
   if (shouldExtract && canExtract) {
     webpackConfig.plugins?.push(
+      // @ts-ignore
       new MiniCssExtractPlugin(extractOptions)
     )
 

@@ -23,15 +23,15 @@ export function compileConfig(config: Configuration) {
   return compiler
 }
 
-export function handleCompiler(successHandler: (stats: webpack.Stats) => void, name?: string) {
-  return (error: Error, stats: webpack.Stats) => {
+export function handleCompiler(successHandler: (stats?: webpack.Stats) => void, name?: string) {
+  return (error?: Error, stats?: webpack.Stats) => {
     if (error) {
       logger.br()
       logger.error(FAILED_TO_COMPILE, error)
       process.exit(1)
     }
 
-    if (stats.hasErrors()) {
+    if (stats?.hasErrors()) {
       logger.br()
       logger.errors(FAILED_TO_BUNDLING, stats.toJson().errors)
       process.exit(1)

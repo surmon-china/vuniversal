@@ -23,4 +23,3 @@ export function getVunConfig(): VunLibConfig {
 }
 
 export const vunConfig: VunLibConfig = getVunConfig()
-export default vunConfig
