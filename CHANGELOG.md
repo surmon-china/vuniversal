@@ -4,18 +4,25 @@ All notable changes to this project will be documented in this file.
 
 ### TODO
 
-- [ ] Webpack5
-  - block by vue-loader
-  - fix bugs with html-webpack-plugin
+- Builder
+  - [x] Build with tsc & abc
+  - [ ] Webpack5
+      - Remove cache-loader
+      - https://juejin.im/post/5df5cdf66fb9a0161a0c3092
+  - [x] block by vue-loader & webpack 5
+  - [ ] fix bugs with html-webpack-plugin@^4.0.0-beta.11
+  - [ ] modern support
+  - [ ] analyze support
+  - [ ] Jest support
+  - [ ] wds message
+  - [ ] OptimizeCSSAssetsPlugin
+  - [ ] server prod optimize
   - ~~autofix (cache-loader)~~
   - ~~autofix (pnp-loader)~~
-- [ ] Meta
-  - Client
-  - Server
-- [x] Build with tsc & abc
-- [ ] universal 404 context
-- [ ] universal cache
-- [ ] morden support
+- Vuniversal
+  - [ ] Meta
+  - [ ] universal 404 context
+  - [ ] universal cache
 
 ### 0.0.5 (2020-05-08)
 
