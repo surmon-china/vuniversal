@@ -7,11 +7,11 @@ export function yourApplicationIsRunningAt(url: string) {
   return `Your application is running at: ${url}`
 }
 
-export function compiledSuccessfully(name: string = '') {
+export function compiledSuccessfully(name = '') {
   return `Compiled ${name} successfully`.replace(/\s+/g, ' ')
 }
 
-export function compiling(name: string = '') {
+export function compiling(name = '') {
   const text = `${name} compiling...`.replace(/\s+/g, ' ')
   return text.charAt(0).toUpperCase() + text.slice(1)
 }

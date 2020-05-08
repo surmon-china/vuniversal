@@ -1,9 +1,8 @@
 import { Configuration } from 'webpack'
 import { requireResolve } from '@cli/utils'
-import { BuildContext } from '../webpack'
 import vunConfig from '../vuniversal'
 
-export function modifyEslintConfig(webpackConfig: Configuration, buildContext: BuildContext) {
+export function modifyEslintConfig(webpackConfig: Configuration) {
   const { lintOnSave } = vunConfig
   const hasTypeScript = !!vunConfig.typescript
   const baseExtensions = ['.js', '.jsx', '.vue']
