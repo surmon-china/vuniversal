@@ -1,9 +1,10 @@
 
 import webpack, { Configuration } from 'webpack'
 import logger from '@cli/services/logger'
-import { VunEnvObject, VunLibConfig } from '../vuniversal'
+import notifier from '@cli/services/notifier'
+import { FAILED_TO_VALIDATION } from '@cli/texts'
 import { VueEnv } from '@cli/environment'
-import { FAILED_TO_COMPILE, FAILED_TO_BUNDLING, compiledSuccessfully, compiling } from '@cli/texts'
+import { VunEnvObject, VunLibConfig } from '../vuniversal'
 import { BuildContext } from '.'
 
 export function isClientTarget(buildContext: BuildContext): boolean {
@@ -17,35 +18,28 @@ export function compileConfig(config: Configuration) {
     compiler = webpack(config)
   } catch (error) {
     logger.br()
-    logger.error(FAILED_TO_COMPILE, error)
+    logger.error(FAILED_TO_VALIDATION, error)
+    notifier.failed(FAILED_TO_VALIDATION)
     process.exit(1)
   }
   return compiler
 }
 
-export function handleCompiler(successHandler: (stats?: webpack.Stats) => void, name?: string) {
+export function handleCompiler(successHandler: (stats?: webpack.Stats) => void) {
   return (error?: Error, stats?: webpack.Stats) => {
-    if (error) {
-      logger.br()
-      logger.error(FAILED_TO_COMPILE, error)
-      process.exit(1)
+    // https://github.com/geowarin/friendly-errors-webpack-plugin/blob/v2.0.0-beta.2/src/friendly-errors-plugin.js#L52
+    if (error || stats?.hasErrors()) {
+      return
     }
 
-    if (stats?.hasErrors()) {
-      logger.br()
-      logger.errors(FAILED_TO_BUNDLING, stats.toJson().errors)
-      process.exit(1)
-    }
-
-    logger.done(compiledSuccessfully(name))
+    // https://github.com/geowarin/friendly-errors-webpack-plugin/blob/v2.0.0-beta.2/src/friendly-errors-plugin.js#L83
     successHandler(stats)
   }
 }
 
-export function runPromise(compiler: webpack.Compiler, name?: string) {
+export function runPromise(compiler: webpack.Compiler) {
   return new Promise((resolve) => {
-    logger.start(compiling(name))
-    compiler.run(handleCompiler(resolve, name))
+    compiler.run(handleCompiler(resolve))
   })
 }
 

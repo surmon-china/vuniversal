@@ -39,4 +39,3 @@ export function isClientTarget(target: VueEnv): boolean {
 export function isServerTarget(target: VueEnv): boolean {
   return target === VueEnv.Server
 }
-

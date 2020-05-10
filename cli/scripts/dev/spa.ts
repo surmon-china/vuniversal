@@ -1,13 +1,12 @@
-import WebpackDevServer from 'webpack-dev-server'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { getWebpackConfig } from '@cli/configs/webpack'
-import { defaultDevServerConfig } from '@cli/configs/dev-server'
+import { createWebpackDevServer } from '@cli/configs/wds'
 import { compileConfig, compilerToPromise, getDevServerUrl } from '@cli/configs/webpack/helper'
-import { spaTemplateRender } from '@cli/configs/html-plugin'
-import { success as successNotifier } from '@cli/services/notifier'
 import { NodeEnv, VueEnv } from '@cli/environment'
-import { DEV_SERVER_RUN_FAILED, FAILED_TO_COMPILE, yourApplicationIsRunningAt } from '@cli/texts'
+import { spaTemplateRender } from '@cli/configs/html'
+import { DEV_SERVER_RUN_FAILED, DEV_SERVER_RUN_SUCCESSFULLY, projectIsRunningAt } from '@cli/texts'
 import { vunConfig } from '@cli/configs/vuniversal'
+import notifier from '@cli/services/notifier'
 import logger from '@cli/services/logger'
 
 export function startSPAServer() {
@@ -24,34 +23,32 @@ export function startSPAServer() {
   }))
 
   const clientCompiler = compileConfig(clientConfig)
-  const devServerConfig: WebpackDevServer.Configuration = {
-    ...defaultDevServerConfig,
-    port: vunConfig.dev.port,
-    historyApiFallback: true,
-    open: true
-  }
-
-  // https://webpack.docschina.org/configuration/dev-server
-  WebpackDevServer.addDevServerEntrypoints(clientConfig, devServerConfig)
-  const devServer = new WebpackDevServer(clientCompiler, devServerConfig)
+  const devServer = createWebpackDevServer(
+    clientCompiler,
+    {
+      port: vunConfig.dev.port,
+      historyApiFallback: true,
+      open: true
+    },
+    clientConfig
+  )
 
   compilerToPromise(clientCompiler, VueEnv.Client)
-    .then(() => {
-      devServer.listen(vunConfig.dev.port, vunConfig.dev.host, error => {
+    .catch(() => null)
+    .finally(() => {
+      devServer.listen(vunConfig.dev.port, vunConfig.dev.host, (error?: Error) => {
         if (error) {
           logger.br()
           logger.error(DEV_SERVER_RUN_FAILED, error)
+          notifier.notify('', DEV_SERVER_RUN_FAILED)
           process.exit(1)
         } else {
           const serverUrl = getDevServerUrl(vunConfig.dev.host, vunConfig.dev.port)
-          successNotifier(serverUrl)
-          logger.done(yourApplicationIsRunningAt(serverUrl))
+          const projectIsRunningAtUrl = projectIsRunningAt(serverUrl)
+          logger.br()
+          logger.done(projectIsRunningAtUrl)
+          notifier.notify(projectIsRunningAtUrl, DEV_SERVER_RUN_SUCCESSFULLY)
         }
       })
-    })
-    .catch(errors => {
-      logger.br()
-      logger.errors(FAILED_TO_COMPILE, errors)
-      process.exit(1)
     })
 }

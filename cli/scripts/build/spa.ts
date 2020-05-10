@@ -1,12 +1,15 @@
 import fs from 'fs-extra'
 import path from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { NodeEnv, VueEnv } from '@cli/environment'
 import { getWebpackConfig } from '@cli/configs/webpack'
 import { SPA_TEMPLATE_FILE, DEFAULT_FALLBACK_FILE } from '@cli/paths'
-import { NodeEnv, VueEnv } from '@cli/environment'
+import { COMPILED_SUCCESSFULLY, compiledSuccessfully } from '@cli/texts'
 import { compileConfig, runPromise } from '@cli/configs/webpack/helper'
-import { spaTemplateRender } from '@cli/configs/html-plugin'
+import { spaTemplateRender } from '@cli/configs/html'
 import { vunConfig } from '@cli/configs/vuniversal'
+import notifier from '@cli/services/notifier'
+import logger from '@cli/services/logger'
 
 export function startBuildSPA() {
   const indexHTMLpath = path.resolve(vunConfig.dir.build, SPA_TEMPLATE_FILE)
@@ -49,8 +52,15 @@ export function startBuildSPA() {
 
   // TODO: prefetch & preload plugins
 
+  // Compile
+  const compiler = compileConfig(clientConfig)
+  // WORKAROUND: https://github.com/chrisvfritz/prerender-spa-plugin/blob/v3.4.0/es6/index.js#L60
+  // TODO: Remove when prerender-spa-plugin upgrade
+  // @ts-ignore
+  compiler.outputFileSystem.mkdirp = require('mkdirp')
+
   // Run
-  runPromise(compileConfig(clientConfig), VueEnv.Client).then(() => {
+  runPromise(compiler).then(() => {
     // Prerender fallback
     if (typeof vunConfig.prerender === 'object') {
       const { fallback } = vunConfig.prerender
@@ -64,5 +74,9 @@ export function startBuildSPA() {
         )
       }
     }
+
+    logger.done(compiledSuccessfully())
+    notifier.successfully(COMPILED_SUCCESSFULLY)
+    process.exit()
   })
 }

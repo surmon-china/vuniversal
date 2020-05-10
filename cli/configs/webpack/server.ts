@@ -8,25 +8,15 @@ import { NodeEnv, VueEnv, isDev } from '@cli/environment'
 import { modifyServerDevConfig } from './server.dev'
 import { modifyServerProdConfig } from './server.prod'
 import { SERVER_ENTRY, SERVER_MANIFEST_FILE, WEBPACK_HOT_POLL_ENTRY, getManifestPath } from '@cli/paths'
-import { requireResolve } from '@cli/utils'
+import { resolveEntry } from '@cli/utils'
 import { BuildContext } from '.'
 
 export function modifyServerConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   const IS_DEV = isDev(buildContext.environment)
 
-  // https://github.com/ericclemmons/start-server-webpack-plugin
   webpackConfig.entry = {
-    [SERVER_ENTRY]: [requireResolve(vunConfig.serverEntry)]
+    [SERVER_ENTRY]: [resolveEntry(vunConfig.serverEntry, VueEnv.Server)]
   }
-
-  // TODO: 待测试
-  // We want to uphold node's __filename, and __dirname.
-  webpackConfig.node = false
-  // webpackConfig.node = {
-  //   __console: false,
-  //   __dirname: false,
-  //   __filename: false,
-  // }
 
   // We need to tell webpack what to bundle into our Node bundle.
   const whitelist = [
@@ -35,6 +25,7 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
     /\.(mp4|mp3|ogg|swf|webp)$/,
     /\.(css|scss|sass|sss|less)$/
   ]
+  webpackConfig.node = false
   webpackConfig.externals = [
     nodeExternals({
       whitelist: IS_DEV

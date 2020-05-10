@@ -4,10 +4,11 @@ import mergeConfig from 'webpack-merge'
 import { stringify } from 'javascript-stringify'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
-import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
 import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '@cli/environment'
+import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
 import { requireResolve } from '@cli/utils'
 import { getManifestPath } from '@cli/paths'
+import { createFriendlyErrorsWebpackPlugin } from '../error'
 import { getBabelLoader, getExcluder } from '../babel'
 import { modifyTypeScriptConfig } from '../typescript'
 import { modifyEslintConfig } from '../eslint'
@@ -79,13 +80,11 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       alias: {
         '@': vunConfig.dir.source,
         '~': vunConfig.dir.source,
-        // 'vue': vunConfig.build.runtimeCompiler
-        //   ? '@vue/runtime-dom'
-        //   : 'vue'
         // TODO: ESM 无法启用 HMR 啊
-        // 'vue$': vunConfig.build.runtimeCompiler
-        //   ? 'vue/dist/vue.runtime.esm-bundler.js'
-        //   : 'vue/dist/vue.esm.js'
+        'vue': vunConfig.build.runtimeCompiler
+          // ? '@vue/runtime-dom'
+          ? 'vue/dist/vue.esm-bundler.js'
+          : 'vue'
       },
       plugins: [PnpWebpackPlugin]
     },
@@ -154,6 +153,8 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       new VueLoader.VueLoaderPlugin(),
       // https://github.com/Urthen/case-sensitive-paths-webpack-plugin
       new CaseSensitivePathsPlugin({ debug: false }),
+      // https://github.com/geowarin/friendly-errors-webpack-plugin
+      createFriendlyErrorsWebpackPlugin(),
       // Define environment vars
       // We define environment variables that can be accessed globally in our
       new webpack.DefinePlugin(transformToProcessEnvObject({

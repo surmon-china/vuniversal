@@ -1,7 +1,7 @@
 import { VunLibConfig } from './interface'
 import { VUN_DEFAULT_HTML_TEMPLATE } from '@cli/paths'
 import { NodeEnv, isProd, isDev } from '@cli/environment'
-import { appPackageJSON } from '@cli/utils'
+import { appPackageJSON } from '@cli/configs/package'
 
 const dependencies = Object.keys(appPackageJSON.dependencies)
 const devDependencies = Object.keys(appPackageJSON.devDependencies)
@@ -24,7 +24,7 @@ export const defaultConfig: VunLibConfig = {
     modules: []
   },
   get lintOnSave() {
-    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint')
+    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint') && 'default'
   },
   dev: {
     host: 'localhost',

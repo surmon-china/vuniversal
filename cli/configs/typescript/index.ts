@@ -3,13 +3,13 @@ import path from 'path'
 import { Configuration } from 'webpack'
 import { Options as TsLoaderOptions } from 'ts-loader'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
-import logger from '@cli/services/logger'
 import { requireResolve } from '@cli/utils'
 import { isProd, isClientTarget } from '@cli/environment'
 import { BuildContext } from '../webpack'
 import { getBabelLoader } from '../babel'
 import { enableParallel, getThreadLoader } from '../parallel'
 import { vunConfig } from '../vuniversal'
+import logger from '@cli/services/logger'
 
 // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-plugin-typescript/index.js
 export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContext: BuildContext) {
@@ -53,24 +53,23 @@ export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContex
     typeof vunConfig.typescript === 'object' &&
     !!vunConfig.typescript.forkTsChecker
   )
-  // 是不是服务端拥有更完整的代码
   // 服务端和客户端大部分代码是重合的，但是运行了两个实例，也就是说同样的错误会报两遍
-  // TODO: confirm client universal
   if (IS_CLIENT && enableForkTsChecker) {
     const vunForkTsCheckerOptions = (
       typeof vunConfig.typescript === 'object' &&
       typeof vunConfig.typescript.forkTsChecker === 'object'
     ) ? vunConfig.typescript.forkTsChecker : {}
 
-    webpackConfig.plugins?.unshift(
+    webpackConfig.plugins?.push(
       new ForkTsCheckerWebpackPlugin({
-        // TODO: 不知道该咋办
-        // eslint: true,
-        // eslintOptions: {},
+        // Not friendly & duplicate with eslint-loader
+        // eslint: !!vunConfig.lintOnSave,
         logger,
+        // disable logger
+        silent: true,
+        // emit errors to webpack https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#options
+        async: false,
         formatter: 'codeframe',
-        // sync when IS_PROD
-        // async: !IS_PROD,
         // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
         checkSyntacticErrors: useThreads,
         vue: {

@@ -1,7 +1,7 @@
 <br>
 <p align="center">
   <a href="https://github.surmon.me/vuniversal" target="_blank">
-    <img src="https://raw.githubusercontent.com/surmon-china/vuniversal/master/logo.png" width="195">
+    <img src="https://raw.githubusercontent.com/surmon-china/vuniversal/master/presses/logo.png" width="195">
   </a>
 </p>
 <p align="center">Create vue (3) universal web applications quickly.</p>

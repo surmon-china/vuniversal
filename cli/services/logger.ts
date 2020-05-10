@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 
-export enum LogTypes {
+enum LogTypes {
   Warn = 'warn',
   Debug = 'debug',
   Info = 'info',
@@ -26,8 +26,8 @@ const logStyles = {
     msg: ' INFO '
   },
   [LogTypes.Error]: {
-    bg: chalk.bgHex('#de1e1e'),
-    text: chalk.hex('#de1e1e'),
+    bg: chalk.bgRed,
+    text: chalk.red,
     msg: ' ERROR '
   },
   [LogTypes.Start]: {
@@ -42,68 +42,72 @@ const logStyles = {
   }
 }
 
+const consoleLog = global.console.log
+const consoleDir = global.console.dir
+
 const write = (type: LogTypes, text: string, verbose?: any) => {
   const logType = logStyles[type]
-
-  let logObject = false
-  let textToLog = logType.bg.black(logType.msg) + ' ' + logType.text(text)
+  const isObjectVerbose = typeof verbose === 'object'
+  // const needBr = [LogTypes.Start, LogTypes.Done, LogTypes.Warn, LogTypes.Debug].includes(type)
+  const textToLog = logType.bg.black(logType.msg) + ' ' + logType.text(text)
 
   // Adds optional verbose output
-  if (verbose) {
-    if (typeof verbose === 'object') {
-      logObject = true
-    } else {
-      textToLog += `\n\n${verbose}`
-    }
+  // needBr && consoleLog()
+  if (isObjectVerbose) {
+    consoleLog(textToLog)
+    consoleDir(verbose, { depth: 15 })
+  } else {
+    consoleLog(
+      !!verbose
+        ? textToLog + `\n${verbose}`
+        : textToLog
+    )
   }
-
-  console.log(textToLog)
-  if (['start', 'done', 'error'].includes(type)) {
-    console.log()
-  }
-
-  if (logObject) {
-    console.dir(verbose, { depth: 15 })
-  }
+  consoleLog()
 }
 
 // Printing any statements
-export const log = (text = '') => console.log(text)
+const log = (...text: string[]) => consoleLog(...text)
 // Starting a process
-export const start = (text: string) => write(LogTypes.Start, text)
+const start = (text: string) => write(LogTypes.Start, text)
 // Ending a process
-export const done = (text: string) => write(LogTypes.Done, text)
+const done = (text: string) => write(LogTypes.Done, text)
 // Info about a process task
-export const info = (text: string) => write(LogTypes.Info, text)
+const info = (text: string) => write(LogTypes.Info, text)
 // Verbose output
-// takes optional data
-export const debug = (text: string, data?: any) => write(LogTypes.Debug, text, data)
+const debug = (text: string, data?: any) => write(LogTypes.Debug, text, data)
 // Warn output
-export const warn = (text: string, data?: any) => write(LogTypes.Warn, text, data)
+const warn = (text: string, data?: any) => write(LogTypes.Warn, text, data)
 // Error output
-// takes an optional error
-export const error = (text: string, error?: Error) => write(LogTypes.Error, text, error)
-export const errors = (text: string, errors: Array<Error | string>) => {
+const error = (text: string | Error, error?: Error) => {
   const errorLog = logStyles[LogTypes.Error]
-  console.log(errorLog.bg.black(errorLog.msg) + ' ' + errorLog.text(text))
-  console.log()
-  errors.forEach(error => {
-    console.log(
-      errorLog.text(
-        error instanceof Error
-          ? error.message || String(error)
-          : error
-        )
-    )
-    console.log()
+  let logContent = errorLog.bg.black(errorLog.msg) + ' '
+  if (typeof text === 'string') {
+    logContent += errorLog.text(text)
+    if (error) {
+      logContent += `\n\n${errorLog.text(error.stack || error.message || error)}`
+    }
+  } else {
+    logContent += errorLog.text(text.stack || text.message || text)
+  }
+  // consoleLog()
+  consoleLog(logContent)
+  consoleLog()
+}
+const errors = (text: string, errors: Array<Error | string>) => {
+  const errorLog = logStyles[LogTypes.Error]
+  consoleLog(errorLog.bg.black(errorLog.msg) + ' ' + errorLog.text(text) + `(${errors.length} errors)`)
+  consoleLog()
+  errors.forEach(_error => {
+    typeof _error === 'string'
+      ? consoleLog(errorLog.text(_error))
+      : write(LogTypes.Error, _error.name || _error.message, _error.stack)
+    consoleLog()
   })
 }
 
-export function br(): void {
-  console.log('\n')
-}
-
-export function clear(): void {
+const br = () => consoleLog()
+const clear = () => {
   process.stdout.write(
     process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
   )

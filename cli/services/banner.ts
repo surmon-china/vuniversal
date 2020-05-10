@@ -2,9 +2,9 @@ import chalk from 'chalk'
 import wrapAnsi from 'wrap-ansi'
 import prettyBytes from 'pretty-bytes'
 import boxen, { BorderStyle } from 'boxen'
-import { VUN_NAME } from '../paths'
-import { vunPackageJSON } from '../utils'
+import { vunPackageJSON } from '@cli/configs/package'
 import { NodeEnv, UniversalMode } from '../environment'
+import { VUN_NAME } from '../paths'
 
 // 80% of terminal column width
 // this is a fn because console width can have changed since startup

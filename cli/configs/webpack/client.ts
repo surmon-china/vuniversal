@@ -7,7 +7,7 @@ import { modifyClientDevConfig } from './clien.dev'
 import { modifyClientProdConfig } from './client.prod'
 import { VueEnv, isDev, isUniversal } from '@cli/environment'
 import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '@cli/paths'
-import { requireResolve } from '@cli/utils'
+import { resolveEntry } from '@cli/utils'
 import { autoHash } from './helper'
 import { BuildContext } from '.'
 
@@ -23,8 +23,7 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
 
   // specify our client entry point src/client
   webpackConfig.entry = {
-    // Make sure entry file exist
-    [CLIENT_ENTRY]: [requireResolve(vunConfig.clientEntry)]
+    [CLIENT_ENTRY]: [resolveEntry(vunConfig.clientEntry, VueEnv.Client)]
   }
 
   // Specify the client output directory and paths.

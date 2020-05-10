@@ -1,8 +1,9 @@
-import logger from '@cli/services/logger'
 import { getWebpackConfig } from '@cli/configs/webpack'
 import { compileConfig, runPromise } from '@cli/configs/webpack/helper'
+import { COMPILED_SUCCESSFULLY, compiledSuccessfully } from '@cli/texts'
 import { NodeEnv, VueEnv } from '@cli/environment'
-import { compiledSuccessfully } from '@cli/texts'
+import notifier from '@cli/services/notifier'
+import logger from '@cli/services/logger'
 
 export function startBuildSSR() {
   const clientConfig = getWebpackConfig({
@@ -15,9 +16,11 @@ export function startBuildSSR() {
   })
 
   Promise.all([
-    runPromise(compileConfig(clientConfig), VueEnv.Client),
-    runPromise(compileConfig(serverConfig), VueEnv.Server)
+    runPromise(compileConfig(clientConfig)),
+    runPromise(compileConfig(serverConfig))
   ]).then(() => {
     logger.done(compiledSuccessfully())
+    notifier.successfully(COMPILED_SUCCESSFULLY)
+    process.exit()
   })
 }

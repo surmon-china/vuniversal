@@ -1,4 +1,3 @@
-
 # Changelog
 All notable changes to this project will be documented in this file.
 
@@ -7,16 +6,18 @@ All notable changes to this project will be documented in this file.
 - Cli
   - [x] Build with tsc & abc
   - [x] Webpack5
-      - Remove cache-loader
-      - https://juejin.im/post/5df5cdf66fb9a0161a0c3092
+      - [x] Remove cache-loader
+      - [x] https://juejin.im/post/5df5cdf66fb9a0161a0c3092
+      - [x] ModuleFederationPlugin https://juejin.im/post/5eb382c26fb9a04388075b45?utm_source=gold_browser_extension
   - [x] block by vue-loader & webpack 5
   - [x] fix bugs with html-webpack-plugin@^4.0.0-beta.11
-  - [ ] fix prerender plugin with webpack 5
-  - [ ] notifier logo & texts
+  - [x] helper command
+  - [x] fix prerender plugin with webpack 5
+  - [x] wds message
+  - [x] notifier logo & texts
   - [ ] modern support
   - [ ] analyze support
   - [ ] Jest support
-  - [ ] wds message
   - [ ] OptimizeCSSAssetsPlugin
   - [ ] server prod optimize
   - ~~autofix (cache-loader)~~
