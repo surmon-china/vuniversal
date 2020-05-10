@@ -55,7 +55,8 @@ yarn add vuniversal
 **vun.config.js**
 
 ```js
-module.exports = {universal: true,
+module.exports = {
+  universal: true,
   modern: true,
   clientEntry: 'src/client',
   serverEntry: 'src/server',
