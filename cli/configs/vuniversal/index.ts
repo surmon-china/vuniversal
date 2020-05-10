@@ -3,6 +3,7 @@ import { VunLibConfig } from './interface'
 import { defaultConfig } from './default'
 import { transformConfig, normalizeConfig } from './transformer'
 import { APP_VUN_CONFIG_PATH } from '@cli/paths'
+import logger from '@cli/services/logger'
 
 export * from './default'
 export * from './interface'
@@ -17,7 +18,7 @@ export function getVunConfig(): VunLibConfig {
   try {
     return normalizeConfig(require(APP_VUN_CONFIG_PATH))
   } catch (error) {
-    console.error('Invalid vuniversal config file.', error)
+    logger.error('Invalid vuniversal config file!', error)
     process.exit(1)
   }
 }
