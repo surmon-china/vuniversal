@@ -34,10 +34,6 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
     chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
   }
 
-  webpackConfig.optimization = {
-    ...vunConfig.build.optimization
-  }
-
   webpackConfig.node = false
 
   webpackConfig.plugins?.push(

@@ -4,14 +4,12 @@ import { VunLibConfig } from '../vuniversal'
 import { isWindows, requireResolve } from '@cli/utils'
 
 export function getBabelLoader(vunConfig: VunLibConfig): RuleSetRule {
-  const babelOptions = {
-    presets: [requireResolve('@vue/babel-preset-app')],
-    ...vunConfig.babel
-  }
-
   return {
     loader: requireResolve('babel-loader'),
-    options: babelOptions
+    options: {
+      presets: [requireResolve('@vue/babel-preset-app')],
+      ...vunConfig.babel
+    }
   }
 }
 

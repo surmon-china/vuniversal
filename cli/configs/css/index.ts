@@ -14,8 +14,8 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
   const IS_CLIENT = isClientTarget(buildContext.target)
 
   const buildOptions = vunConfig.build
+  const loaderOptions = buildOptions.loaders || {}
   const cssOptions = buildOptions.css
-  const loaderOptions = cssOptions.loaderOptions || {}
   const styleResources = cssOptions.styleResources || {}
   const sourceMap = cssOptions.sourceMap
 
@@ -90,7 +90,7 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
           loader: MiniCssExtractPlugin.loader,
           options: {
             hmr: IS_DEV,
-            // TODO: 必有深意
+            // TODO: test
             // use relative publicPath in extracted CSS based on extract location
             publicPath: '../'.repeat(
               extractOptions.filename
@@ -103,7 +103,10 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
       } else {
         rule.use.push({
           loader: requireResolve('vue-style-loader'),
-          options: { sourceMap }
+          options: {
+            sourceMap,
+            ...loaderOptions.vueStyle
+          }
         })
       }
 

@@ -37,6 +37,9 @@
 
 ``` bash
 yarn add vuniversal
+
+# init vun config file
+npx vun init
 ```
 
 **package.json**

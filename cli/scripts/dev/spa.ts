@@ -28,7 +28,8 @@ export function startSPAServer() {
     {
       port: vunConfig.dev.port,
       historyApiFallback: true,
-      open: true
+      open: true,
+      ...vunConfig.dev.devServer
     },
     clientConfig
   )
@@ -38,14 +39,12 @@ export function startSPAServer() {
     .finally(() => {
       devServer.listen(vunConfig.dev.port, vunConfig.dev.host, (error?: Error) => {
         if (error) {
-          logger.br()
           logger.error(DEV_SERVER_RUN_FAILED, error)
           notifier.notify('', DEV_SERVER_RUN_FAILED)
           process.exit(1)
         } else {
           const serverUrl = getDevServerUrl(vunConfig.dev.host, vunConfig.dev.port)
           const projectIsRunningAtUrl = projectIsRunningAt(serverUrl)
-          logger.br()
           logger.done(projectIsRunningAtUrl)
           notifier.notify(projectIsRunningAtUrl, DEV_SERVER_RUN_SUCCESSFULLY)
         }

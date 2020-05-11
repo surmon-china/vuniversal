@@ -15,6 +15,11 @@ export const defaultConfig: VunLibConfig = {
   template: VUN_DEFAULT_HTML_TEMPLATE,
   prerender: false,
   inspect: false,
+  get lintOnSave() {
+    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint')
+      ? 'default'
+      : false
+  },
   env: {},
   dir: {
     build: 'dist',
@@ -22,9 +27,6 @@ export const defaultConfig: VunLibConfig = {
     source: 'src',
     root: '.',
     modules: []
-  },
-  get lintOnSave() {
-    return isDev(process.env.NODE_ENV as NodeEnv) && allDependencies.includes('eslint') && 'default'
   },
   dev: {
     host: 'localhost',
@@ -56,7 +58,6 @@ export const defaultConfig: VunLibConfig = {
       },
       requireModuleExtension: true,
       sourceMap: false,
-      loaderOptions: {} as any,
       styleResources: {
         scss: [],
         sass: [],
@@ -64,6 +65,7 @@ export const defaultConfig: VunLibConfig = {
         stylus: []
       }
     },
+    loaders: {} as any,
     optimization: {
       splitChunks: {
         cacheGroups: {
@@ -74,7 +76,7 @@ export const defaultConfig: VunLibConfig = {
             chunks: 'initial'
           },
           common: {
-            name: `chunk-common`,
+            name: 'chunk-common',
             minChunks: 2,
             priority: -20,
             chunks: 'initial',
@@ -85,9 +87,11 @@ export const defaultConfig: VunLibConfig = {
     }
   },
   babel: {},
-  webpack: {},
-  typescript: !allDependencies.includes('typescript') ? false : {
-    tsLoader: {},
-    forkTsChecker: true
-  }
+  typescript: !allDependencies.includes('typescript')
+    ? false
+    : {
+      tsLoader: {},
+      forkTsChecker: true
+    },
+  webpack: () => ({})
 }

@@ -17,7 +17,6 @@ export function compileConfig(config: Configuration) {
   try {
     compiler = webpack(config)
   } catch (error) {
-    logger.br()
     logger.error(FAILED_TO_VALIDATION, error)
     notifier.failed(FAILED_TO_VALIDATION)
     process.exit(1)
@@ -31,7 +30,6 @@ export function handleCompiler(successHandler: (stats?: webpack.Stats) => void) 
     if (error || stats?.hasErrors()) {
       return
     }
-
     // https://github.com/geowarin/friendly-errors-webpack-plugin/blob/v2.0.0-beta.2/src/friendly-errors-plugin.js#L83
     successHandler(stats)
   }

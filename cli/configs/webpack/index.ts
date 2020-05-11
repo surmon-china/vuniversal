@@ -4,7 +4,7 @@ import mergeConfig from 'webpack-merge'
 import { stringify } from 'javascript-stringify'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
-import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev } from '@cli/environment'
+import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev, isProd } from '@cli/environment'
 import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
 import { requireResolve } from '@cli/utils'
 import { getManifestPath } from '@cli/paths'
@@ -41,6 +41,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
   const IS_SERVER = isServerTarget(buildContext.target)
   const IS_CLIENT = isClientTarget(buildContext.target)
   const IS_DEV = isDev(buildContext.environment)
+  const IS_PROD = isProd(buildContext.environment)
 
   const modules = [
     'node_modules',
@@ -99,7 +100,8 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           test: /\.vue$/,
           loader: requireResolve('vue-loader'),
           options: {
-            extractCSS: !!vunConfig.build.css.extract
+            extractCSS: !!vunConfig.build.css.extract,
+            ...vunConfig.build.loaders.vue
           }
         },
         {
@@ -117,6 +119,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           options: {
             limit: 10000,
             name: genAssetSubPath('image'),
+            ...vunConfig.build.loaders.imgUrl,
             emitFile: IS_CLIENT
           }
         },
@@ -127,6 +130,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           loader: requireResolve('file-loader'),
           options: {
             name: genAssetSubPath('image'),
+            ...vunConfig.build.loaders.svgFile,
             emitFile: IS_CLIENT
           }
         },
@@ -135,6 +139,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           loader: requireResolve('url-loader'),
           options: {
             name: genAssetSubPath('media'),
+            ...vunConfig.build.loaders.mediaUrl,
             emitFile: IS_CLIENT
           }
         },
@@ -143,6 +148,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           loader: requireResolve('url-loader'),
           options: {
             name: genAssetSubPath('fonts'),
+            ...vunConfig.build.loaders.fontUrl,
             emitFile: IS_CLIENT
           }
         }
@@ -173,7 +179,17 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     ],
     watchOptions: {
       ignored: ['node_modules/**']
-    }
+    },
+    optimization: vunConfig.build.optimization
+  }
+
+  if (IS_PROD) {
+    webpackConfig.plugins?.push(
+      new webpack.BannerPlugin({
+        banner: 'Build with vuniversal. https://github.com/surmon-china/vuniversal',
+        entryOnly: true
+      })
+    )
   }
 
   // CSS
@@ -208,8 +224,6 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       if (response) {
         webpackConfig = mergeConfig(webpackConfig, response)
       }
-    } else {
-      webpackConfig = mergeConfig(webpackConfig, vunConfig.webpack)
     }
   }
 
@@ -222,9 +236,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       plugins: webpackConfig?.plugins?.map(plugin => plugin.constructor?.name)
     }
     logger.info('Inspect webpack config')
-    logger.br()
     logger.log(highlight(stringify(inspectConfig, null, 2), { language: 'js' }))
-    logger.br()
   }
 
   return webpackConfig

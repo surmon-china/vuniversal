@@ -34,7 +34,8 @@ export function startSSRServer() {
     {
       port: assetsServerPost,
       historyApiFallback: false,
-      open: false
+      open: false,
+      ...vunConfig.dev.devServer
     },
     clientConfig
   )
@@ -73,7 +74,6 @@ export function startSSRServer() {
     .finally(() => {
       clientServer.listen(assetsServerPost, vunConfig.dev.host, error => {
         if (error) {
-          logger.br()
           logger.error(DEV_SERVER_RUN_FAILED, error)
           notifier.notify('', DEV_SERVER_RUN_FAILED)
           process.exit(1)

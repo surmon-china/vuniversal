@@ -12,10 +12,9 @@ export function modifyServerProdConfig(webpackConfig: Configuration): void {
   }
 
   webpackConfig.plugins?.push(
-    // TODO: !!!
     // Prevent creating multiple chunks for the server
-    new webpack.optimize.LimitChunkCountPlugin()
-    // TODO: 为生成的文件头部添加 banner（包含 vuniversal 信息）
-    // new webpack.BannerPlugin(banner)
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 5
+    })
   )
 }

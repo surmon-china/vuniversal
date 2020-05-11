@@ -1,4 +1,6 @@
 import chalk from 'chalk'
+import { Console } from 'console'
+import { isBrLastLine } from './stdout'
 
 enum LogTypes {
   Warn = 'warn',
@@ -42,32 +44,44 @@ const logStyles = {
   }
 }
 
-const consoleLog = global.console.log
-const consoleDir = global.console.dir
+export const loggerConsole = new Console(process.stdout, process.stderr)
+
+const br = () => {
+  loggerConsole.log()
+}
+
+const clear = () => {
+  process.stdout.write(
+    process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
+  )
+}
+
+const autoPreBr = () => {
+  if (!isBrLastLine()) {
+    br()
+  }
+}
 
 const write = (type: LogTypes, text: string, verbose?: any) => {
   const logType = logStyles[type]
   const isObjectVerbose = typeof verbose === 'object'
-  // const needBr = [LogTypes.Start, LogTypes.Done, LogTypes.Warn, LogTypes.Debug].includes(type)
   const textToLog = logType.bg.black(logType.msg) + ' ' + logType.text(text)
-
-  // Adds optional verbose output
-  // needBr && consoleLog()
+  autoPreBr()
   if (isObjectVerbose) {
-    consoleLog(textToLog)
-    consoleDir(verbose, { depth: 15 })
+    loggerConsole.log(textToLog)
+    loggerConsole.dir(verbose, { depth: 15 })
   } else {
-    consoleLog(
+    loggerConsole.log(
       !!verbose
         ? textToLog + `\n${verbose}`
         : textToLog
     )
   }
-  consoleLog()
+  br()
 }
 
 // Printing any statements
-const log = (...text: string[]) => consoleLog(...text)
+const log = (...text: string[]) => loggerConsole.log(...text)
 // Starting a process
 const start = (text: string) => write(LogTypes.Start, text)
 // Ending a process
@@ -90,30 +104,22 @@ const error = (text: string | Error, error?: Error) => {
   } else {
     logContent += errorLog.text(text.stack || text.message || text)
   }
-  // consoleLog()
-  consoleLog(logContent)
-  consoleLog()
+  autoPreBr()
+  loggerConsole.error(logContent)
+  br()
 }
+// Errors output
 const errors = (text: string, errors: Array<Error | string>) => {
   const errorLog = logStyles[LogTypes.Error]
-  consoleLog(errorLog.bg.black(errorLog.msg) + ' ' + errorLog.text(text) + `(${errors.length} errors)`)
-  consoleLog()
-  errors.forEach(_error => {
-    typeof _error === 'string'
-      ? consoleLog(errorLog.text(_error))
-      : write(LogTypes.Error, _error.name || _error.message, _error.stack)
-    consoleLog()
-  })
-}
-
-const br = () => consoleLog()
-const clear = () => {
-  process.stdout.write(
-    process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
-  )
+  autoPreBr()
+  loggerConsole.error(errorLog.bg.black(errorLog.msg) + ' ' + errorLog.text(text) + `(${errors.length} errors)`)
+  errors.forEach(_error => error(_error))
 }
 
 export default {
+  br,
+  autoPreBr,
+  clear,
   log,
   info,
   debug,
@@ -121,7 +127,5 @@ export default {
   start,
   done,
   error,
-  errors,
-  clear,
-  br
+  errors
 }
