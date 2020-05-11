@@ -16,9 +16,7 @@ export const createFriendlyErrorsWebpackPlugin = (options?: FriendlyErrorsWebpac
         notifier.notify(
           name
             ? `SEVERITY: ${name}`
-            : rawMessage
-              ? rawMessage
-              : `FILE: ${file}`,
+            : rawMessage || `FILE: ${file}`,
           FAILED_TO_COMPILE
         )
       }
