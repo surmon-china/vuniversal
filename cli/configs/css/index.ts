@@ -2,6 +2,7 @@
 import path from 'path'
 import { Configuration, RuleSetRule } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin'
 import { isDev, isClientTarget } from '@cli/environment'
 import { findExistingFile, requireResolve } from '@cli/utils'
 import { BuildContext } from '../webpack'
@@ -251,13 +252,24 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
 
     // minify extracted CSS
     if (!IS_DEV) {
-      // optimize-css
-      // TODO remove: 15 star https://github.com/intervolga/optimize-cssnano-plugin
-      const OptimizeCssnanoPlugin = require('@intervolga/optimize-cssnano-plugin')
       webpackConfig.plugins?.push(
-        new OptimizeCssnanoPlugin({
-          sourceMap: buildOptions.productionSourceMap && sourceMap,
-          cssnanoOptions
+        // @ts-ignore
+        new OptimizeCSSAssetsPlugin({
+          canPrint: true,
+          cssProcessor: require('cssnano'),
+          cssProcessorPluginOptions: cssnanoOptions,
+          cssProcessorOptions: {
+            // TODO: map & duplicates
+            safe: true,
+            autoprefixer: { disable: true },
+            mergeLonghand: false,
+            discardDuplicates: {
+              removeAll: true
+            },
+            discardComments: {
+              removeAll: true
+            }
+          }
         })
       )
     }

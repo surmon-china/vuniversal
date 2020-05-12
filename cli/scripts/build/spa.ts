@@ -45,7 +45,8 @@ export function startBuildSPA() {
         server: {
           port: vunConfig.dev.port,
           proxy: vunConfig.dev.proxy
-        }
+        },
+        ...vunConfig.prerender?.options
       }))
     }
   }

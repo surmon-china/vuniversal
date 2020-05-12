@@ -41,6 +41,8 @@ export interface VunLibConfig {
     routes: string[]
     // 是否回退为 SPA
     fallback: true | string
+    // options of https://github.com/chrisvfritz/prerender-spa-plugin
+    options: object
   }
   // Eslint
   lintOnSave: boolean | 'default' | 'warning' | 'error'
@@ -87,10 +89,8 @@ export interface VunLibConfig {
     productionSourceMap: boolean
     // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
     parallel: boolean | number 
-    // crossorigin: '' | 'anonymous' | 'use-credentials';
-    // integrity: boolean
-    // 是不是要通过插件实现啊
-    // pwa: object;
+    // https://cli.vuejs.org/zh/config/#crossorigin
+    crossorigin: false | '' | 'anonymous' | 'use-credentials'
     // webpack optimization
     optimization: webpack.Configuration['optimization']
     // 有关样式的配置项

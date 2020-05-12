@@ -1,11 +1,12 @@
 import webpack, { Configuration } from 'webpack'
 import { SERVER_JS_FILE, VUN_DEV_CACHE_PATH } from '@cli/paths'
+import { vunConfig } from '../vuniversal'
 
 export function modifyServerDevConfig(webpackConfig: Configuration): void {
   // Specify webpack Node.js output path and filename
   webpackConfig.output = {
     path: VUN_DEV_CACHE_PATH,
-    publicPath: '/',
+    publicPath: vunConfig.build.publicPath,
     filename: SERVER_JS_FILE,
     libraryTarget: 'commonjs2'
   }

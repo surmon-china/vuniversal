@@ -41,6 +41,7 @@ export const defaultConfig: VunLibConfig = {
     analyze: false,
     runtimeCompiler: false,
     productionSourceMap: true,
+    crossorigin: false,
     transpileDependencies: [],
     get filenameHashing() {
       return isProd(process.env.NODE_ENV as NodeEnv)

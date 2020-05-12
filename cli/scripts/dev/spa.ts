@@ -26,6 +26,7 @@ export function startSPAServer() {
   const devServer = createWebpackDevServer(
     clientCompiler,
     {
+      host: vunConfig.dev.host,
       port: vunConfig.dev.port,
       historyApiFallback: true,
       open: true,

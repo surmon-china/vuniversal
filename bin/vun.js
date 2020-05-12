@@ -7,10 +7,7 @@ const chalk = require('chalk')
 const logger = require('../cli-dist/services/logger').default
 
 // Overlay global console
-global.console.log = logger.log
-global.console.info = logger.info
 global.console.warn = logger.warn
-global.console.debug = logger.debug
 global.console.error = logger.error
 
 function logHelp() {

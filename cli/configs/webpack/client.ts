@@ -31,7 +31,7 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
     path: clientBuildPath,
     publicPath: vunConfig.build.publicPath,
     filename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
-    chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
+    chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`
   }
 
   webpackConfig.node = false

@@ -1,4 +1,3 @@
-
 import webpack, { Configuration } from 'webpack'
 import logger from '@cli/services/logger'
 import notifier from '@cli/services/notifier'

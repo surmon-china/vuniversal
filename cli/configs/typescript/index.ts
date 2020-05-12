@@ -65,9 +65,9 @@ export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContex
         // Not friendly & duplicate with eslint-loader
         // eslint: !!vunConfig.lintOnSave,
         logger,
-        // disable logger
+        // Disable logger
         silent: true,
-        // emit errors to webpack https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#options
+        // Emit errors to webpack: https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#options
         async: false,
         formatter: 'codeframe',
         // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
