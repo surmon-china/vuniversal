@@ -193,6 +193,24 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         entryOnly: true
       })
     )
+
+    if (vunConfig.build.analyze) {
+      // https://github.com/webpack-contrib/webpack-bundle-analyzer
+      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+      webpackConfig.plugins?.push(
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'server',
+          openAnalyzer: true,
+          logLevel: 'silent',
+          ...(
+            // TODO: vuniversal config interface & types
+            typeof vunConfig.build.analyze === 'boolean'
+              ? {}
+              : vunConfig.build.analyze
+          )
+        })
+      )
+    }
   }
 
   // CSS

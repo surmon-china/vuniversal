@@ -33,3 +33,6 @@
   - [ ] Meta (vue-meta?)
   - [ ] universal 404 context
   - [ ] universal cache
+  - [ ] `no-prerender` component
+  - [ ] `client-only` component
+  - [ ] `only-run` component?
