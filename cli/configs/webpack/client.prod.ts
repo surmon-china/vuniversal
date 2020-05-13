@@ -1,4 +1,4 @@
-import webpack, { Configuration } from 'webpack'
+import { Configuration } from 'webpack'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import { getClientBuildPath } from '@cli/paths'
 import { getTerserConfig } from '../terser'
@@ -12,10 +12,7 @@ export function modifyClientProdConfig(webpackConfig: Configuration): void {
   webpackConfig.plugins?.push(
     new CopyWebpackPlugin([
       { from: vunConfig.dir.public, to: clientBuildPath }
-    ]),
-    new webpack.ids.HashedModuleIdsPlugin({
-      hashDigest: 'hex'
-    })
+    ])
   )
 
   webpackConfig.optimization = {

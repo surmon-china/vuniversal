@@ -70,10 +70,13 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
   // plugin.
   const needInlineMinification = !IS_DEV && !shouldExtract
 
+  // https://cssnano.co/guides/optimisations
+  // MRAK: duplicated!! https://github.com/NMFR/optimize-css-assets-webpack-plugin/issues/45#issuecomment-380738707
   const cssnanoOptions: any = {
     preset: ['default', {
       mergeLonghand: false,
-      cssDeclarationSorter: false
+      cssDeclarationSorter: false,
+      autoprefixer: { disable: true },
     }]
   }
   if (buildOptions.productionSourceMap && sourceMap) {
@@ -257,18 +260,9 @@ export function modifyCSSConfig(webpackConfig: Configuration, buildContext: Buil
         new OptimizeCSSAssetsPlugin({
           canPrint: true,
           cssProcessor: require('cssnano'),
-          cssProcessorPluginOptions: cssnanoOptions,
           cssProcessorOptions: {
-            // TODO: map & duplicates
-            safe: true,
-            autoprefixer: { disable: true },
-            mergeLonghand: false,
-            discardDuplicates: {
-              removeAll: true
-            },
-            discardComments: {
-              removeAll: true
-            }
+            ...cssnanoOptions,
+            // TODO: duplicates
           }
         })
       )

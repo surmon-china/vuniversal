@@ -18,14 +18,14 @@
   - [x] ~~integrity has bug with preload~~ [Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity)
   - [x] prerender option e.g. wait
   - [x] OptimizeCSSAssetsPlugin
-  - [ ] extractOptions (duplicates) & OptimizeCSSAssetsPlugin (map) [so](https://stackoverflow.com/questions/52564625/cssnano-doesnt-remove-duplicates)
+  - [x] extractOptions (duplicates) & OptimizeCSSAssetsPlugin (map) [so](https://stackoverflow.com/questions/52564625/cssnano-doesnt-remove-duplicates)
+  - [x] server prod optimize (max chunk length = 1)
   - [ ] modern support
   - [ ] analyze support
   - [ ] Jest support
   - [ ] init script
   - [ ] server boundle `require.resolveWeak` [FYI](https://github.com/faceyspacey/react-universal-component)
   - [ ] server boundle async to html [FYI](https://github.com/jamiebuilds/react-loadable)
-  - [ ] server prod optimize
   - ~~autofix (cache-loader)~~
   - ~~autofix (pnp-loader)~~
 

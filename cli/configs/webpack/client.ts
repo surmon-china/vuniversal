@@ -8,7 +8,7 @@ import { modifyClientProdConfig } from './client.prod'
 import { VueEnv, isDev, isUniversal } from '@cli/environment'
 import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '@cli/paths'
 import { resolveEntry } from '@cli/utils'
-import { autoHash } from './helper'
+import { autoChunkHash } from './helper'
 import { BuildContext } from '.'
 
 export function modifyClientConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
@@ -30,11 +30,31 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
   webpackConfig.output = {
     path: clientBuildPath,
     publicPath: vunConfig.build.publicPath,
-    filename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`,
-    chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoHash(vunConfig)}.js`
+    filename: `${vunConfig.build.assetsDir}/js/[name]${autoChunkHash(vunConfig)}.js`,
+    chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoChunkHash(vunConfig)}.js`
   }
 
   webpackConfig.node = false
+  webpackConfig.optimization = {
+    ...webpackConfig.optimization,
+    splitChunks: {
+      cacheGroups: {
+        vendors: {
+          name: 'chunk-vendors',
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          chunks: 'initial'
+        },
+        common: {
+          name: 'chunk-common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
+        }
+      }
+    }
+  }
 
   webpackConfig.plugins?.push(
     new WebpackBar({

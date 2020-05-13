@@ -1,13 +1,19 @@
 import path from 'path'
-import { Configuration } from 'webpack'
+import webpack, { Configuration } from 'webpack'
 import WebpackBar from 'webpackbar'
 import ManifestPlugin from 'webpack-manifest-plugin'
 import nodeExternals from 'webpack-node-externals'
 import { vunConfig } from '../vuniversal'
-import { NodeEnv, VueEnv, isDev } from '@cli/environment'
-import { modifyServerDevConfig } from './server.dev'
-import { modifyServerProdConfig } from './server.prod'
-import { SERVER_ENTRY, SERVER_MANIFEST_FILE, WEBPACK_HOT_POLL_ENTRY, getManifestPath } from '@cli/paths'
+import { VueEnv, isDev } from '@cli/environment'
+import {
+  SERVER_ENTRY,
+  SERVER_JS_FILE,
+  SERVER_MANIFEST_FILE,
+  VUN_DEV_CACHE_PATH,
+  WEBPACK_HOT_POLL_ENTRY,
+  getManifestPath,
+  getServerBuildPath
+} from '@cli/paths'
 import { resolveEntry } from '@cli/utils'
 import { BuildContext } from '.'
 
@@ -16,6 +22,16 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
 
   webpackConfig.entry = {
     [SERVER_ENTRY]: [resolveEntry(vunConfig.serverEntry, VueEnv.Server)]
+  }
+
+  // Specify webpack Node.js output path and filename
+  webpackConfig.output = {
+    path: IS_DEV
+      ? VUN_DEV_CACHE_PATH
+      : getServerBuildPath(vunConfig),
+    publicPath: vunConfig.build.publicPath,
+    filename: SERVER_JS_FILE,
+    libraryTarget: 'commonjs2'
   }
 
   // We need to tell webpack what to bundle into our Node bundle.
@@ -49,10 +65,17 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
         SERVER_MANIFEST_FILE
       ),
       writeToFileEmit: true
+    }),
+    // Prevent creating multiple chunks for the server
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 1
     })
   )
 
-  buildContext.environment === NodeEnv.Development
-    ? modifyServerDevConfig(webpackConfig)
-    : modifyServerProdConfig(webpackConfig)
+  if (IS_DEV) {
+    webpackConfig.plugins?.push(
+      // Add hot module replacement
+      new webpack.HotModuleReplacementPlugin()
+    )
+  }
 }

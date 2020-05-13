@@ -16,7 +16,7 @@ import { getThreadLoader } from '../parallel'
 import { modifyCSSConfig } from '../css'
 import { modifyClientConfig } from './client'
 import { modifyServerConfig } from './server'
-import { transformToProcessEnvObject, getAssetsServerUrl, autoHash } from './helper'
+import { transformToProcessEnvObject, getAssetsServerUrl, autoContentHash } from './helper'
 import { vunConfig } from '../vuniversal'
 import logger from '@cli/services/logger'
 
@@ -29,10 +29,10 @@ export interface BuildContext {
 }
 // TODO: 好东西！！ https://github.com/facebook/create-react-app/blob/master/packages/react-scripts/config/webpack.config.js
 
-const genAssetSubPath = (dir: string) => {
+const genAssetFileName = (dir: string) => {
   return path.posix.join(
     vunConfig.build.assetsDir,
-    `${dir}/[name]${autoHash(vunConfig)}.[ext]`
+    `${dir}/[name]${autoContentHash(vunConfig)}.[ext]`
   )
 }
 
@@ -118,7 +118,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           loader: requireResolve('url-loader'),
           options: {
             limit: 10000,
-            name: genAssetSubPath('image'),
+            name: genAssetFileName('image'),
             ...vunConfig.build.loaders.imgUrl,
             emitFile: IS_CLIENT
           }
@@ -129,7 +129,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           test: /\.(svg)(\?.*)?$/,
           loader: requireResolve('file-loader'),
           options: {
-            name: genAssetSubPath('image'),
+            name: genAssetFileName('image'),
             ...vunConfig.build.loaders.svgFile,
             emitFile: IS_CLIENT
           }
@@ -138,7 +138,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
           loader: requireResolve('url-loader'),
           options: {
-            name: genAssetSubPath('media'),
+            name: genAssetFileName('media'),
             ...vunConfig.build.loaders.mediaUrl,
             emitFile: IS_CLIENT
           }
@@ -147,7 +147,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
           loader: requireResolve('url-loader'),
           options: {
-            name: genAssetSubPath('fonts'),
+            name: genAssetFileName('fonts'),
             ...vunConfig.build.loaders.fontUrl,
             emitFile: IS_CLIENT
           }
@@ -180,7 +180,10 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     watchOptions: {
       ignored: ['node_modules/**']
     },
-    optimization: vunConfig.build.optimization
+    optimization: {
+      moduleIds: IS_DEV ? 'named' : 'deterministic',
+      chunkIds: IS_DEV ? 'named' : 'deterministic'
+    }
   }
 
   if (IS_PROD) {
@@ -213,6 +216,12 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
   // Server
   if (IS_SERVER) {
     modifyServerConfig(webpackConfig, buildContext)
+  }
+
+  // Modify optimization
+  webpackConfig.optimization = {
+    ...webpackConfig.optimization,
+    ...vunConfig.build.optimization
   }
 
   // Apply vun plugins, if they are present in vun.config.js
