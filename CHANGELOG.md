@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+### 0.0.13 (2020-05-14)
+
+**Feature**
+- Analyze supported
+
 ### 0.0.12 (2020-05-14)
 
 **Feature**
