@@ -6,6 +6,8 @@
       - [x] Remove cache-loader
       - [x] [Upgrade](https://juejin.im/post/5df5cdf66fb9a0161a0c3092)
       - [x] [ModuleFederationPlugin](https://juejin.im/post/5eb382c26fb9a04388075b45?utm_source=gold_browser_extension)
+      - ~~autofix (cache-loader)~~
+      - ~~autofix (pnp-loader)~~
   - [x] block by vue-loader & webpack 5
   - [x] fix bugs with html-webpack-plugin@^4.0.0-beta.11
   - [x] helper command
@@ -22,12 +24,10 @@
   - [x] server prod optimize (max chunk length = 1)
   - [x] analyze support [options](https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin)
   - [ ] modern support
-  - [ ] Jest support
+  - [ ] jest support
   - [ ] init script
   - [ ] server boundle `require.resolveWeak` [FYI](https://github.com/faceyspacey/react-universal-component)
   - [ ] server boundle async to html [FYI](https://github.com/jamiebuilds/react-loadable)
-  - ~~autofix (cache-loader)~~
-  - ~~autofix (pnp-loader)~~
 
 ### Vuniversal
   - [ ] Meta (vue-meta?)
