@@ -20,8 +20,8 @@
   - [x] OptimizeCSSAssetsPlugin
   - [x] extractOptions (duplicates) & OptimizeCSSAssetsPlugin (map) [so](https://stackoverflow.com/questions/52564625/cssnano-doesnt-remove-duplicates)
   - [x] server prod optimize (max chunk length = 1)
+  - [x] analyze support [options](https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin)
   - [ ] modern support
-  - [ ] analyze support
   - [ ] Jest support
   - [ ] init script
   - [ ] server boundle `require.resolveWeak` [FYI](https://github.com/faceyspacey/react-universal-component)

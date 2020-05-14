@@ -129,6 +129,7 @@
     "@types/node-notifier": "^6.0.1",
     "@types/optimize-css-assets-webpack-plugin": "^5.0.1",
     "@types/start-server-webpack-plugin": "^2.2.0",
+    "@types/webpack-bundle-analyzer": "^2.13.3",
     "@types/webpack-dev-server": "^3.10.1",
     "@types/webpack-manifest-plugin": "^2.1.0",
     "@types/webpack-merge": "^4.1.5",

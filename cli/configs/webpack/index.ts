@@ -194,16 +194,20 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
       })
     )
 
+    // Analyze
     if (vunConfig.build.analyze) {
       // https://github.com/webpack-contrib/webpack-bundle-analyzer
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
       webpackConfig.plugins?.push(
         new BundleAnalyzerPlugin({
-          analyzerMode: 'server',
+          logLevel: 'error',
+          analyzerMode: 'static',
+          // defaultSizes: 'gzip',
+          generateStatsFile: true,
           openAnalyzer: true,
-          logLevel: 'silent',
+          reportFilename: path.resolve(vunConfig.dir.build, 'stats', `${buildContext.target}.html`),
+          statsFilename: path.resolve(vunConfig.dir.build, 'stats', `${buildContext.target}.json`),
           ...(
-            // TODO: vuniversal config interface & types
             typeof vunConfig.build.analyze === 'boolean'
               ? {}
               : vunConfig.build.analyze

@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import WebpackDevServer from 'webpack-dev-server'
+import WebpackBundleAnalyzer from 'webpack-bundle-analyzer'
 import { Options as TsLoaderOptions } from 'ts-loader'
 import { Options as ForkTsCheckerOptions } from 'fork-ts-checker-webpack-plugin'
 import { BuildContext } from '../webpack'
@@ -74,7 +75,7 @@ export interface VunLibConfig {
   }
   build: {
     // 统计配置
-    analyze: boolean | object
+    analyze: boolean | WebpackBundleAnalyzer.BundleAnalyzerPlugin.Options
     // CDN PATH
     publicPath: string
     // 输出的 assets 文件夹，相对于 build 的路径
