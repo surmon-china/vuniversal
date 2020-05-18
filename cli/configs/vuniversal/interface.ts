@@ -3,14 +3,18 @@ import WebpackDevServer from 'webpack-dev-server'
 import WebpackBundleAnalyzer from 'webpack-bundle-analyzer'
 import { Options as TsLoaderOptions } from 'ts-loader'
 import { Options as ForkTsCheckerOptions } from 'fork-ts-checker-webpack-plugin'
-import { BuildContext } from '../webpack'
+import { VueEnv } from '@cli/environment'
+
+export interface VunEnvObject {
+  [key: string]: any
+}
 
 interface LoaderOptions {
   [key: string]: any
 }
 
-export interface VunEnvObject {
-  [key: string]: any
+type BuildContext = {
+  target: VueEnv
 }
 
 type RecursivePartial<T> = {
@@ -90,8 +94,13 @@ export interface VunLibConfig {
     productionSourceMap: boolean
     // 是否为 Babel 或 TypeScript 使用 thread-loader。该选项在系统的 CPU 有多于一个内核时自动启用，仅作用于生产构建。
     parallel: boolean | number 
-    // https://cli.vuejs.org/zh/config/#crossorigin
-    crossorigin: false | '' | 'anonymous' | 'use-credentials'
+    html: {
+      // https://cli.vuejs.org/zh/config/#crossorigin
+      crossorigin: false | '' | 'anonymous' | 'use-credentials'
+      preload: boolean | 'preload' | 'prefetch' | 'auto'
+      // TODO
+      ext: any
+    },
     // webpack optimization
     optimization: webpack.Configuration['optimization']
     // 有关样式的配置项
@@ -126,8 +135,8 @@ export interface VunLibConfig {
       vueStyle: LoaderOptions
     }
   }
-  babel: any
-  webpack: ((config: webpack.Configuration, buildContext: BuildContext) => (webpack.Configuration | void))
+  babel: object | ((buildContext: BuildContext) => object)
+  webpack: webpack.Configuration | ((config: webpack.Configuration, buildContext: BuildContext) => (webpack.Configuration | void))
   typescript: boolean | {
     tsLoader: Partial<TsLoaderOptions>
     forkTsChecker: boolean | Partial<ForkTsCheckerOptions>

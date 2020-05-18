@@ -1,13 +1,13 @@
 import { Configuration } from 'webpack'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import { getClientBuildPath } from '@cli/paths'
+import { getClientBuildDir } from '@cli/paths'
 import { getTerserConfig } from '../terser'
 import { vunConfig } from '../vuniversal'
 
 const TerserPlugin = require('terser-webpack-plugin')
 
 export function modifyClientProdConfig(webpackConfig: Configuration): void {
-  const clientBuildPath = getClientBuildPath(vunConfig)
+  const clientBuildPath = getClientBuildDir(vunConfig)
 
   webpackConfig.plugins?.push(
     new CopyWebpackPlugin([

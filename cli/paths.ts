@@ -42,21 +42,21 @@ export const DEFAULT_FALLBACK_FILE = '404.html'
 export const SSR_TEMPLATE_FILE = 'template.html'
 
 // Butid time paths
-export function getServerBuildPath(vunConfig: VunLibConfig): string {
+export function getServerBuildDir(vunConfig: VunLibConfig): string {
   return path.join(vunConfig.dir.build, SERVER_ENTRY)
 }
 
-export function getClientBuildPath(vunConfig: VunLibConfig): string {
+export function getClientBuildDir(vunConfig: VunLibConfig): string {
   return isUniversal(vunConfig)
     ? path.join(vunConfig.dir.build, CLIENT_ENTRY)
     : vunConfig.dir.build
 }
 
-export function getManifestPath(environment: NodeEnv, vunConfig: VunLibConfig): string {
+export function getManifestDir(environment: NodeEnv, vunConfig: VunLibConfig): string {
   return isDev(environment)
     ? VUN_DEV_CACHE_PATH
     : isUniversal(vunConfig)
-      ? getServerBuildPath(vunConfig)
+      ? getServerBuildDir(vunConfig)
       : vunConfig.dir.build
 }
 

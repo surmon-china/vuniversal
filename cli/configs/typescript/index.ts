@@ -20,30 +20,28 @@ export function modifyTypeScriptConfig(webpackConfig: Configuration, buildContex
   const useThreads = IS_PROD && enableParallel(vunConfig)
 
   // ts-loader
-  const vunTsLoaderOptions = typeof vunConfig.typescript === 'object'
-    ? vunConfig.typescript.tsLoader
-    : {}
-  const tsLoader = {
-    loader: requireResolve('ts-loader'),
-    options: {
-      transpileOnly: true,
-      experimentalWatchApi: true,
-      appendTsSuffixTo: [/\.vue$/],
-      // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
-      happyPackMode: useThreads,
-      ...vunTsLoaderOptions
-    } as TsLoaderOptions
-  }
-
-  // loaders
   webpackConfig.resolve?.extensions?.unshift('.ts', '.tsx')
   webpackConfig.module?.rules?.unshift({
     test: /\.(ts|tsx)$/,
     include: [vunConfig.dir.source],
     exclude: [/node_modules/],
     use: [
-      getBabelLoader(vunConfig),
-      tsLoader,
+      getBabelLoader(vunConfig, buildContext),
+      {
+        loader: requireResolve('ts-loader'),
+        options: {
+          transpileOnly: true,
+          experimentalWatchApi: true,
+          appendTsSuffixTo: [/\.vue$/],
+          // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
+          happyPackMode: useThreads,
+          ...(
+            typeof vunConfig.typescript === 'object'
+              ? vunConfig.typescript.tsLoader
+              : {}
+          )
+        } as TsLoaderOptions
+      },
       getThreadLoader(vunConfig)
     ]
   })

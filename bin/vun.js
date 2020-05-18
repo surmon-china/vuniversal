@@ -19,7 +19,6 @@ function logHelp() {
     init: 'Create vuniversal config file (vun.config.js)',
     dev: 'Start the application in development mode (e.g. hot-code reloading, error reporting)',
     build: 'Compiles the application for production deployment (server-rendered/spa-prerender)',
-    test: 'Run test',
     help: 'Shows help for vuniversal'
   }
   Object.keys(commands).forEach(command => {
@@ -35,8 +34,6 @@ switch (script) {
   case 'build':
     require('../cli-dist/scripts/build')
     break
-  case 'test':
-    require('../cli-dist/scripts/test')
     break
   case 'dev':
   case undefined:

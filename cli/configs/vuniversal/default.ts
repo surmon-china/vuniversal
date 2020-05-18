@@ -41,7 +41,6 @@ export const defaultConfig: VunLibConfig = {
     analyze: false,
     runtimeCompiler: false,
     productionSourceMap: true,
-    crossorigin: false,
     transpileDependencies: [],
     get filenameHashing() {
       return isProd(process.env.NODE_ENV as NodeEnv)
@@ -52,6 +51,11 @@ export const defaultConfig: VunLibConfig = {
       } catch (error) {
         return false
       }
+    },
+    html: {
+      crossorigin: false,
+      preload: false,
+      ext: {}
     },
     css: {
       get extract() {
@@ -70,11 +74,11 @@ export const defaultConfig: VunLibConfig = {
     optimization: {}
   },
   babel: {},
+  webpack: {},
   typescript: !allDependencies.includes('typescript')
     ? false
     : {
       tsLoader: {},
       forkTsChecker: true
-    },
-  webpack: () => ({})
+    }
 }

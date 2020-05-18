@@ -1,38 +1,24 @@
-import fs from 'fs-extra'
-import templateParser from 'lodash/template'
+import path from 'path'
+import { Configuration } from 'webpack'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { SPA_TEMPLATE_FILE, getClientBuildDir } from '@cli/paths'
 import { vunConfig } from '../vuniversal'
+import { spaTemplateRender } from './render'
 
-const htmlTemplate = fs.readFileSync(vunConfig.template)
-const templateRender = templateParser(htmlTemplate.toString(), {
-  interpolate: /{{([\s\S]+?)}}/g,
-  evaluate: /{%([\s\S]+?)%}/g
-})
-
-export function spaTemplateRender({ htmlWebpackPlugin }: any) {
-  const { crossorigin } = vunConfig.build
-  const CROSSORIGIN = crossorigin == false || crossorigin == null
-    ? ''
-    : crossorigin === ''
-      ? `crossorigin`
-      : `crossorigin=${crossorigin}`
-
-  const HTML_ATTRS = ''
-  const HEAD_ATTRS = ''
-  const BODY_ATTRS = ''
-  const APP = ''
-  const HEAD = htmlWebpackPlugin.files.css
-    .map((css: string) => `<link rel="stylesheet" href="${css}" ${CROSSORIGIN}>`)
-    .join('\n')
-  const FOOTER = htmlWebpackPlugin.files.js
-    .map((js: string) => `<script src="${js}" ${CROSSORIGIN} defer></script>`)
-    .join('\n')
-
-  return templateRender({
-    HTML_ATTRS,
-    HEAD_ATTRS,
-    BODY_ATTRS,
-    HEAD,
-    APP,
-    FOOTER
-  })
+// HTML plugin config
+export function modifyHTMLConfig(webpackConfig: Configuration) {
+  webpackConfig.plugins?.push(new HtmlWebpackPlugin({
+    filename: path.resolve(getClientBuildDir(vunConfig), SPA_TEMPLATE_FILE),
+    templateContent: spaTemplateRender,
+    inject: false,
+    minify: {
+      removeComments: true,
+      collapseWhitespace: true,
+      removeAttributeQuotes: true,
+      collapseBooleanAttributes: true,
+      removeScriptTypeAttributes: true
+      // more options:
+      // https://github.com/kangax/html-minifier#options-quick-reference
+    }
+  }))
 }

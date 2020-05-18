@@ -6,14 +6,14 @@ import { vunConfig } from '../vuniversal'
 import { modifyClientDevConfig } from './clien.dev'
 import { modifyClientProdConfig } from './client.prod'
 import { VueEnv, isDev, isUniversal } from '@cli/environment'
-import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestPath, getClientBuildPath } from '@cli/paths'
+import { CLIENT_ENTRY, CLIENT_MANIFEST_FILE, getManifestDir, getClientBuildDir } from '@cli/paths'
 import { resolveEntry } from '@cli/utils'
 import { autoChunkHash } from './helper'
 import { BuildContext } from '.'
 
 export function modifyClientConfig(webpackConfig: Configuration, buildContext: BuildContext): void {
   const IS_DEV = isDev(buildContext.environment)
-  const clientBuildPath = getClientBuildPath(vunConfig)
+  const clientBuildDir = getClientBuildDir(vunConfig)
 
   // TODO: morden
   // isLegacyBundle ? '[name]-legacy.js' : '[name].js'
@@ -28,7 +28,7 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
 
   // Specify the client output directory and paths.
   webpackConfig.output = {
-    path: clientBuildPath,
+    path: clientBuildDir,
     publicPath: vunConfig.build.publicPath,
     filename: `${vunConfig.build.assetsDir}/js/[name]${autoChunkHash(vunConfig)}.js`,
     chunkFilename: `${vunConfig.build.assetsDir}/js/[name]${autoChunkHash(vunConfig)}.js`
@@ -67,7 +67,7 @@ export function modifyClientConfig(webpackConfig: Configuration, buildContext: B
     // @ts-ignore
     new ManifestPlugin({
       fileName: path.join(
-        getManifestPath(buildContext.environment, vunConfig),
+        getManifestDir(buildContext.environment, vunConfig),
         CLIENT_MANIFEST_FILE
       ),
       writeToFileEmit: isUniversal(vunConfig),

@@ -11,8 +11,8 @@ import {
   SERVER_MANIFEST_FILE,
   VUN_DEV_CACHE_PATH,
   WEBPACK_HOT_POLL_ENTRY,
-  getManifestPath,
-  getServerBuildPath
+  getManifestDir,
+  getServerBuildDir
 } from '@cli/paths'
 import { resolveEntry } from '@cli/utils'
 import { BuildContext } from '.'
@@ -28,7 +28,7 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
   webpackConfig.output = {
     path: IS_DEV
       ? VUN_DEV_CACHE_PATH
-      : getServerBuildPath(vunConfig),
+      : getServerBuildDir(vunConfig),
     publicPath: vunConfig.build.publicPath,
     filename: SERVER_JS_FILE,
     libraryTarget: 'commonjs2'
@@ -61,7 +61,7 @@ export function modifyServerConfig(webpackConfig: Configuration, buildContext: B
     // @ts-ignore
     new ManifestPlugin({
       fileName: path.join(
-        getManifestPath(buildContext.environment, vunConfig),
+        getManifestDir(buildContext.environment, vunConfig),
         SERVER_MANIFEST_FILE
       ),
       writeToFileEmit: true

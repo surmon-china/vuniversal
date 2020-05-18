@@ -1,15 +1,31 @@
 import path from 'path'
 import { RuleSetRule } from 'webpack'
-import { VunLibConfig } from '../vuniversal'
+import { loadPartialConfig } from '@babel/core'
 import { isWindows, requireResolve } from '@cli/utils'
+import { VunLibConfig } from '../vuniversal'
+import { BuildContext } from '../webpack'
 
-export function getBabelLoader(vunConfig: VunLibConfig): RuleSetRule {
-  return {
-    loader: requireResolve('babel-loader'),
-    options: {
-      presets: [requireResolve('@vue/babel-preset-app')],
+const defaultOptions = {
+  presets: [requireResolve('@vue/babel-preset-app')]
+}
+
+export function getBabelLoader(vunConfig: VunLibConfig, buildContext: BuildContext): RuleSetRule {
+  // Validate a user's config
+  loadPartialConfig()
+
+  let loaderOptions = defaultOptions
+  if (typeof vunConfig.babel === 'object') {
+    loaderOptions = {
+      ...defaultOptions,
       ...vunConfig.babel
     }
+  } else if (typeof vunConfig.babel === 'function') {
+    loaderOptions = vunConfig.babel({ target: buildContext.target }) as any
+  }
+
+  return {
+    loader: requireResolve('babel-loader'),
+    options: loaderOptions
   }
 }
 
@@ -22,12 +38,9 @@ export function getExcluder(vunConfig: VunLibConfig) {
     }
   
     // only include @babel/runtime when the @vue/babel-preset-app preset is used
-    if (
-      // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/babel-preset-app/index.js#L218
-      // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel#L50
-      // process.env.VUE_CLI_TRANSPILE_BABEL_RUNTIME &&
-      filepath.includes(path.join('@babel', 'runtime'))
-    ) {
+    // https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/babel-preset-app/index.js#L218
+    // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel#L50
+    if (filepath.includes(path.join('@babel', 'runtime'))) {
       return false
     }
   

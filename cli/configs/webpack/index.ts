@@ -7,7 +7,7 @@ import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 import { NodeEnv, VueEnv, isServerTarget, isClientTarget, isDev, isProd } from '@cli/environment'
 import { APP_NODE_MODULES_PATH, VUN_NODE_MODULES_PATH, CLIENT_MANIFEST_FILE } from '@cli/paths'
 import { requireResolve } from '@cli/utils'
-import { getManifestPath } from '@cli/paths'
+import { getManifestDir } from '@cli/paths'
 import { createFriendlyErrorsWebpackPlugin } from '../error'
 import { getBabelLoader, getExcluder } from '../babel'
 import { modifyTypeScriptConfig } from '../typescript'
@@ -109,7 +109,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
           include: [vunConfig.dir.source],
           exclude: [getExcluder(vunConfig)],
           use: [
-            getBabelLoader(vunConfig),
+            getBabelLoader(vunConfig, buildContext),
             getThreadLoader(vunConfig)
           ]
         },
@@ -172,7 +172,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
         VUN_DEV_SERVER_URL: getAssetsServerUrl(vunConfig.dev.host, vunConfig.dev.port),
         VUN_SSR_TEMPLATE: vunConfig.template,
         VUN_CLIENT_MANIFEST: path.join(
-          getManifestPath(buildContext.environment, vunConfig),
+          getManifestDir(buildContext.environment, vunConfig),
           CLIENT_MANIFEST_FILE
         )
       }))
@@ -186,6 +186,7 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
     }
   }
 
+  // Only prod
   if (IS_PROD) {
     webpackConfig.plugins?.push(
       new webpack.BannerPlugin({
@@ -250,12 +251,14 @@ export function getWebpackConfig(buildContext: BuildContext): Configuration {
   // Check if vun.config has a modify function. If it does, call it on the
   // configs we created.
   if (vunConfig.webpack) {
-    if (typeof vunConfig.webpack === 'function') {
-      const response = vunConfig.webpack(webpackConfig, buildContext)
+    if (typeof vunConfig.webpack === 'object') {
+      webpackConfig = mergeConfig(webpackConfig, vunConfig.webpack)
+    } else if (typeof vunConfig.webpack === 'function') {
+      const response = vunConfig.webpack(webpackConfig, { target: buildContext.target })
       if (response) {
         webpackConfig = mergeConfig(webpackConfig, response)
       }
-    }
+    } 
   }
 
   // Inspect
