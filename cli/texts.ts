@@ -1,4 +1,5 @@
 export const VUN_COMMND = 'vun'
+export const VUNIVERSAL_NAME = 'Vuniversal'
 export const DEV_SERVER_RUN_FAILED = 'Dev server runs failed!'
 export const DEV_SERVER_RUN_SUCCESSFULLY = 'Dev server runs successfully!'
 

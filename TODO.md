@@ -25,9 +25,9 @@
   - [x] analyze support [options](https://github.com/webpack-contrib/webpack-bundle-analyzer#options-for-plugin)
   - [x] babel config
   - [x] prerender with ssr
+  - [x] bin script
   - [x] jest support (example)
-  - [ ] mocha support (example)
-  - [ ] webpack.config.js interface with root
+  - [ ] mocha support (example) & webpack.config.js interface with root
     - [ ] [FYI](https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-plugin-unit-mocha/index.js#L59)
     - [ ] [FYI](https://github.com/vuejs/vue-cli/blob/dev/packages/%40vue/cli-service/lib/config/app.js#L37)
   - [ ] ssr app.template.html copy to dist & default build spa.html

@@ -2,7 +2,7 @@ import chalk from 'chalk'
 import { Console } from 'console'
 import { isBrLastLine } from './stdout'
 
-enum LogTypes {
+export enum LogTypes {
   Warn = 'warn',
   Debug = 'debug',
   Info = 'info',
@@ -11,7 +11,7 @@ enum LogTypes {
   Done = 'done'
 }
 
-const logStyles = {
+export const logStyles = {
   [LogTypes.Warn]: {
     bg: chalk.bgYellow,
     text: chalk.yellow,
@@ -44,6 +44,11 @@ const logStyles = {
   }
 }
 
+export const yellowText = (text: string) => logStyles[LogTypes.Warn].text(text)
+export const greenText = (text: string) => logStyles[LogTypes.Done].text(text)
+export const blueText = (text: string) => logStyles[LogTypes.Info].text(text)
+export const linkText = (text: string) => logStyles[LogTypes.Info].text.underline(text)
+export const redText = (text: string) => logStyles[LogTypes.Error].text(text)
 export const loggerConsole = new Console(process.stdout, process.stderr)
 
 const br = () => {

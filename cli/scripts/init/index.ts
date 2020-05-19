@@ -1,11 +1,12 @@
 import readline from 'readline'
+// import program from 'program'
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 })
 
-
+// 检测到你已经存在 vun.config.js 文件了，是否覆盖
 // TODO: 选择语言
 // TODO: 检测到当前是 vue 项目，是否从 vue.config.js 自动推断
 // TODO: 检测到当前是 nuxt 项目，是否从 nuxt.config.js 自动推断

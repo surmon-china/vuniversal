@@ -5,6 +5,7 @@ import boxen, { BorderStyle } from 'boxen'
 import { vunPackageJSON } from '@cli/configs/package'
 import { NodeEnv, UniversalMode } from '../environment'
 import { VUN_NAME } from '../paths'
+import { linkText } from './logger'
 
 // 80% of terminal column width
 // this is a fn because console width can have changed since startup
@@ -111,7 +112,7 @@ export function headBanner(options: IHeadBannerOptions = {}) {
 
   // Listeners
   if (options.listeningOn) {
-    messages.push(`Listening on: ${chalk.underline.blue(options.listeningOn)}`)
+    messages.push(`Listening on: ${linkText(options.listeningOn)}`)
   }
 
   process.stdout.write(success(

@@ -22,6 +22,7 @@ export const resolveVunRoot = (...relativePath: string[]): string => {
   return path.resolve(__dirname, '..', ...relativePath)
 }
 export const VUN_NAME = 'Vuniversal'
+export const VUN_DOC_URL = 'https://github.surmon.me/vuniversal'
 export const VUN_ROOT_PATH = resolveVunRoot('.')
 export const VUN_NODE_MODULES_PATH = resolveVunRoot('node_modules')
 export const VUN_DEV_CACHE_PATH = resolveVunRoot('.vun')
