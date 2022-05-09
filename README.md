@@ -7,24 +7,20 @@
 <p align="center">Create vue (3) universal web applications quickly.</p>
 <br>
 <p align="center">
-  <a href="https://www.npmjs.com/package/vuniversa" target="_blank">
-    <img src="https://nodei.co/npm/vuniversal.png?downloads=true&downloadRank=true&stars=true">
-  </a>
-</p>
-<p align="center">
   <img src="https://img.shields.io/badge/MADE%20WITH-VUE-42a97a?style=for-the-badge&labelColor=35495d">
+  &nbsp;
   <a href="https://github.com/surmon-china/vuniversal/stargazers" target="_blank">
     <img src="https://img.shields.io/github/stars/surmon-china/vuniversal.svg?style=for-the-badge">
   </a>
+  &nbsp;
   <a href="https://www.npmjs.com/package/vuniversal" target="_blank">
     <img src="https://img.shields.io/npm/v/vuniversal?color=c7343a&label=npm&style=for-the-badge">
   </a>
+  &nbsp;
   <a href="https://github.com/surmon-china/vuniversal/actions?query=workflow%3APublish" target="_blank">
     <img src="https://img.shields.io/github/workflow/status/surmon-china/vuniversal/Publish?label=publish&style=for-the-badge">
   </a>
-  <a href="https://github.com/surmon-china/vuniversal/issues" target="_blank">
-    <img src="https://img.shields.io/github/issues-raw/surmon-china/vuniversal.svg?style=for-the-badge">
-  </a>
+  &nbsp;
   <a href="https://github.com/surmon-china/vuniversal/blob/master/LICENSE" target="_blank">
     <img src="https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge">
   </a>
